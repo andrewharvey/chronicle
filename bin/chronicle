@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.1.1.1 2007-08-13 22:53:14 steve Exp $
+ $Id: chronicle,v 1.2 2007-08-13 22:55:11 steve Exp $
 
 =cut
 
@@ -293,7 +293,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.1.1.1 $';
+        my $REVISION      = '$Revision: 1.2 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
