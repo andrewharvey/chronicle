@@ -23,7 +23,7 @@
 #
 #  Input directory
 # 
-input = /home/skx/cvs/chronicle/blog
+input = ./blog
 
 
 #
@@ -36,13 +36,13 @@ input = /home/skx/cvs/chronicle/blog
 #
 #  Output directory to write the blog to
 #
-output = /home/skx/cvs/chronicle/output
+output = ./output
 
 
 #
 #  Directory containing the templates
 #
-template = /home/skx/cvs/chronicle/themes/default
+template = /usr/share/chronicle/themes/default
 
 
 #
@@ -76,7 +76,7 @@ template = /home/skx/cvs/chronicle/themes/default
 #
 #  URL prefix, if any.
 #
-url_prefix = http://www.steve.org.uk/Software/chronicle/demo/
+url_prefix = http://example.com/
 
 
 #
@@ -88,4 +88,5 @@ url_prefix = http://www.steve.org.uk/Software/chronicle/demo/
 #
 #  A command to run post-build.
 #
-# post-build = scp -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo
+# post-build = scp -r output/* user@host:/some/path
+#

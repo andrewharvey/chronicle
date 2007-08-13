@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.2 2007-08-13 22:55:11 steve Exp $
+# $Id: Makefile,v 1.3 2007-08-13 23:22:03 steve Exp $
 
 
 #
@@ -51,6 +51,17 @@ clean:
 #
 diff:
 	cvs diff --unified 2>/dev/null
+
+
+#
+#  Install to /usr/local/bin
+#
+install:
+	cp ./etc/chroniclerc ${prefix}/etc/chroniclerc
+	mkdir -p ${prefix}/usr/local/bin
+	cp ./bin/chronicle ${prefix}/usr/local/bin
+	mkdir -p ${prefix}/usr/share/chronicle/themes/default
+	cp -r ./themes/default/*.* ${prefix}/usr/share/chronicle/themes/default
 
 
 #
