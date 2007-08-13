@@ -1,0 +1,85 @@
+##
+#  Configuration file for the chronicle blog compiler.
+##
+
+
+##
+#
+#  NOTE:
+#
+#    For this file to be used it should be renamed ~/.chroniclerc
+#
+####
+
+
+
+
+#
+#  Input directory
+# 
+input = /home/skx/cvs/chronicle/data
+
+
+#
+#  The pattern of files to include
+#
+# pattern = *.txt
+#
+
+
+#
+#  Output directory to write the blog to
+#
+output = /home/skx/cvs/chronicle/output
+
+
+#
+#  Directory containing the templates
+#
+template = /home/skx/cvs/chronicle/etc
+
+
+#
+#  The number of entries to include on the index.
+#
+# entry-count = 10
+#
+
+
+#
+#  We can disable the sidebar if we want
+#
+#  no-tags = 1
+#
+#  no-archive = 1
+#
+
+
+#  The filename to use for tag lings
+#
+# filename = index.html
+#
+
+
+#
+#  Suffix to use for single entries.
+#
+# suffix = .html
+
+
+#
+#  URL prefix, if any.
+#
+url_prefix = http://www.steve.org.uk/Software/chronicle/demo/
+
+
+#
+#  A command to run pre-build
+#
+# pre-build = cvs update -A -d
+
+
+#
+#  A command to run post-build.
+#
+# post-build = scp -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo

@@ -1,0 +1,1277 @@
+#!/usr/bin/perl -w
+
+=head1 NAME
+
+chronicle - A blog compiler.
+
+=cut
+
+=head1 SYNOPSIS
+
+
+  Help Options:
+
+   --help        Show the help information for this script.
+
+   --manual      Read the manual for this script.
+
+   --verbose     Show useful debugging information.
+
+   --version     Show the version number and exit.
+
+=cut
+
+
+=head1 ABOUT
+
+  Chronicle is a simple tool to convert a collection of text files,
+ located in a single directory, into a static collection of HTML
+ pages which comprise a blog.
+
+  It supports only the bare minimum of features which are required
+ to be useful:
+
+   * Tagging support.
+
+   * RSS support.
+
+   * Archive support.
+
+  The obvious deficiencies are:
+
+   * Lack of support for commenting.
+
+   * Lack of pingback/trackback support.
+
+  Having said that it is a robust, stable, and useful system.
+
+=cut
+
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+ $Id: chronicle,v 1.1.1.1 2007-08-13 22:53:14 steve Exp $
+
+=cut
+
+=head1 LICENSE
+
+Copyright (c) 2007 by Steve Kemp.  All rights reserved.
+
+This module is free software;
+you can redistribute it and/or modify it under
+the same terms as Perl itself.
+The LICENSE file contains the full text of the license.
+
+=cut
+
+
+use strict;
+use warnings;
+use Date::Parse;
+use File::Copy;
+use File::Path;
+use Getopt::Long;
+use HTML::Template;
+use Pod::Usage;
+
+
+
+
+#
+#  Configuration values read initially from the global configuration
+# file, then optionally overridden by the command line.
+#
+my %CONFIG;
+
+
+
+#
+#  Setup default options.
+#
+setupDefaultOptions();
+
+
+#
+#  Read the per-user configuration file.
+#
+readConfigurationFile();
+
+
+#
+#  Parse the command line arguments.
+#
+parseCommandLineArguments();
+
+
+#
+#  Should we run something before we start?
+#
+if ( $CONFIG{'pre-build'} )
+{
+    $CONFIG{'verbose'} && print "Running command: $CONFIG{'pre-build'}\n";
+
+    system($CONFIG{'pre-build'});
+}
+
+#
+#  Make sure our output directory exists.
+#
+mkpath( $CONFIG{'output'}, 0, 0755 ) if ( ! -d $CONFIG{'output'} );
+
+
+
+#
+#  Parse each of the given text files, and build up a datastructure
+# we can use to create our pages.
+#
+#  The data-structure is a hash of arrays.  The hash key is the blog
+# entry's filename, and the array stored as the hash's value has
+# keys such as:
+#
+#   tags  => [ 'test', 'testing' ]
+#   date  => '1st july 2007'
+#   title => 'Some title'
+#
+#
+my %data = createDataStructure();
+
+#
+#  Find each unique tag which is used within our text.
+#
+my %all_tags;
+%all_tags = findAllTags() unless( $CONFIG{'no-tags'} );
+
+
+#
+#  Find each unique month + year we've used.
+#
+my %all_dates = findAllMonths();
+%all_dates = findAllMonths() unless( $CONFIG{'no-archive'} );
+
+
+#
+#  Now create the global tag + date loops which are used for our
+# sidebar.
+#
+my %CLOUD;
+$CLOUD{'tag'}     = createTagCloud( %all_tags ) unless( $CONFIG{'no-tags'} );
+$CLOUD{'archive'} = createDateCloud( %all_dates ) unless( $CONFIG{'no-archive'} );;
+
+
+#
+#  Output each static page.
+#
+$CONFIG{'verbose'} && print "Creating static pages:\n";
+foreach my $file ( keys %data )
+{
+    outputStaticPage( $file );
+}
+
+
+
+#
+#  Build an output page for each tag which we've discovered.
+#
+foreach my $tagName ( sort keys %all_tags )
+{
+    $CONFIG{'verbose'} && print "Creating tag page: $tagName\n";
+
+    outputTagPage( $tagName );
+}
+
+
+
+#
+#  Now build the archives.
+#
+foreach my $date ( keys( %all_dates ) )
+{
+    $CONFIG{'verbose'} && print "Creating archive page: $date\n";
+
+    outputArchivePage( $date );
+}
+
+
+
+#
+#  Now output the most recent entries for our front-page.
+#
+outputIndexPage();
+
+
+
+#
+#  Copy the stylesheet into place.
+#
+copyStyleSheet();
+
+
+#
+#  Post-build command?
+#
+if ( $CONFIG{'post-build'} )
+{
+    $CONFIG{'verbose'} && print "Running command: $CONFIG{'post-build'}\n";
+
+    system($CONFIG{'post-build'});
+}
+
+#
+#  All done.
+#
+exit;
+
+
+
+
+
+=begin doc
+
+  Setup the default options we'd expect into our global configuration hash.
+
+=end doc
+
+=cut
+
+sub setupDefaultOptions
+{
+    $CONFIG{'input'}      = "./blog";
+    $CONFIG{'output'}     = "./output";
+    $CONFIG{'template'}   = "./etc";
+    $CONFIG{'url-prefix'} = "";
+}
+
+
+
+=begin doc
+
+  Parse the command line arguments this script was given.
+
+=end doc
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
+
+    #
+    #  Parse options.
+    #
+    GetOptions(
+               # Help options
+               "help",         \$HELP,
+               "manual",       \$MANUAL,
+               "verbose",      \$CONFIG{'verbose'},
+               "version",      \$VERSION,
+
+               # paths
+               "input=s",      \$CONFIG{'input'},
+               "output=s",     \$CONFIG{'output'},
+               "templates=s",  \$CONFIG{'templates'},
+
+               # optional
+               "pattern=s",    \$CONFIG{'pattern'},
+               "no-tags",      \$CONFIG{'no-tags'},
+               "no-archive",   \$CONFIG{'no-archive'},
+
+               # commands
+               "pre-build=s",  \$CONFIG{'pre-build'},
+               "post-build=s", \$CONFIG{'post-build'},
+
+              );
+
+    pod2usage(1) if $HELP;
+    pod2usage(-verbose => 2 ) if $MANUAL;
+
+    if ( $VERSION )
+    {
+        my $REVISION      = '$Revision: 1.1.1.1 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
+
+        logprint( "chronicle release $REVISION\n" );
+        exit;
+    }
+}
+
+
+
+=begin doc
+
+  Create our global datastructure, by reading each of the blog
+ files and extracting:
+
+  1.  The title of the entry.
+
+  2.  Any tags which might be present.
+
+  3.  The date upon which it was made.
+
+=end doc
+
+=cut
+
+sub createDataStructure
+{
+    my %results;
+
+    if ( ! -d $CONFIG{'input'} )
+    {
+        print <<EOF;
+
+  The blog input directory $CONFIG{'input'} does not exist.
+
+  Aborting.
+EOF
+
+        exit
+    }
+
+    #
+    #  Did the user override the default pattern?
+    #
+    my $pattern = $CONFIG{'pattern'} || "*";
+    my $count   = 0;
+
+    foreach my $file ( sort( glob( $CONFIG{'input'} . "/" . $pattern ) ) )
+    {
+        my $title   = '';
+        my $date    = '';
+        my $private = 0;
+
+        my @tags;
+
+        open( INPUT, "<", $file ) or die "Failed to open blog file $file - $!";
+        while( my $line = <INPUT> )
+        {
+            if ( $line =~ /^tags: (.*)/i )
+            {
+                my $tag .= $1;
+                foreach my $t ( split( /,/, $tag ) )
+                {
+                    # strip leading and trailing space.
+                    $t =~ s/^\s+//;
+                    $t =~ s/\s+$//;
+
+                    # skip empty tags.
+                    next if ( !length($t) );
+
+                    # lowercase and store the tags.
+                    $tag = lc($tag);
+                    push ( @tags, $t );
+                }
+            }
+            elsif (( $line =~ /^title: (.*)/i ) && !length($title) )
+            {
+                $title = $1;
+            }
+            elsif (( $line =~ /^date: (.*)/i ) && !length($date) )
+            {
+                $date = $1;
+            }
+            elsif ( $line =~ /^status: (.*)/i )
+            {
+                my $level = $1;
+                $private = 1 if ( $level =~ /private/i);
+            }
+        }
+        close( INPUT );
+
+        $results{$file} = { tags => \@tags,
+                            title => $title,
+                            date  => $date } unless( $private );
+
+        $count += 1;
+    }
+
+    #
+    #  Make sure we found some entries.
+    #
+    if ( $count < 1 )
+    {
+        print <<EOF;
+
+  There were no text files found in the input directory
+ $CONFIG{'input'} which matched the pattern '$pattern'.
+
+  Aborting.
+
+EOF
+        exit;
+    }
+
+    return %results;
+}
+
+
+
+=begin doc
+
+  Find each distinct tag which has been used within blog entries,
+ and the number of times each one has been used.
+
+=end doc
+
+=cut
+
+sub findAllTags
+{
+    my %allTags;
+
+    foreach my $f ( keys %data )
+    {
+        my $h = $data{$f};
+        my $tags = $h->{'tags'} || undef;
+        foreach my $t ( @$tags )
+        {
+            $allTags{$t}+=1;
+        }
+    }
+
+    return( %allTags );
+}
+
+
+
+=begin doc
+
+  Create a structure for a tag cloud.
+
+=end doc
+
+=cut
+
+sub createTagCloud
+{
+    my( %unique ) = ( @_ );
+
+    my $results;
+
+    foreach my $key ( sort keys( %unique ) )
+    {
+        push( @$results,
+            { tag => $key,
+              count => $unique{$key} } );
+    }
+    return $results;
+
+}
+
+
+
+=begin doc
+
+  Find each of the distinct Month + Year pairs for entries which
+ have been created.
+
+=end doc
+
+=cut
+
+sub findAllMonths
+{
+    my %allDates;
+    foreach my $f ( keys %data )
+    {
+        my $h    = $data{$f};
+        next if ( !$h );
+
+        my $date = $h->{'date'} || undef;
+        next if ( !$date );
+
+        #
+        #  Strip to month
+        #
+        my ($ss,$mm,$hh,$day,$month,$year,$zone) = strptime($date);
+        my @abbr = qw( January February March April May June July August September October November December );
+        $month = $abbr[$month];
+        $year += 1900;
+        $date = $month . " " . $year;
+
+        $allDates{$date}+=1;
+    }
+
+    return( %allDates );
+}
+
+
+
+=begin doc
+
+  Create a data structure which can be used for our archive layout.
+
+  This is a little messy too.  It mostly comes because we want to
+ have a nested loop so that we can place our entries in a nice manner.
+
+  TODO: FIXME.
+=end doc
+
+=cut
+
+sub createDateCloud
+{
+    my( %unique ) = ( @_ );
+
+    my $results;
+
+    #
+    #  First find the distinct years.
+    #
+    my %years;
+    foreach my $key ( sort keys %unique  )
+    {
+        if ( $key =~ /([0-9]+)/ )
+        {
+            my $year = $1;
+            $years{$year} += 1;
+        }
+    }
+
+    #
+    #  Now for each year we want to push on the number of
+    # months
+    #
+    foreach my $year ( keys %years )
+    {
+        my $months;
+
+        foreach my $key ( keys %unique )
+        {
+            if ( $key =~ /(.*) ([0-9]+)/ )
+            {
+                my $y  = $2;
+                my $m = $1;
+                if ( $year eq $y )
+                {
+                    my $count = $unique{ $key };
+                    my $month = $m;
+
+                    push( @$months, { month => $m,
+                                      count => $count } );
+                }
+            }
+        }
+
+        push( @$results, { year => $year,
+                           months => $months } );
+    }
+    return $results;
+}
+
+
+
+=begin doc
+
+  This function will return a hash containing our tag information,
+ the values of the hash will be an array of filenames which contain
+ that entry.
+
+=end doc
+
+=cut
+
+sub readTagInformation
+{
+    my( @files ) = (@_);
+
+    my %results;
+
+    foreach my $file ( @files )
+    {
+        my $tag;
+        open( FILE, "<", $file ) or die "Failed to read: $file - $!";
+        foreach my $line ( <FILE> )
+        {
+            next unless $line =~ /^tags:(.*)/i;
+
+            my $tags = $1;
+
+            foreach my $t ( split( /,/ , $tags ) )
+            {
+                # strip leading and trailing space.
+                $t =~ s/^\s+//;
+                $t =~ s/\s+$//;
+
+                # skip empty tags.
+                next if ( !length($t) );
+
+                # lowercase all tags
+                $t = lc($t);
+
+                # Store the filename in the hash for this tag.
+                my $cur = $results{$t};
+                push @$cur, $file;
+                $results{$t} = $cur;
+            }
+        }
+        close( FILE );
+    }
+    return %results;
+}
+
+
+
+=begin doc
+
+
+=end doc
+
+=cut
+
+sub readDateInformation
+{
+    my( @files ) = (@_);
+
+    my %results;
+
+    foreach my $file ( @files )
+    {
+        my $tag;
+        open( FILE, "<", $file ) or die "Failed to read: $file - $!";
+        foreach my $line ( <FILE> )
+        {
+            next unless $line =~ /^date:(.*)/i;
+            my ($ss,$mm,$hh,$day,$month,$year,$zone) = strptime($1 );
+
+            my @abbr = qw( January February March April May June July August September October November December );
+
+            $year += 1900;
+            $month = $abbr[$month];
+
+            # Store the filename in the hash for this tag.
+            my $cur = $results{$year}{$month};
+            push @$cur, $file;
+            $results{$year}{$month} = $cur;
+        }
+        close( FILE );
+    }
+    return %results;
+}
+
+
+
+
+=begin doc
+
+  Sort by date.
+
+=end doc
+
+=cut
+
+sub bywhen
+{
+    my ($ss,$mm,$hh,$day,$month,$year,$zone) = strptime($a->{'date'});
+    my ($ss2,$mm2,$hh2,$day2,$month2,$year2,$zone2) = strptime($b->{'date'});
+
+    if ( !defined($year ) || ( !defined( $year2 ) ) )
+    {
+        return 0;
+    }
+
+    return "$year2$month2$day2" <=> "$year$month$day";
+}
+
+
+
+
+=begin doc
+
+  Output the index page + index RSS feed.
+
+=end doc
+
+=cut
+
+sub outputIndexPage
+{
+
+    #
+    #  Holder for the blog entries.
+    #
+    my $entries;
+
+    #
+    #  Find all the entries and sort them to be most recent first.
+    #
+    my $tmp;
+    foreach my $file ( keys ( %data ) )
+    {
+        my $blog = readBlogEntry( $file );
+        push( @$tmp, $blog ) if (keys( %$blog ) );
+    }
+    my @tmp2 = sort bywhen @$tmp;
+
+
+    #
+    #  The number of entries to display upon the index.
+    #
+    my $max = $CONFIG{'entry-count'} || 10;
+    foreach my $f ( @tmp2 )
+    {
+        push( @$entries, $f ) if ( $max > 0 );
+        $max -= 1;
+    }
+
+    #
+    #  Open the index template.
+    #
+    my $template = loadTemplate( "index.template" );
+
+    $template->param( entries => $entries )     if ( $entries );
+    $template->param( tagcloud => $CLOUD{'tag'} )   if ( $CLOUD{'tag'} );
+    $template->param( datecloud => $CLOUD{'archive'} ) if ( $CLOUD{'archive'} );
+
+    #
+    #  Page to use
+    #
+    my $index = $CONFIG{'filename'} || "index.html";
+
+    open( OUTPUT, ">", "$CONFIG{'output'}/$index" );
+    print OUTPUT $template->output();
+    close( OUTPUT );
+
+    #
+    #  Output the RSS feed
+    #
+    $template = loadTemplate( "index.xml.template",
+                              die_on_bad_params => 0 );
+    $template->param( entries => $entries ) if ( $entries );
+    open( OUTPUT, ">", "$CONFIG{'output'}/index.rss" );
+    print OUTPUT $template->output();
+    close( OUTPUT );
+}
+
+
+
+=begin doc
+
+  Write out a /tags/$foo/index.html containing each blog entry which has the
+ tag '$foo'.
+
+=end doc
+
+=cut
+
+sub outputTagPage
+{
+    my ( $tagName ) = ( @_ );
+
+    #
+    #  Make the tag directory.
+    #
+    my $dir = "$CONFIG{'output'}/tags/";
+    mkpath( $dir, 0, 0755 ) if ( ! -d $dir );
+
+    #
+    #  Now the specific one.
+    #
+    $dir = "$CONFIG{'output'}/tags/$tagName";
+    mkdir $dir, 0755 if ( ! -d $dir );
+
+    my %allTags;
+    my %tagEntries;
+    foreach my $f ( keys %data )
+    {
+        my $h = $data{$f};
+        my $tags = $h->{'tags'} || undef;
+        foreach my $t ( @$tags )
+        {
+            $allTags{$t}+=1;
+            my $a = $tagEntries{$t};
+            push @$a, $f ;
+            $tagEntries{$t}= $a;
+        }
+    }
+
+    my $matching =  $tagEntries{$tagName};
+
+    my $entries;
+
+    #
+    #  Now read the matching entries.
+    #
+    foreach my $f ( sort @$matching )
+    {
+        my $blog = readBlogEntry( $f );
+        if (keys( %$blog ) )
+        {
+            $CONFIG{'verbose'} && print "\tAdded: $f\n";
+            push( @$entries, $blog );
+        }
+    }
+
+    #
+    #  Now write the output as a HTML page.
+    #
+    my $template = loadTemplate( "tags.template" );
+    $template->param( entries => $entries )   if ( $entries );
+    $template->param( tagname => $tagName );
+    $template->param( tagcloud => $CLOUD{'tag'} ) if ( $CLOUD{'tag'} );
+    $template->param( datecloud => $CLOUD{'archive'} ) if ( $CLOUD{'archive'} );
+
+    #
+    #  Page to use
+    #
+    my $index = $CONFIG{'filename'} || "index.html";
+
+    open( OUTPUT, ">", "$dir/$index" );
+    print OUTPUT $template->output();
+    close( OUTPUT );
+
+    #
+    #  Now output the .xml file
+    #
+    $template = loadTemplate( "tags.xml.template", die_on_bad_params => 0 );
+    $template->param( entries => $entries ) if ( $entries );
+    $template->param( tagname => $tagName ) if ( $tagName );
+    open( OUTPUT, ">", "$dir/$tagName.rss" );
+    print OUTPUT $template->output();
+    close( OUTPUT );
+
+}
+
+
+
+=begin doc
+
+  Output the archive page for the given Month + Year.
+
+  This function is a *mess* and iterates over the data structure much
+ more often than it needs to.
+
+  TODO:  FIXME
+
+=end doc
+
+=cut
+
+sub outputArchivePage
+{
+    my( $date ) = ( @_ );
+
+    #
+    #  Should we abort?
+    #
+    if ( $CONFIG{'no-archive'} )
+    {
+        $CONFIG{'verbose'} && print "Ignoring archive page, as instructed.\n";
+        return;
+    }
+
+
+    my $year = '';
+    my $month = '';
+    if ( $date =~ /(.*) ([0-9]+)/ )
+    {
+        $year  = $2;
+        $month = $1;
+    }
+
+    #
+    #  Make the directory
+    #
+    my $dir = "$CONFIG{'output'}/archive/$year";
+    mkpath( $dir, 0, 0755 ) if ( ! -d $dir );
+
+    $dir .= "/$month";
+    mkdir $dir, 0755 if ( ! -d $dir );
+
+    my $entries;
+
+
+    my %allDates;
+    my %dateEntries;
+    foreach my $f ( keys %data )
+    {
+        my $h    = $data{$f};
+        my $date = $h->{'date'} || undef;
+        $allDates{$date}+=1;
+
+        #
+        #  Strip to month
+        #
+        my ($ss,$mm,$hh,$day,$month,$year,$zone) = strptime($date);
+        my @abbr = qw( January February March April May June July August September October November December );
+        $month = $abbr[$month];
+        $year += 1900;
+        $date = $month . " " . $year;
+        my $a = $dateEntries{$date};
+        push @$a, $f ;
+        $dateEntries{$date}= $a;
+    }
+
+
+    my $matching = $dateEntries{$date};
+    foreach my $f ( reverse @$matching )
+    {
+        $CONFIG{'verbose'} && print "\tAdded: $f\n";
+
+        my $blog = readBlogEntry( $f );
+        if (keys( %$blog ) )
+        {
+            push( @$entries, $blog );
+        }
+    }
+
+    #
+    #  Now write the output as a HTML page.
+    #
+    my $template = loadTemplate( "month.template" );
+    $template->param( entries => $entries )   if ( $entries );
+    $template->param( year => $year, month => $month );
+    $template->param( tagcloud => $CLOUD{'tag'} ) if ( $CLOUD{'tag'} );
+    $template->param( datecloud => $CLOUD{'archive'} ) if ( $CLOUD{'archive'} );
+
+    #
+    #  Page to use
+    #
+    my $index = $CONFIG{'filename'} || "index.html";
+    open( OUTPUT, ">", "$dir/$index" );
+    print OUTPUT $template->output();
+    close( OUTPUT );
+
+    #
+    #  Now the RSS page.
+    #
+    $template = loadTemplate( "month.xml.template", die_on_bad_params => 0 );
+    $template->param( entries => $entries ) if ( $entries );
+    $template->param( month => $month, year => $year );
+    open( OUTPUT, ">", "$dir/$month.rss" );
+    print OUTPUT $template->output();
+    close( OUTPUT );
+}
+
+
+
+
+=begin doc
+
+  Output static page.
+
+=end doc
+
+=cut
+
+sub outputStaticPage
+{
+    my ( $filename ) = ( @_ );
+
+    #
+    #  Load the template
+    #
+    my $template = loadTemplate( "entry.template" );
+
+
+    #
+    #  Just the name of the file.
+    #
+    my $basename = $filename;
+    if ( $basename =~ /(.*)\/(.*)/ )
+    {
+        $basename=$2;
+    }
+    #
+    #  Read the entry
+    #
+    my $static = readBlogEntry( $filename );
+
+    my $title = $static->{'title'} || $basename;
+    my $tags  = $static->{'tags'};
+    my $body  = $static->{'body'};
+    my $date  = $static->{'date'} || "";
+
+    $CONFIG{'verbose'} && print "\t$filename\n";
+
+    #
+    #  Convert to suitable filename.
+    #
+    my $file = fileToTitle($title);
+    $file    = $CONFIG{'output'} . "/" . $file;
+
+    $template->param( title => $title );
+    $template->param( tags => $tags ) if ( $tags );
+    $template->param( date => $date ) if ( $date );
+    $template->param( body => $body );
+    $template->param( tagcloud => $CLOUD{'tag'} ) if ( $CLOUD{'tag'} );
+    $template->param( datecloud => $CLOUD{'archive'} ) if ( $CLOUD{'archive'} );
+    open( OUTPUT, ">", $file );
+    print OUTPUT $template->output();
+    close( OUTPUT );
+
+}
+
+
+
+=begin doc
+
+  Return a hash of interesting data from our blog file.
+
+=end doc
+
+=cut
+
+sub readBlogEntry
+{
+    my ( $filename ) = ( @_);
+
+    my %entry;
+
+
+    my $title = "";
+    my $tags  = "";
+    my $body  = "";
+    my $date  = "";
+
+    open( ENTRY, "<", $filename ) or die "Failed to read $filename $!";
+    while( my $line = <ENTRY> )
+    {
+        #
+        #  Append any tags.
+        #
+        if ( $line =~ /^tags: (.*)/i )
+        {
+            $tags .= $1;
+        }
+        elsif (( $line =~ /^title: (.*)/i ) && !length($title) )
+        {
+            $title = $1;
+        }
+        elsif (( $line =~ /^date: (.*)/i ) && !length($date) )
+        {
+            $date = $1;
+        }
+        else
+        {
+            $body .= $line;
+        }
+    }
+    close( ENTRY );
+
+    #
+    #  If we have title then we can store it
+    #
+    my $entryTags;
+
+    foreach my $tag ( split( /,/, $tags ) )
+    {
+        # strip leading and trailing space.
+        $tag =~ s/^\s+//;
+        $tag =~ s/\s+$//;
+
+        # skip empty tags.
+        next if ( !length($tag) );
+        $tag = lc($tag);
+        push ( @$entryTags, { tag => $tag } );
+    }
+
+    #
+    #  Get the link
+    #
+    my $link = fileToTitle( $title );
+
+    #
+    #  If the date isn't set then use todays.
+    #
+    if ( ! defined($date) ||( !length( $date ) ) )
+    {
+        my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov De
+c );
+        my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
+          localtime(time);
+
+        $year += 1900;
+
+        $date = "$mday $abbr[$mon] $year";
+    }
+
+    #
+    #  Store the entry.
+    #
+    $entry{'title'} = $title;
+    $entry{'body'}  = $body if ( $body );
+    $entry{'link'}  = $link;
+    $entry{'date'}  = $date;
+    $entry{'tags'}  = $entryTags if ( $entryTags );
+    return \%entry;
+}
+
+
+
+=begin doc
+
+  Create a filename for an URL which does not contain unsafe
+ characters.
+
+=end doc
+
+=cut
+
+sub fileToTitle
+{
+    my( $file ) = ( @_ );
+
+    if ( $file =~ /(.*)\.(.*)/ )
+    {
+        $file = $1;
+    }
+    $file =~ s/ /_/g;
+    $file =~ s/\///g;
+    $file =~ s/\\//g;
+
+    my $suffix = $CONFIG{'suffix'} ||".html";
+    $file .= $suffix;
+    return( $file );
+
+}
+
+
+
+=begin doc
+
+  Load a template file.
+
+=end doc
+
+=cut
+
+sub loadTemplate
+{
+    my( $file, %params ) = (@_);
+
+    #
+    #  Make sure the file exists.
+    #
+    if ( ! -e $CONFIG{'template'} . "/" . $file )
+    {
+        print <<EOF;
+
+  The template file $file was not found in our template directory
+ of $CONFIG{'template'}.
+
+  Aborting.
+EOF
+        exit;
+    }
+
+    my $t = HTML::Template->new( filename          => $file,
+                                 path              => $CONFIG{'template'},
+                                 loop_context_vars => 1,
+                                 global_vars       => 1,
+                                 %params );
+
+    #
+    #  Global setting.
+    #
+    if ( $CONFIG{'url_prefix'} )
+    {
+        $t->param( url_prefix => $CONFIG{'url_prefix'} );
+    }
+
+    return( $t );
+}
+
+
+
+=begin doc
+
+  Read the configuration file ".chroniclerc" if it exists.
+
+=end doc
+
+=cut
+
+sub readConfigurationFile
+{
+    my $file = $ENV{'HOME'} . "/.chroniclerc";
+    return if ( ! -e $file );
+
+    my $line = "";
+
+    open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
+
+    while (defined($line = <FILE>) )
+    {
+        chomp $line;
+        if ($line =~ s/\\$//)
+        {
+            $line .= <FILE>;
+            redo unless eof(FILE);
+        }
+
+        # Skip lines beginning with comments
+        next if ( $line =~ /^([ \t]*)\#/ );
+
+        # Skip blank lines
+        next if ( length( $line ) < 1 );
+
+        # Strip trailing comments.
+        if ( $line =~ /(.*)\#(.*)/ )
+        {
+            $line = $1;
+        }
+
+        # Find variable settings
+        if ( $line =~ /([^=]+)=([^\n]+)/ )
+        {
+            my $key = $1;
+            my $val = $2;
+
+            # Strip leading and trailing whitespace.
+            $key =~ s/^\s+//;
+            $key =~ s/\s+$//;
+            $val =~ s/^\s+//;
+            $val =~ s/\s+$//;
+
+            # command expansion?
+            if ( $val =~ /(.*)`([^`]+)`(.*)/ )
+            {
+                # store
+                my $pre  = $1;
+                my $cmd  = $2;
+                my $post = $3;
+
+                # get output
+                my $output = `$cmd`;
+                chomp( $output );
+
+                # build up replacement.
+                $val = $pre . $output . $post;
+            }
+
+            # Store value.
+            $CONFIG{ $key } = $val;
+        }
+    }
+
+    close( FILE );
+
+}
+
+
+
+=begin doc
+
+  Copy the stylesheet into place unless it already exists.
+
+=end doc
+
+=cut
+
+sub copyStyleSheet
+{
+    my $input  = $CONFIG{'template'} . "/style.css";
+    my $output = $CONFIG{'output'} . "/style.css";
+
+    copy( $input, $output ) unless( -e $output );
+}

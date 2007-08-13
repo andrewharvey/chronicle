@@ -1,0 +1,52 @@
+
+chronicle - A blog compiler
+---------------------------
+
+  Chronicle is a tool which will convert a directory of text files
+ into a static HTML weblog, or blog.
+
+  The system supports tagged entries, and several other useful features,
+ but it is primarily designed to be as simple to possible to install
+ and use.
+
+
+Installation
+------------
+
+  No installation is currently required; simply create your blog entries
+ in the data/ directory and run "./bin/chronicle" to create HTML files
+ in the output/ directory.
+
+  Each output page will be re-created from scratch at this point, so
+ if you've edited any of your files they will be regenerated to include
+ your updated text.
+
+
+
+Blog Format
+-----------
+
+  The blog format is very simple.  Each file should start like this:
+
+   --
+   title:  The title of my post
+   date: 12 August 2007
+   tags: foo, bar, baz
+   ...
+   ...
+   ...
+   --
+
+  The tags are optional, but recommended, similarly the date of the post
+ is used in preference to the current date.
+
+
+Customisation
+-------------
+
+  Templates are used to create the output, and you will find those
+ located within the ./etc/ directory.
+
+
+Steve
+--
