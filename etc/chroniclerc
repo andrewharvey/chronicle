@@ -5,9 +5,15 @@
 
 ##
 #
-#  NOTE:
+#  When the compiler starts it will look for both:
 #
-#    For this file to be used it should be renamed ~/.chroniclerc
+#    /etc/chroniclerc
+#
+#  and
+#
+#    ~/.chroniclerc
+#
+#  Both files will be read if present, the latter may override the former.
 #
 ####
 
@@ -17,7 +23,7 @@
 #
 #  Input directory
 # 
-input = /home/skx/cvs/chronicle/data
+input = /home/skx/cvs/chronicle/blog
 
 
 #
@@ -36,7 +42,7 @@ output = /home/skx/cvs/chronicle/output
 #
 #  Directory containing the templates
 #
-template = /home/skx/cvs/chronicle/etc
+template = /home/skx/cvs/chronicle/themes/default
 
 
 #
