@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.3 2007-08-13 23:02:02 steve Exp $
+ $Id: chronicle,v 1.4 2007-08-13 23:17:15 steve Exp $
 
 =cut
 
@@ -243,7 +243,7 @@ sub setupDefaultOptions
 {
     $CONFIG{'input'}      = "./blog";
     $CONFIG{'output'}     = "./output";
-    $CONFIG{'template'}   = "./etc";
+    $CONFIG{'template'}   = "./themes/default";
     $CONFIG{'url-prefix'} = "";
 }
 
@@ -294,7 +294,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.3 $';
+        my $REVISION      = '$Revision: 1.4 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
