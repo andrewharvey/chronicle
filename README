@@ -1,25 +1,53 @@
 
+Homepage:
+    http://www.steve.org.uk/Software/chronicle/
+
+CVS Repository:
+    http://chronicle.cvsrepository.org/
+
+
+
+         
 chronicle - A blog compiler
 ---------------------------
 
-  Chronicle is a tool which will convert a directory of text files
- into a static HTML weblog, or blog.
+  Chronicle is a tool which will convert a directory of simple
+ text files into a static HTML weblog, (or blog if you prefer).
 
-  The system supports tagged entries, and several other useful features,
- but it is primarily designed to be as simple to possible to install
- and use.
+  The system is intentionally simple, but it does support:
+
+  * Template based output.
+
+  * Support for RSS feeds.
+
+  * Support for tagged entries.
+
+
+
 
 
 Installation
 ------------
 
-  No installation is currently required; simply create your blog entries
- in the data/ directory and run "./bin/chronicle" to create HTML files
- in the output/ directory.
+  It is possible to run the software without installing it, just 
+ by placing blog entries in the ./blog directory and running
+ ./bin/chronicle.
 
-  Each output page will be re-created from scratch at this point, so
- if you've edited any of your files they will be regenerated to include
- your updated text.
+  However it is recommended you install the software system-wide
+ by running "make install" as root.
+
+  This will give you:
+
+    /usr/share/chronicle        <-  The theme directories.
+    /usr/local/bin/chronicle    <-  The main binary.
+    /etc/chroniclerc            <-  The main configuration file.
+
+  If you wish to customise the templates it is recommended you
+ make a copy of them with a new name, then edit that copy.  This
+ will prevent changes from being overwritten on upgrade.
+
+  The configuration file may be copied to ~/.chroniclerc for
+ per-user configuration.
 
 
 
@@ -28,24 +56,26 @@ Blog Format
 
   The blog format is very simple.  Each file should start like this:
 
-   --
+  /--
    title:  The title of my post
    date: 12 August 2007
    tags: foo, bar, baz
-   ...
-   ...
-   ...
-   --
+
+   The text of the actual entry goes here.
+
+   However much there is of it.
+  \--
+
 
   The tags are optional, but recommended, similarly the date of the post
- is used in preference to the current date.
+ is used in preference to the current date if none is present.
 
 
-Customisation
--------------
+Bugs?
+-----
 
-  Templates are used to create the output, and you will find those
- located within the ./etc/ directory.
+  Please report bugs to the author, where they will be fixed as
+ quickly as possible.
 
 
 Steve
