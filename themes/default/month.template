@@ -35,9 +35,6 @@
  <div class="padding"></div>
 <!-- /tmpl_loop -->
 
-<!-- tmpl_if name='tagcloud' -->
-
-
 
 <div id="sidebar">
 <!-- tmpl_if name='datecloud' -->
@@ -54,8 +51,8 @@
 </ul>
 <!-- /tmpl_if name='datecloud' -->
 
+<!-- tmpl_if name='tagcloud' -->
 <h2>Tags</h2>
-<!-- Tag Cloud -->
 <ul>
 <!-- tmpl_loop name='tagcloud' -->
  <li><a href="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --> (<!-- tmpl_var name='count' -->)</a></li>
