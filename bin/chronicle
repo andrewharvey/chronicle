@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.7 2007-08-14 14:22:05 steve Exp $
+ $Id: chronicle,v 1.8 2007-08-14 17:58:18 steve Exp $
 
 =cut
 
@@ -245,6 +245,7 @@ sub setupDefaultOptions
     $CONFIG{'output'}     = "./output";
     $CONFIG{'template'}   = "./themes/default";
     $CONFIG{'url-prefix'} = "";
+    $CONFIG{'format'}     = 'html';
 }
 
 
@@ -294,7 +295,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.7 $';
+        my $REVISION      = '$Revision: 1.8 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1094,6 +1095,27 @@ sub readBlogEntry
     close( ENTRY );
 
     #
+    #  Convert the body if we're supposed to.
+    #
+    if ( $CONFIG{'format'} eq 'html' )
+    {
+        # nop
+    }
+    elsif( lc($CONFIG{'format'}) eq 'markdown' )
+    {
+        $body = markdown2HTML( $body );
+    }
+    elsif( lc($CONFIG{'format'}) eq 'textile' )
+    {
+        $body = textile2HTML( $body );
+    }
+    else
+    {
+        print "Unkown blog entry format.  Leaving text as raw\n";
+    }
+
+    #
+    #
     #  If we have title then we can store it
     #
     my $entryTags;
@@ -1336,3 +1358,93 @@ sub copyStaticFiles
         }
     }
 }
+
+
+
+=begin doc
+
+  Convert from markdown to HTML.
+
+=end doc
+
+=cut
+
+sub markdown2HTML
+{
+    my( $text ) = (@_);
+
+    #
+    #  Make sure we have the module installed.  Use eval to
+    # avoid making this mandatory.
+    #
+    my $test    = "use Text::Markdown;";
+
+    #
+    #  Test loading the module.
+    #
+    eval( $test );
+    if ( $@ )
+    {
+        print <<EOF;
+
+  You have chosen to format your input text via Markdown, but the
+ Perl module Text::Markdown is not installed.
+
+  Aborting.
+EOF
+        exit;
+    }
+
+    #
+    #  Convert.
+    #
+    $text = Text::Markdown::Markdown( $text );
+    return( $text );
+}
+
+
+
+=begin doc
+
+  Convert from textile to HTML.
+
+=end doc
+
+=cut
+
+sub textile2HTML
+{
+    my( $text ) = (@_);
+
+    #
+    #  Make sure we have the module installed.  Use eval to
+    # avoid making this mandatory.
+    #
+    my $test    = "use Text::Textile;";
+
+    #
+    #  Test loading the module.
+    #
+    eval( $test );
+    if ( $@ )
+    {
+        print <<EOF;
+
+  You have chosen to format your input text via Textile, but the
+ Perl module Text::Textile is not installed.
+
+  Aborting.
+EOF
+        exit;
+    }
+
+    #
+    #  Convert.
+    #
+    $text = Text::Textile::textile( $text );
+    return( $text );
+}
+
+
+
+

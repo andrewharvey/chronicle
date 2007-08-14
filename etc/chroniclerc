@@ -53,6 +53,27 @@ template = /usr/share/chronicle/themes/default
 
 
 #
+#  Here we specify the format the blog entries are written in.
+#
+#  Valid choices are:
+#
+#   html
+#   ----  
+#    The blog entries aren't touched and are inserted as-is.
+#
+#   markdown
+#   --------
+#    The blog entries are converted from markdown -> html then output.
+#
+#   textile
+#   -------
+#    The blog entries are converted from textile -> html then output.
+#
+# format = html
+#
+
+
+#
 #  We can disable the sidebar if we want
 #
 #  no-tags = 1
