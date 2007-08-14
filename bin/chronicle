@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.4 2007-08-13 23:17:15 steve Exp $
+ $Id: chronicle,v 1.5 2007-08-14 13:39:30 steve Exp $
 
 =cut
 
@@ -294,7 +294,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.4 $';
+        my $REVISION      = '$Revision: 1.5 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -361,7 +361,7 @@ EOF
         open( INPUT, "<", $file ) or die "Failed to open blog file $file - $!";
         while( my $line = <INPUT> )
         {
-            if ( $line =~ /^tags: (.*)/i )
+            if ( $line =~ /^tags:(.*)/i )
             {
                 my $tag .= $1;
                 foreach my $t ( split( /,/, $tag ) )
@@ -378,17 +378,31 @@ EOF
                     push ( @tags, $t );
                 }
             }
-            elsif (( $line =~ /^title: (.*)/i ) && !length($title) )
+            elsif (( $line =~ /^title:(.*)/i ) && !length($title) )
             {
                 $title = $1;
+
+                # strip leading and trailing space.
+                $title =~ s/^\s+// if ( length $title );
+                $title =~ s/\s+$// if ( length $title );
             }
-            elsif (( $line =~ /^date: (.*)/i ) && !length($date) )
+            elsif (( $line =~ /^date:(.*)/i ) && !length($date) )
             {
                 $date = $1;
+
+                # strip leading and trailing space.
+                $date =~ s/^\s+// if ( $date );
+                $date =~ s/\s+$// if ( $date );
+
             }
-            elsif ( $line =~ /^status: (.*)/i )
+            elsif ( $line =~ /^status:(.*)/i )
             {
                 my $level = $1;
+
+                # strip leading and trailing space.
+                $level =~ s/^\s+// if ( $level );
+                $level =~ s/\s+$// if ( $level );
+
                 $private = 1 if ( $level =~ /private/i);
             }
         }
@@ -1035,10 +1049,12 @@ sub readBlogEntry
     my %entry;
 
 
-    my $title = "";
-    my $tags  = "";
-    my $body  = "";
-    my $date  = "";
+    my $title  = "";
+    my $tags   = "";
+    my $body   = "";
+    my $date   = "";
+    my $status = "";
+
 
     open( ENTRY, "<", $filename ) or die "Failed to read $filename $!";
     while( my $line = <ENTRY> )
@@ -1053,10 +1069,22 @@ sub readBlogEntry
         elsif (( $line =~ /^title: (.*)/i ) && !length($title) )
         {
             $title = $1;
+
+            # strip leading and trailing space.
+            $title =~ s/^\s+// if ( length $title );
+            $title =~ s/\s+$// if ( length $title );
         }
         elsif (( $line =~ /^date: (.*)/i ) && !length($date) )
         {
             $date = $1;
+
+            # strip leading and trailing space.
+            $date =~ s/^\s+// if ( length $date );
+            $date =~ s/\s+$// if ( length $date );
+        }
+        elsif (( $line =~ /^status:(.*)/ ) && !length ( $status ) )
+        {
+            $status = $1;
         }
         else
         {
