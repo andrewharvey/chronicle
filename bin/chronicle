@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.5 2007-08-14 13:39:30 steve Exp $
+ $Id: chronicle,v 1.6 2007-08-14 14:01:15 steve Exp $
 
 =cut
 
@@ -207,9 +207,9 @@ outputIndexPage();
 
 
 #
-#  Copy the stylesheet into place.
+#  Copy any static files into place.
 #
-copyStyleSheet();
+copyStaticFiles();
 
 
 #
@@ -294,7 +294,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.5 $';
+        my $REVISION      = '$Revision: 1.6 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1300,16 +1300,32 @@ sub readConfigurationFile
 
 =begin doc
 
-  Copy the stylesheet into place unless it already exists.
+  Copy any static files from the theme directory into the "live" location
+ in the output.
+
+  This only works for a top-level target directory.
 
 =end doc
 
 =cut
 
-sub copyStyleSheet
+sub copyStaticFiles
 {
-    my $input  = $CONFIG{'template'} . "/style.css";
-    my $output = $CONFIG{'output'} . "/style.css";
+    #
+    #  Soure and destination for the copy
+    #
+    my $input  = $CONFIG{'template'};
+    my $output = $CONFIG{'output'};
 
-    copy( $input, $output ) unless( -e $output );
+    foreach my $pattern ( qw! *.css *.jpg *.gif *.png *.js *.ico ! )
+    {
+        foreach my $file ( glob( $input . "/" . $pattern ) )
+        {
+            if ( ! -e  "$output/$file" )
+            {
+                $CONFIG{'verbose'} && print "Copying static file $file\n";
+                copy( "$input/$file", "$output/$file" );
+            }
+        }
+    }
 }
