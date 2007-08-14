@@ -1,0 +1,24 @@
+#
+#  File for ~/bin/release
+#
+
+#
+#  Command to run
+#
+preupload="make release"
+
+#
+#
+#  Pattern for our release tarball.
+#
+pattern=chronicle-[0-9].[0-9].tar.gz*
+
+#
+#  Pattern for our GPG-signature.
+#
+signature=chronicle-[0-9].[0-9].tar.gz.asc
+
+#
+#  Upload location.
+#
+upload=steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle
