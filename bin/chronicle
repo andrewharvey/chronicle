@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.8 2007-08-14 17:58:18 steve Exp $
+ $Id: chronicle,v 1.9 2007-08-14 18:10:18 steve Exp $
 
 =cut
 
@@ -90,6 +90,8 @@ my %CONFIG;
 
 
 
+
+
 #
 #  Setup default options.
 #
@@ -119,12 +121,6 @@ if ( $CONFIG{'pre-build'} )
     system($CONFIG{'pre-build'});
 }
 
-#
-#  Make sure our output directory exists.
-#
-mkpath( $CONFIG{'output'}, 0, 0755 ) if ( ! -d $CONFIG{'output'} );
-
-
 
 #
 #  Parse each of the given text files, and build up a datastructure
@@ -141,8 +137,9 @@ mkpath( $CONFIG{'output'}, 0, 0755 ) if ( ! -d $CONFIG{'output'} );
 #
 my %data = createDataStructure();
 
+
 #
-#  Find each unique tag which is used within our text.
+#  Find each unique tag used within our entries.
 #
 my %all_tags;
 %all_tags = findAllTags() unless( $CONFIG{'no-tags'} );
@@ -164,6 +161,13 @@ $CLOUD{'tag'}     = createTagCloud( %all_tags ) unless( $CONFIG{'no-tags'} );
 $CLOUD{'archive'} = createDateCloud( %all_dates ) unless( $CONFIG{'no-archive'} );;
 
 
+
+#
+#  Make sure our output directory exists.
+#
+mkpath( $CONFIG{'output'}, 0, 0755 ) if ( ! -d $CONFIG{'output'} );
+
+
 #
 #  Output each static page.
 #
@@ -176,7 +180,7 @@ foreach my $file ( keys %data )
 
 
 #
-#  Build an output page for each tag which we've discovered.
+#  Build an output page for each tag which has ever been used.
 #
 foreach my $tagName ( sort keys %all_tags )
 {
@@ -200,7 +204,7 @@ foreach my $date ( keys( %all_dates ) )
 
 
 #
-#  Now output the most recent entries for our front-page.
+#  Finally out the most recent entries for the front-page.
 #
 outputIndexPage();
 
@@ -222,10 +226,13 @@ if ( $CONFIG{'post-build'} )
     system($CONFIG{'post-build'});
 }
 
+
 #
 #  All done.
 #
 exit;
+
+
 
 
 
@@ -241,18 +248,46 @@ exit;
 
 sub setupDefaultOptions
 {
+    #
+    #  Text directory.
+    #
     $CONFIG{'input'}      = "./blog";
+
+    #
+    #  Output directory.
+    #
     $CONFIG{'output'}     = "./output";
+
+    #
+    #  Theme directory.
+    #
     $CONFIG{'template'}   = "./themes/default";
+
+    #
+    #  prefix for all links.
+    #
     $CONFIG{'url-prefix'} = "";
+
+    #
+    #  Default input format
+    #
     $CONFIG{'format'}     = 'html';
+
+    #
+    #  Entries per-page for the index.
+    #
+    $CONFIG{'entry-count'} = 10;
+
 }
+
 
 
 
 =begin doc
 
   Parse the command line arguments this script was given.
+
+  TODO:  Document these in the POD.
 
 =end doc
 
@@ -295,7 +330,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.8 $';
+        my $REVISION      = '$Revision: 1.9 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -351,7 +386,6 @@ EOF
         #  Ignore directories.
         #
         next if ( -d $file );
-
 
         my $title   = '';
         my $date    = '';
@@ -738,7 +772,7 @@ sub outputIndexPage
     #
     #  The number of entries to display upon the index.
     #
-    my $max = $CONFIG{'entry-count'} || 10;
+    my $max = $CONFIG{'entry-count'};
     foreach my $f ( @tmp2 )
     {
         push( @$entries, $f ) if ( $max > 0 );
@@ -994,7 +1028,6 @@ sub outputStaticPage
     #
     my $template = loadTemplate( "entry.template" );
 
-
     #
     #  Just the name of the file.
     #
@@ -1050,11 +1083,11 @@ sub readBlogEntry
     my %entry;
 
 
-    my $title  = "";
-    my $tags   = "";
-    my $body   = "";
-    my $date   = "";
-    my $status = "";
+    my $title  = "";   # entry title.
+    my $tags   = "";   # entry tags.
+    my $body   = "";   # entry body.
+    my $date   = "";   # entry date
+    my $status = "";   # entry privacy/security.
 
 
     open( ENTRY, "<", $filename ) or die "Failed to read $filename $!";
@@ -1111,7 +1144,7 @@ sub readBlogEntry
     }
     else
     {
-        print "Unkown blog entry format.  Leaving text as raw\n";
+        print "Unkown blog entry format ($CONFIG{'format'}).  Treating as HTML.\n";
     }
 
     #
