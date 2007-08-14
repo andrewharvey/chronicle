@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.6 2007-08-14 14:01:15 steve Exp $
+ $Id: chronicle,v 1.7 2007-08-14 14:22:05 steve Exp $
 
 =cut
 
@@ -294,7 +294,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.6 $';
+        my $REVISION      = '$Revision: 1.7 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1321,10 +1321,17 @@ sub copyStaticFiles
     {
         foreach my $file ( glob( $input . "/" . $pattern ) )
         {
+            #
+            #  Get the name of the file.
+            #
+            if ( $file =~ /(.*)\/(.*)/ )
+            {
+                $file = $2;
+            }
             if ( ! -e  "$output/$file" )
             {
-                $CONFIG{'verbose'} && print "Copying static file $file\n";
-                copy( "$input/$file", "$output/$file" );
+                $CONFIG{'verbose'} && print "Copying static file: $file\n";
+                copy(  "$input/$file", "$output/$file" );
             }
         }
     }
