@@ -7,8 +7,19 @@
  </head>
  <body>
 
+ <div class="title">
+  <h1><!-- tmpl_if name='blog_title' -->
+       <a href="<!-- tmpl_var name='url_prefix' -->"><!-- tmpl_var name='blog_title' --></a>
+      <!-- tmpl_else -->
+       Untitled Blog
+      <!-- /tmpl_if -->
+  </h1>
+  <!-- tmpl_if name='blog_subtitle' -->
+      <h2><!-- tmpl_var name='blog_subtitle' --></h2>
+  <!-- /tmpl_if -->
+ </div>
 
-<h1><a href="index.html">Blog</a> &gt; <!-- tmpl_var name='title' --></h1>
+
  <div class="entry">
   <div class="title"><!-- tmpl_var name='title' --></div>
   <div class="date"><!-- tmpl_var name='date' --></div>

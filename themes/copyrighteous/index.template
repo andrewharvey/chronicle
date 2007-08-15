@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <html>
 <head>
- <title>copyrighteous: Blog Title</title>
+ <title>copyrighteous: <!-- tmpl_var name='blog_title' --></title>
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='url_prefix' -->style.css">
   <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='url_prefix' -->index.rss" type="application/rss+xml">
 </head>
@@ -9,8 +9,16 @@
 <body>
 <div id='content'>
 <div id='title'>
-<span class="title">
- <a href="<!-- tmpl_var name='url_prefix' -->">Blog Title</a><br /></span>
+<span class="title"><a href="<!-- tmpl_var name='url_prefix' -->">
+  <!-- tmpl_if name='blog_title' -->
+    <!-- tmpl_var name='blog_title' -->
+  <!-- tmpl_else -->
+    Untitled Blog
+  <!-- /tmpl_if -->
+  </a><br /></span>
+  <!-- tmpl_if name='blog_subtitle' -->
+    <!-- tmpl_var name='blog_subtitle' -->
+  <!-- /tmpl_if -->
 </div>
 
 <br />

@@ -2,14 +2,26 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
  <head>
-  <title>Blog: Index</title>
+  <title><!-- tmpl_var name='blog_title' --></title>
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='url_prefix' -->style.css">
   <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='url_prefix' -->index.rss" type="application/rss+xml">
 
  </head>
  <body>
 
- <h1>Most Recent Entries</h1>
+ <div class="title">
+  <h1><!-- tmpl_if name='blog_title' -->
+       <a href="<!-- tmpl_var name='url_prefix' -->"><!-- tmpl_var name='blog_title' --></a>
+      <!-- tmpl_else -->
+       Untitled Blog
+      <!-- /tmpl_if -->
+  </h1>
+  <!-- tmpl_if name='blog_subtitle' -->
+      <h2><!-- tmpl_var name='blog_subtitle' --></h2>
+  <!-- /tmpl_if -->
+ </div>
+
+ <p style="text-align: right;"><a href="index.rss"><img src="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->xml.gif"></a></p>
 
  <!-- tmpl_loop name='entries' -->
  <div class="entry">
@@ -26,7 +38,7 @@
  </div>
  <div class="padding"></div>
  <!-- /tmpl_loop -->
-
+ <p style="text-align: right;"><a href="index.rss"><img src="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->xml.gif"></a></p>
 
 <div id="sidebar">
 

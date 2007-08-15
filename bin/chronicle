@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.9 2007-08-14 18:10:18 steve Exp $
+ $Id: chronicle,v 1.10 2007-08-15 00:40:35 steve Exp $
 
 =cut
 
@@ -330,7 +330,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.9 $';
+        my $REVISION      = '$Revision: 1.10 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -782,11 +782,30 @@ sub outputIndexPage
     #
     #  Open the index template.
     #
-    my $template = loadTemplate( "index.template" );
+    my $template = loadTemplate( "index.template",
+                                 die_on_bad_params => 0 );
 
-    $template->param( entries => $entries )     if ( $entries );
-    $template->param( tagcloud => $CLOUD{'tag'} )   if ( $CLOUD{'tag'} );
-    $template->param( datecloud => $CLOUD{'archive'} ) if ( $CLOUD{'archive'} );
+    #
+    #  The entries.
+    #
+    $template->param( entries => $entries )
+      if ( $entries );
+
+    #
+    #  The clouds
+    #
+    $template->param( tagcloud => $CLOUD{'tag'} )
+      if ( $CLOUD{'tag'} );
+    $template->param( datecloud => $CLOUD{'archive'} )
+      if ( $CLOUD{'archive'} );
+
+    #
+    #  Blog title and subtitle, if present.
+    #
+    $template->param( blog_title => $CONFIG{'blog_title'} )
+      if ( $CONFIG{'blog_title'} );
+    $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
+      if ( $CONFIG{'blog_subtitle'} );
 
     #
     #  Page to use
@@ -870,11 +889,31 @@ sub outputTagPage
     #
     #  Now write the output as a HTML page.
     #
-    my $template = loadTemplate( "tags.template" );
+    my $template = loadTemplate( "tags.template",
+                                 die_on_bad_params => 0 );
+
+    #
+    #  The entries.
+    #
     $template->param( entries => $entries )   if ( $entries );
     $template->param( tagname => $tagName );
-    $template->param( tagcloud => $CLOUD{'tag'} ) if ( $CLOUD{'tag'} );
-    $template->param( datecloud => $CLOUD{'archive'} ) if ( $CLOUD{'archive'} );
+
+    #
+    #  The clouds
+    #
+    $template->param( tagcloud => $CLOUD{'tag'} )
+      if ( $CLOUD{'tag'} );
+    $template->param( datecloud => $CLOUD{'archive'} )
+      if ( $CLOUD{'archive'} );
+
+    #
+    #  Blog title and subtitle, if present.
+    #
+    $template->param( blog_title => $CONFIG{'blog_title'} )
+      if ( $CONFIG{'blog_title'} );
+    $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
+      if ( $CONFIG{'blog_subtitle'} );
+
 
     #
     #  Page to use
@@ -983,11 +1022,30 @@ sub outputArchivePage
     #
     #  Now write the output as a HTML page.
     #
-    my $template = loadTemplate( "month.template" );
+    my $template = loadTemplate( "month.template",
+                                 die_on_bad_params => 0 );
+
+    #
+    #  The entries.
+    #
     $template->param( entries => $entries )   if ( $entries );
     $template->param( year => $year, month => $month );
-    $template->param( tagcloud => $CLOUD{'tag'} ) if ( $CLOUD{'tag'} );
-    $template->param( datecloud => $CLOUD{'archive'} ) if ( $CLOUD{'archive'} );
+
+    #
+    #  The clouds
+    #
+    $template->param( tagcloud => $CLOUD{'tag'} )
+      if ( $CLOUD{'tag'} );
+    $template->param( datecloud => $CLOUD{'archive'} )
+      if ( $CLOUD{'archive'} );
+
+    #
+    #  Blog title and subtitle, if present.
+    #
+    $template->param( blog_title => $CONFIG{'blog_title'} )
+      if ( $CONFIG{'blog_title'} );
+    $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
+      if ( $CONFIG{'blog_subtitle'} );
 
     #
     #  Page to use
@@ -1026,7 +1084,8 @@ sub outputStaticPage
     #
     #  Load the template
     #
-    my $template = loadTemplate( "entry.template" );
+    my $template = loadTemplate( "entry.template",
+                                 die_on_bad_params => 0 );
 
     #
     #  Just the name of the file.
@@ -1054,12 +1113,28 @@ sub outputStaticPage
     my $file = fileToTitle($title);
     $file    = $CONFIG{'output'} . "/" . $file;
 
+    #
+    #  The entry.
+    #
     $template->param( title => $title );
     $template->param( tags => $tags ) if ( $tags );
     $template->param( date => $date ) if ( $date );
     $template->param( body => $body );
+
+    #
+    #  Our clouds
+    #
     $template->param( tagcloud => $CLOUD{'tag'} ) if ( $CLOUD{'tag'} );
     $template->param( datecloud => $CLOUD{'archive'} ) if ( $CLOUD{'archive'} );
+
+    #
+    #  Blog title and subtitle, if present.
+    #
+    $template->param( blog_title => $CONFIG{'blog_title'} )
+      if ( $CONFIG{'blog_title'} );
+    $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
+      if ( $CONFIG{'blog_subtitle'} );
+
     open( OUTPUT, ">", $file );
     print OUTPUT $template->output();
     close( OUTPUT );

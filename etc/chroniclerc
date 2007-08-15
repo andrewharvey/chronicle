@@ -101,6 +101,12 @@ url_prefix = http://example.com/
 
 
 #
+#  The title for the Blog
+#
+blog_title    = Steve Kemp's Blog
+blog_subtitle = Free Software & Debian
+
+#
 #  A command to run pre-build
 #
 # pre-build = cvs update -A -d

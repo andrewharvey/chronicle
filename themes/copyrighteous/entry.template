@@ -8,9 +8,18 @@
 <body>
 <div id='content'>
 <div id='title'>
-<span class="title">
- <a href="<!-- tmpl_var name='url_prefix' -->">Blog Title</a><br /></span>
+<span class="title"><a href="<!-- tmpl_var name='url_prefix' -->">
+  <!-- tmpl_if name='blog_title' -->
+    <!-- tmpl_var name='blog_title' -->
+  <!-- tmpl_else -->
+    Untitled Blog
+  <!-- /tmpl_if -->
+  </a><br /></span>
+  <!-- tmpl_if name='blog_subtitle' -->
+    <!-- tmpl_var name='blog_subtitle' -->
+  <!-- /tmpl_if -->
 </div>
+
 <br />
 <div class="blosxomFirstDayDiv">
 <span class="blosxomDate"><!-- tmpl_var name='date' --></span>

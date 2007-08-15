@@ -8,9 +8,19 @@
  </head>
  <body>
 
-<h1><a href="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->">Blog</a> &gt; Entries Tagged &quot;<tt><!-- tmpl_var name='tagname' --></tt>&quot;</h1>
+ <div class="title">
+  <h1><!-- tmpl_if name='blog_title' -->
+       <a href="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->"><!-- tmpl_var name='blog_title' --></a>
+      <!-- tmpl_else -->
+       Untitled Blog
+      <!-- /tmpl_if -->
+  </h1>
+  <!-- tmpl_if name='blog_subtitle' -->
+      <h2><!-- tmpl_var name='blog_subtitle' --></h2>
+  <!-- /tmpl_if -->
+ </div>
 
-<p>If you wish you may subscribe to an <a href="<!-- tmpl_var name='tagname' escape='html' -->.rss">RSS feed</a> of matching entries.</p>
+ <p style="text-align: right;"><a href="<!-- tmpl_var name='tagname' escape='html' -->.rss"><img src="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->xml.gif"></a></p>
 
 
 <!-- tmpl_loop name='entries' -->
@@ -33,6 +43,7 @@
 </div>
 <div class="padding"></div>
 <!-- /tmpl_loop -->
+ <p style="text-align: right;"><a href="<!-- tmpl_var name='tagname' escape='html' -->.rss"><img src="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->xml.gif"></a></p>
 
 
 
