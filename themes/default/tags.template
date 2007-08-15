@@ -20,6 +20,7 @@
   <!-- /tmpl_if -->
  </div>
 
+ <p>Entries tagged "<!-- tmpl_var name='tagname' escape='html' -->".</p>
  <p style="text-align: right;"><a href="<!-- tmpl_var name='tagname' escape='html' -->.rss"><img src="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->xml.gif"></a></p>
 
 
