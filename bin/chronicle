@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.10 2007-08-15 00:40:35 steve Exp $
+ $Id: chronicle,v 1.11 2007-08-15 18:23:35 steve Exp $
 
 =cut
 
@@ -80,6 +80,12 @@ use HTML::Template;
 use Pod::Usage;
 
 
+#
+#  Release number
+#
+#  NOTE:  Set by 'make release'.
+#
+my $RELEASE = 'UNRELEASED';
 
 
 #
@@ -330,13 +336,13 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.10 $';
+        my $REVISION      = '$Revision: 1.11 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
         }
 
-        logprint( "chronicle release $REVISION\n" );
+        print( "chronicle release $RELEASE\n" );
         exit;
     }
 }
@@ -806,6 +812,8 @@ sub outputIndexPage
       if ( $CONFIG{'blog_title'} );
     $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
       if ( $CONFIG{'blog_subtitle'} );
+    $template->param( release => $RELEASE );
+
 
     #
     #  Page to use
