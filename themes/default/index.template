@@ -21,7 +21,7 @@
   <!-- /tmpl_if -->
  </div>
 
- <p style="text-align: right;"><a href="index.rss"><img src="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->xml.gif"></a></p>
+ <p style="text-align: right;"><a href="index.rss"><img src="<!-- tmpl_var name='url_prefix' -->xml.gif"></a></p>
 
  <!-- tmpl_loop name='entries' -->
  <div class="entry">
@@ -38,7 +38,7 @@
  </div>
  <div class="padding"></div>
  <!-- /tmpl_loop -->
- <p style="text-align: right;"><a href="index.rss"><img src="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->xml.gif"></a></p>
+ <p style="text-align: right;"><a href="index.rss"><img src="<!-- tmpl_var name='url_prefix' -->xml.gif"></a></p>
 
 <div id="sidebar">
 
@@ -65,5 +65,9 @@
 </ul>
 <!-- /tmpl_if -->
 </div>
+
+<p style="text-align: right">
+Created by <a href="http://steve.org.uk/Software/chronicle">Chronicle v<!-- tmpl_var name='release' --></a>
+</p>
 </body>
 </html>
