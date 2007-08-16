@@ -22,7 +22,6 @@
  </div>
 
  <p>Entries from <!-- tmpl_var name='month' escape='html' --> <!-- tmpl_var name='year' escape='html' -->.</p>
- <p style="text-align: right;"><a href="<!-- tmpl_var name='month' escape='html' -->.rss"><img src="<!-- tmpl_if name='url_prefix' --><!-- tmpl_var name='url_prefix' --><!-- tmpl_else -->../../<!-- /tmpl_if -->xml.gif"></a></p>
 
 <!-- tmpl_loop name='entries' -->
 <div class="entry">
