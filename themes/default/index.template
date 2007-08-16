@@ -21,7 +21,6 @@
   <!-- /tmpl_if -->
  </div>
 
- <p style="text-align: right;"><a href="index.rss"><img src="<!-- tmpl_var name='url_prefix' -->xml.gif"></a></p>
 
  <!-- tmpl_loop name='entries' -->
  <div class="entry">
