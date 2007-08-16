@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.11 2007-08-15 18:23:35 steve Exp $
+ $Id: chronicle,v 1.12 2007-08-16 12:45:55 steve Exp $
 
 =cut
 
@@ -318,12 +318,15 @@ sub parseCommandLineArguments
                # paths
                "input=s",      \$CONFIG{'input'},
                "output=s",     \$CONFIG{'output'},
-               "templates=s",  \$CONFIG{'templates'},
+               "templates=s",  \$CONFIG{'template'},
 
                # optional
                "pattern=s",    \$CONFIG{'pattern'},
                "no-tags",      \$CONFIG{'no-tags'},
                "no-archive",   \$CONFIG{'no-archive'},
+
+               # prefix
+               "url-prefix=s", \$CONFIG{'url_prefix'},
 
                # commands
                "pre-build=s",  \$CONFIG{'pre-build'},
@@ -336,7 +339,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.11 $';
+        my $REVISION      = '$Revision: 1.12 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -521,9 +524,14 @@ sub createTagCloud
 
     foreach my $key ( sort keys( %unique ) )
     {
+        my $count = $unique{$key};
+        my $size  = 10 + ( $count * 5 );
+        $size = 40 if ( $size >= 40 );
+
         push( @$results,
-            { tag => $key,
-              count => $unique{$key} } );
+            { tag   => $key,
+              count => $count,
+              size  => $size} );
     }
     return $results;
 
