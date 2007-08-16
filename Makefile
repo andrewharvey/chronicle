@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.6 2007-08-15 18:23:35 steve Exp $
+# $Id: Makefile,v 1.7 2007-08-16 12:45:44 steve Exp $
 
 
 #
@@ -103,3 +103,9 @@ test-verbose:
 #
 update: 
 	cvs -z3 update -A -P -d 2>/dev/null
+
+
+steve:
+	./bin/chronicle --template=./themes/default --url-prefix=http://www.steve.org.uk/Software/chronicle/demo/ --pre-build="/bin/rm -rf ./output" --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo/"
+	./bin/chronicle --template=./themes/copyrighteous --url-prefix=http://www.steve.org.uk/Software/chronicle/demo2/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo2/"
+	./bin/chronicle --template=./themes/blocky --url-prefix=http://www.steve.org.uk/Software/chronicle/demo3/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo3/"
