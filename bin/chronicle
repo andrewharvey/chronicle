@@ -25,8 +25,8 @@ chronicle - A blog compiler.
 =head1 ABOUT
 
   Chronicle is a simple tool to convert a collection of text files,
- located in a single directory, into a static collection of HTML
- pages which comprise a blog.
+ located within a single directory, into a blog consisting of static
+ HTML files.
 
   It supports only the bare minimum of features which are required
  to be useful:
@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.12 2007-08-16 12:45:55 steve Exp $
+ $Id: chronicle,v 1.13 2007-09-03 05:00:43 steve Exp $
 
 =cut
 
@@ -88,20 +88,11 @@ use Pod::Usage;
 my $RELEASE = 'UNRELEASED';
 
 
-#
-#  Configuration values read initially from the global configuration
-# file, then optionally overridden by the command line.
-#
-my %CONFIG;
-
-
-
-
 
 #
 #  Setup default options.
 #
-setupDefaultOptions();
+my %CONFIG = setupDefaultOptions();
 
 
 #
@@ -254,6 +245,8 @@ exit;
 
 sub setupDefaultOptions
 {
+    my %CONFIG;
+
     #
     #  Text directory.
     #
@@ -284,6 +277,7 @@ sub setupDefaultOptions
     #
     $CONFIG{'entry-count'} = 10;
 
+    return( %CONFIG );
 }
 
 
@@ -323,6 +317,7 @@ sub parseCommandLineArguments
                # optional
                "pattern=s",    \$CONFIG{'pattern'},
                "no-tags",      \$CONFIG{'no-tags'},
+               "no-cache",     \$CONFIG{'no-cache'},
                "no-archive",   \$CONFIG{'no-archive'},
 
                # prefix
@@ -339,7 +334,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.12 $';
+        my $REVISION      = '$Revision: 1.13 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -583,7 +578,6 @@ sub findAllMonths
   This is a little messy too.  It mostly comes because we want to
  have a nested loop so that we can place our entries in a nice manner.
 
-  TODO: FIXME.
 =end doc
 
 =cut
@@ -693,46 +687,6 @@ sub readTagInformation
 
 =begin doc
 
-
-=end doc
-
-=cut
-
-sub readDateInformation
-{
-    my( @files ) = (@_);
-
-    my %results;
-
-    foreach my $file ( @files )
-    {
-        my $tag;
-        open( FILE, "<", $file ) or die "Failed to read: $file - $!";
-        foreach my $line ( <FILE> )
-        {
-            next unless $line =~ /^date:(.*)/i;
-            my ($ss,$mm,$hh,$day,$month,$year,$zone) = strptime($1 );
-
-            my @abbr = qw( January February March April May June July August September October November December );
-
-            $year += 1900;
-            $month = $abbr[$month];
-
-            # Store the filename in the hash for this tag.
-            my $cur = $results{$year}{$month};
-            push @$cur, $file;
-            $results{$year}{$month} = $cur;
-        }
-        close( FILE );
-    }
-    return %results;
-}
-
-
-
-
-=begin doc
-
   Sort by date.
 
 =end doc
@@ -744,7 +698,7 @@ sub bywhen
     my ($ss,$mm,$hh,$day,$month,$year,$zone) = strptime($a->{'date'});
     my ($ss2,$mm2,$hh2,$day2,$month2,$year2,$zone2) = strptime($b->{'date'});
 
-    if ( !defined($year ) || ( !defined( $year2 ) ) )
+    if ( !defined($year) || ( !defined($year2) ) )
     {
         return 0;
     }
@@ -1173,6 +1127,33 @@ sub readBlogEntry
 
     my %entry;
 
+    #
+    #  Do we have the memcache module available?
+    #
+    my $cache = undef;
+    my $test  = "use Cache::Memcached;";
+    eval( $test );
+    if ( ( ! $@ )  && ( ! $CONFIG{'no-cache'} ) )
+    {
+        # create the cache object
+        $cache = new Cache::Memcached {'servers' => ["localhost:11211"] };
+
+        # fetch from the cache if it is present.
+        my $cached = $cache->get( "file_$filename" );
+        if ( defined( $cached ) )
+        {
+            $CONFIG{'verbose'} && print "memcache-get: $filename\n";
+            return( \%$cached )
+        }
+        else
+        {
+            $CONFIG{'verbose'} && print "memcache-fail: $filename\n";
+        }
+    }
+
+    #
+    #  I
+    #
 
     my $title  = "";   # entry title.
     my $tags   = "";   # entry tags.
@@ -1284,6 +1265,15 @@ c );
     $entry{'link'}  = $link;
     $entry{'date'}  = $date;
     $entry{'tags'}  = $entryTags if ( $entryTags );
+
+    #
+    #  Store the read file in the cache if we're using it.
+    #
+    if ( defined( $cache ) )
+    {
+        $CONFIG{'verbose'} && print "memcache-set: $filename\n";
+        $cache->set( "file_$filename", \%entry );
+    }
     return \%entry;
 }
 
