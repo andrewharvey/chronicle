@@ -9,14 +9,34 @@ chronicle - A blog compiler.
 =head1 SYNOPSIS
 
 
+  Path Options:
+
+   --input       Specify the input directory to use.
+   --output      Specify the directory to write output to.
+   --templates   Specify the path to the theme templates.
+   --pattern     Specify the pattern of files to work with.
+   --url-prefix  Specify the prefix to the live blog.
+
+
+  Pre & Post-Build Commands:
+
+   --pre-build   Specify a command to execute prior to building the blog.
+   --post-build  Specify a command to execute once the blog has been built.
+
+
+  Optional Features:
+
+   --no-archive  Don't create an archive page.
+   --no-cache    Don't use the optional memcached features, even if available.
+   --no-tags     Don't produce any tag pages.
+   --lower-case  Lower-case all filenames which are output.
+
+
   Help Options:
 
    --help        Show the help information for this script.
-
    --manual      Read the manual for this script.
-
    --verbose     Show useful debugging information.
-
    --version     Show the version number and exit.
 
 =cut
@@ -54,7 +74,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.14 2007-09-03 05:13:09 steve Exp $
+ $Id: chronicle,v 1.15 2007-09-03 05:16:51 steve Exp $
 
 =cut
 
@@ -313,9 +333,9 @@ sub parseCommandLineArguments
                "input=s",      \$CONFIG{'input'},
                "output=s",     \$CONFIG{'output'},
                "templates=s",  \$CONFIG{'template'},
+               "pattern=s",    \$CONFIG{'pattern'},
 
                # optional
-               "pattern=s",    \$CONFIG{'pattern'},
                "no-tags",      \$CONFIG{'no-tags'},
                "no-cache",     \$CONFIG{'no-cache'},
                "no-archive",   \$CONFIG{'no-archive'},
@@ -335,7 +355,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.14 $';
+        my $REVISION      = '$Revision: 1.15 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
