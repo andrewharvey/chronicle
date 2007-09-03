@@ -54,7 +54,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.13 2007-09-03 05:00:43 steve Exp $
+ $Id: chronicle,v 1.14 2007-09-03 05:13:09 steve Exp $
 
 =cut
 
@@ -319,6 +319,7 @@ sub parseCommandLineArguments
                "no-tags",      \$CONFIG{'no-tags'},
                "no-cache",     \$CONFIG{'no-cache'},
                "no-archive",   \$CONFIG{'no-archive'},
+               "lower-case",   \$CONFIG{'lower-case'},
 
                # prefix
                "url-prefix=s", \$CONFIG{'url_prefix'},
@@ -334,7 +335,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.13 $';
+        my $REVISION      = '$Revision: 1.14 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -526,7 +527,7 @@ sub createTagCloud
         push( @$results,
             { tag   => $key,
               count => $count,
-              size  => $size} );
+              size  => $size } );
     }
     return $results;
 
@@ -1065,11 +1066,15 @@ sub outputStaticPage
     {
         $basename=$2;
     }
+
     #
     #  Read the entry
     #
     my $static = readBlogEntry( $filename );
 
+    #
+    #  Get the pieces of information.
+    #
     my $title = $static->{'title'} || $basename;
     my $tags  = $static->{'tags'};
     my $body  = $static->{'body'};
@@ -1302,6 +1307,12 @@ sub fileToTitle
 
     my $suffix = $CONFIG{'suffix'} ||".html";
     $file .= $suffix;
+
+    #
+    #  Lower case?
+    #
+    $file = lc($file) if ( $CONFIG{'lower-case'} );
+
     return( $file );
 
 }
