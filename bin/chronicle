@@ -74,7 +74,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.15 2007-09-03 05:16:51 steve Exp $
+ $Id: chronicle,v 1.16 2007-09-04 10:51:11 steve Exp $
 
 =cut
 
@@ -93,6 +93,7 @@ The LICENSE file contains the full text of the license.
 use strict;
 use warnings;
 use Date::Parse;
+use Time::Local;
 use File::Copy;
 use File::Path;
 use Getopt::Long;
@@ -355,7 +356,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.15 $';
+        my $REVISION      = '$Revision: 1.16 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -716,15 +717,25 @@ sub readTagInformation
 
 sub bywhen
 {
-    my ($ss,$mm,$hh,$day,$month,$year,$zone) = strptime($a->{'date'});
+    #
+    #  Parse and return the date
+    #
+    my ($ss1,$mm1,$hh1,$day1,$month1,$year1,$zone1) = strptime($a->{'date'});
     my ($ss2,$mm2,$hh2,$day2,$month2,$year2,$zone2) = strptime($b->{'date'});
 
-    if ( !defined($year) || ( !defined($year2) ) )
-    {
-        return 0;
-    }
+    #
+    # Abort if we didn't work.
+    #
+    die "Couldn't find first year"  unless defined($year1);
+    die "Couldn't find second year" unless defined($year2);
 
-    return "$year2$month2$day2" <=> "$year$month$day";
+    #
+    #  Convert to compare
+    #
+    my $c = timelocal(0,0,0,$day1,$month1,$year1 + 1900);
+    my $d = timelocal(0,0,0,$day2,$month2,$year2 + 1900);
+
+    return $d <=> $c;
 }
 
 
