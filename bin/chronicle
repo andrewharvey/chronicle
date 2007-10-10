@@ -23,6 +23,9 @@ chronicle - A blog compiler.
    --pre-build   Specify a command to execute prior to building the blog.
    --post-build  Specify a command to execute once the blog has been built.
 
+  Blog Entry Options:
+
+   --format      Specify the format of your entries, HTML/textile/markdown.
 
   Optional Features:
 
@@ -67,6 +70,60 @@ chronicle - A blog compiler.
 
 =cut
 
+=head1 BLOG FORMAT
+
+  The format of the text files we process is critical to the output
+ pages.  Each entry should look something like this:
+
+=for example begin
+
+    Title:  This is the title of the blog post
+    Date:  2nd March 2007
+    Tags: one, two, three, long tag
+
+    The text of your entry goes here.
+
+=for example end
+
+
+  In this example we can see that the entry itself has been prefaced
+ with a small header.  The header must contain a 'Title:' line.  The
+ 'Date:' line is optional, as is the 'Tags:' line.
+
+  The text of the entry itself is assumed to be HTML, however if you
+ have the optional modules installed you may write it in Markdown or
+ Textile formats.
+
+  Simply add 'format = [ markdown | textile | html]' to the configuration
+ file to specify which you wish to use.  (Or use the --format) command
+ line argument.
+
+  If you're missing the required Perl module to support your chosen
+ input format you will be told this.
+
+
+=cut
+
+
+=head1 OPTIONAL CACHING
+
+  To speed the rebuilding of a large blog the compiler may use the
+ Memcached deaemon, if installed and available upon the local machine.
+
+  To install this, under a Debian GNU/Linux system please run:
+
+=for example begin
+
+    apt-get update
+    apt-get install memcached libcache-memcached-perl
+
+=for example end
+
+  You may disable this caching behaviour with --no-cache, and see the
+ effect with --verbose.
+
+=cut
+
 
 =head1 AUTHOR
 
@@ -74,7 +131,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.17 2007-10-10 08:53:45 steve Exp $
+ $Id: chronicle,v 1.18 2007-10-10 11:58:22 steve Exp $
 
 =cut
 
@@ -352,6 +409,9 @@ sub parseCommandLineArguments
                "no-archive",   \$CONFIG{'no-archive'},
                "lower-case",   \$CONFIG{'lower-case'},
 
+               # input format.
+               "format=s",     \$CONFIG{'format'},
+
                # prefix
                "url-prefix=s", \$CONFIG{'url_prefix'},
 
@@ -366,7 +426,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.17 $';
+        my $REVISION      = '$Revision: 1.18 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1177,28 +1237,34 @@ sub readBlogEntry
     close( ENTRY );
 
     #
-    #  Convert the body if we're supposed to.
+    #  Determine the input format to use.
     #
-    if ( $CONFIG{'format'} eq 'html' )
+    my $format = lc($CONFIG{'format'});
+
+    #
+    #  Now process accordingly.
+    #
+    if ( $format eq 'html' )
     {
         # nop
     }
-    elsif( lc($CONFIG{'format'}) eq 'markdown' )
+    elsif( $format eq 'markdown' )
     {
         $body = markdown2HTML( $body );
     }
-    elsif( lc($CONFIG{'format'}) eq 'textile' )
+    elsif( $format eq 'textile' )
     {
         $body = textile2HTML( $body );
     }
     else
     {
-        print "Unkown blog entry format ($CONFIG{'format'}).  Treating as HTML.\n";
+        print "Unkown blog entry format ($CONFIG{'format'}).\n";
+        print "Treating as HTML.\n";
     }
 
     #
     #
-    #  If we have title then we can store it
+    #  If we have tags then we should use them.
     #
     my $entryTags;
 
