@@ -3,13 +3,13 @@
 <html>
  <head>
   <title>Blog: <!-- tmpl_var name='title' --></title>
-  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='url_prefix' -->style.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
  </head>
  <body>
 
  <div class="title">
   <h1><!-- tmpl_if name='blog_title' -->
-       <a href="<!-- tmpl_var name='url_prefix' -->"><!-- tmpl_var name='blog_title' --></a>
+       <a href="<!-- tmpl_var name='top' -->"><!-- tmpl_var name='blog_title' --></a>
       <!-- tmpl_else -->
        Untitled Blog
       <!-- /tmpl_if -->
@@ -30,7 +30,7 @@
   <table width="100%">
   <tr><td>
   <!-- tmpl_if name='tags' -->
-  <div class="tags">Tags: <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='url_prefix' -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop --></div>
+  <div class="tags">Tags: <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop --></div>
    <!-- /tmpl_if -->
   </td><td align="right"><!-- tmpl_var name='date' --></td></tr></table>
  </fieldset>
@@ -44,7 +44,7 @@
 <li><!-- tmpl_var name='year' -->
 <ul>
 <!-- tmpl_loop name='months' -->
-<li><a href="<!-- tmpl_var name='url_prefix' -->archive/<!-- tmpl_var name='year' -->/<!-- tmpl_var name='month' -->/"><!-- tmpl_var name='month' --> (<!-- tmpl_var name='count' -->)</a></li>
+<li><a href="<!-- tmpl_var name='top' -->archive/<!-- tmpl_var name='year' -->/<!-- tmpl_var name='month' -->/"><!-- tmpl_var name='month_name' --> (<!-- tmpl_var name='count' -->)</a></li>
 <!-- /tmpl_loop -->
 </ul></li>
 <!-- /tmpl_loop -->
@@ -56,7 +56,7 @@
 <fieldset>
  <legend>Tags</legend>
  <!-- tmpl_loop name='tagcloud' -->
- <span style="font-size: <!-- tmpl_var name='size' -->px"><a href="<!-- tmpl_var name='url_prefix' -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --></span>
+ <span style="font-size: <!-- tmpl_var name='size' -->px"><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --></span>
 <!-- /tmpl_loop -->
 </fieldset>
 <!-- /tmpl_if -->

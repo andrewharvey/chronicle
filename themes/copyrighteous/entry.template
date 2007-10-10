@@ -2,13 +2,13 @@
 <html>
 <head>
  <title>copyrighteous: <!-- tmpl_var name='title' --></title>
- <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='url_prefix' -->style.css">
+ <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
 </head>
 
 <body>
 <div id='content'>
 <div id='title'>
-<span class="title"><a href="<!-- tmpl_var name='url_prefix' -->">
+<span class="title"><a href="<!-- tmpl_var name='top' -->">
   <!-- tmpl_if name='blog_title' -->
     <!-- tmpl_var name='blog_title' -->
   <!-- tmpl_else -->
@@ -31,7 +31,7 @@
 <!-- tmpl_var name='body' -->
 </div>
 Permalink 
-<span class="tags"><!-- tmpl_if name='tags' -->| <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='url_prefix' -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop --><!-- /tmpl_if --> </span> 
+<span class="tags"><!-- tmpl_if name='tags' -->| <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop --><!-- /tmpl_if --> </span> 
 </div>
 </div>
 </div>
@@ -44,7 +44,7 @@ Permalink
 <li><!-- tmpl_var name='year' -->
 <ul>
 <!-- tmpl_loop name='months' -->
-<li><a href="<!-- tmpl_var name='url_prefix' -->archive/<!-- tmpl_var name='year' -->/<!-- tmpl_var name='month' -->/"><!-- tmpl_var name='month' --> (<!-- tmpl_var name='count' -->)</a></li>
+<li><a href="<!-- tmpl_var name='top' -->archive/<!-- tmpl_var name='year' -->/<!-- tmpl_var name='month' -->/"><!-- tmpl_var name='month_name' --> (<!-- tmpl_var name='count' -->)</a></li>
 <!-- /tmpl_loop -->
 </ul></li>
 <!-- /tmpl_loop -->
@@ -56,7 +56,7 @@ Permalink
 <span class="rightMenu">Tags</span><br />
 <ul>
 <!-- tmpl_loop name='tagcloud' -->
- <li><a href="<!-- tmpl_var name='url_prefix' -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --> (<!-- tmpl_var name='count' -->)</a></li>
+ <li><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --> (<!-- tmpl_var name='count' -->)</a></li>
 <!-- /tmpl_loop -->
 </ul>
 <!-- /tmpl_if -->
