@@ -155,7 +155,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.21 2007-10-10 21:30:50 steve Exp $
+ $Id: chronicle,v 1.22 2007-10-10 21:31:32 steve Exp $
 
 =cut
 
@@ -193,6 +193,10 @@ use Time::Local;
 my $RELEASE = 'UNRELEASED';
 
 
+#
+#  The names of the months.  Posted early to allow i18n users.
+#
+my @names = qw( January February March April May June July August September October November December );
 
 #
 #  Setup default options.
@@ -458,7 +462,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.21 $';
+        my $REVISION      = '$Revision: 1.22 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -704,7 +708,6 @@ sub createDateCloud
     my $results;
     my $year;
     my $months;
-    my @names = qw( January February March April May June July August September October November December );
 
     foreach my $date ( sort keys %entry_dates )
     {
@@ -1068,7 +1071,6 @@ sub outputArchivePage
     my $template = loadTemplate( "month.template",
                                  die_on_bad_params => 0 );
 
-    my @names = qw( January February March April May June July August September October November December );
 
     #
     #  The entries
