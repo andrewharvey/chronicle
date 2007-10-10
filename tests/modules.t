@@ -10,6 +10,10 @@
 
 use Test::More qw( no_plan );
 
+BEGIN{ use_ok( 'Date::Format' ); }
+require_ok( 'Date::Format' );
+
+
 BEGIN{ use_ok( 'Date::Parse' ); }
 require_ok( 'Date::Parse' );
 
@@ -44,6 +48,10 @@ require_ok( 'strict' );
 
 BEGIN{ use_ok( 'Test::More' ); }
 require_ok( 'Test::More' );
+
+
+BEGIN{ use_ok( 'Time::Local' ); }
+require_ok( 'Time::Local' );
 
 
 BEGIN{ use_ok( 'warnings' ); }
