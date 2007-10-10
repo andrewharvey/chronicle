@@ -131,7 +131,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.18 2007-10-10 11:58:22 steve Exp $
+ $Id: chronicle,v 1.19 2007-10-10 20:00:57 steve Exp $
 
 =cut
 
@@ -149,14 +149,16 @@ The LICENSE file contains the full text of the license.
 
 use strict;
 use warnings;
+
+
 use Date::Parse;
 use Date::Format;
-use Time::Local;
 use File::Copy;
 use File::Path;
 use Getopt::Long;
 use HTML::Template;
 use Pod::Usage;
+use Time::Local;
 
 
 #
@@ -426,7 +428,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.18 $';
+        my $REVISION      = '$Revision: 1.19 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
