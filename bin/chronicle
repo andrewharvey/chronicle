@@ -155,7 +155,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.20 2007-10-10 20:09:24 steve Exp $
+ $Id: chronicle,v 1.21 2007-10-10 21:30:50 steve Exp $
 
 =cut
 
@@ -458,7 +458,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.20 $';
+        my $REVISION      = '$Revision: 1.21 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1068,11 +1068,18 @@ sub outputArchivePage
     my $template = loadTemplate( "month.template",
                                  die_on_bad_params => 0 );
 
+    my @names = qw( January February March April May June July August September October November December );
+
     #
-    #  The entries.
+    #  The entries
     #
     $template->param( entries => $entries )   if ( $entries );
+
+    #
+    #  Output the month + year.
+    #
     $template->param( year => $year, month => $month );
+    $template->param( month_name => $names[$month - 1 ] );
 
     #
     #  The clouds
@@ -1102,6 +1109,7 @@ sub outputArchivePage
     $template = loadTemplate( "month.xml.template", die_on_bad_params => 0 );
     $template->param( entries => $entries ) if ( $entries );
     $template->param( month => $month, year => $year );
+    $template->param( month_name => $names[$month - 1 ] );
     outputTemplate( $template, "$dir/$month.rss" );
 }
 
