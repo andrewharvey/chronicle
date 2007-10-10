@@ -1,0 +1,19 @@
+
+        
+Primary Author
+--------------
+
+  Steve Kemp <steve [at] uk.org.steve>
+
+
+Contributions
+-------------
+
+  Listed alphabetically by surname.
+
+  Josh Grams [josh [@] com.qualdan]
+   - Added better base URL detection.
+   - Added chronological sorting for months & shorter month-URLs.
+
+
+$Id: AUTHORS,v 1.1 2007-10-10 10:02:09 steve Exp $
