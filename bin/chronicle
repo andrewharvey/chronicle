@@ -29,6 +29,7 @@ chronicle - A blog compiler.
 
   Optional Features:
 
+   --force       Force the copying of static files from the blog theme.
    --no-archive  Don't create an archive page.
    --no-cache    Don't use the optional memcached features, even if available.
    --no-tags     Don't produce any tag pages.
@@ -70,6 +71,7 @@ chronicle - A blog compiler.
 
 =cut
 
+
 =head1 BLOG FORMAT
 
   The format of the text files we process is critical to the output
@@ -84,7 +86,6 @@ chronicle - A blog compiler.
     The text of your entry goes here.
 
 =for example end
-
 
   In this example we can see that the entry itself has been prefaced
  with a small header.  The header must contain a 'Title:' line.  The
@@ -101,6 +102,29 @@ chronicle - A blog compiler.
   If you're missing the required Perl module to support your chosen
  input format you will be told this.
 
+=cut
+
+
+=head1 CONFIGURATION
+
+  The configuration of the software is minimal, and generally performed
+ via the command line arguments.  However it is possible to save settings
+ either in the file /etc/chroniclerc or the per-user ~/.chroniclerc
+ file.
+
+  These files contain lines of the form:
+
+=for example begin
+
+   input  = /home/me/blog
+
+   output = /var/www/blog
+
+   format = markdown
+
+=for example end
+
+  Keys which are unknown are ignored.
 
 =cut
 
@@ -131,7 +155,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.19 2007-10-10 20:00:57 steve Exp $
+ $Id: chronicle,v 1.20 2007-10-10 20:09:24 steve Exp $
 
 =cut
 
@@ -367,6 +391,11 @@ sub setupDefaultOptions
     #
     $CONFIG{'entry-count'} = 10;
 
+    #
+    #  Don't overwrite files by default
+    #
+    $CONFIG{'force'} = 0;
+
     return( %CONFIG );
 }
 
@@ -406,6 +435,7 @@ sub parseCommandLineArguments
                "pattern=s",    \$CONFIG{'pattern'},
 
                # optional
+               "force",        \$CONFIG{'force'},
                "no-tags",      \$CONFIG{'no-tags'},
                "no-cache",     \$CONFIG{'no-cache'},
                "no-archive",   \$CONFIG{'no-archive'},
@@ -428,7 +458,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.19 $';
+        my $REVISION      = '$Revision: 1.20 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1519,6 +1549,8 @@ sub readConfigurationFile
 
   This only works for a top-level target directory.
 
+  Unless --force is specified we skip copying files which already exist.
+
 =end doc
 
 =cut
@@ -1542,7 +1574,7 @@ sub copyStaticFiles
             {
                 $file = $2;
             }
-            if ( ! -e  "$output/$file" )
+            if ( $CONFIG{'force'} || ( ! -e "$output/$file" ) )
             {
                 $CONFIG{'verbose'} && print "Copying static file: $file\n";
                 copy(  "$input/$file", "$output/$file" );
