@@ -77,12 +77,12 @@ template = /usr/share/chronicle/themes/default
 #  We can disable the sidebar if we want
 #
 #  no-tags = 1
-#
 #  no-archive = 1
 #
 
 
-#  The filename to use for tag lings
+#
+#  The filename to use for tag links
 #
 # filename = index.html
 #
@@ -97,14 +97,14 @@ template = /usr/share/chronicle/themes/default
 #
 #  URL prefix, if any.
 #
-url_prefix = http://example.com/
+# url_prefix = http://example.com/
 
 
 #
 #  The title for the Blog
 #
-blog_title    = Steve Kemp's Blog
-blog_subtitle = Free Software & Debian
+# blog_title    = Steve Kemp's Blog
+# blog_subtitle = Free Software & Debian
 
 #
 #  A command to run pre-build
