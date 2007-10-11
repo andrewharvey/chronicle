@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.12 2007-10-10 20:09:43 steve Exp $
+# $Id: Makefile,v 1.13 2007-10-11 07:42:21 steve Exp $
 
 
 #
@@ -46,6 +46,9 @@ clean:
 	@find . -name '*.bak' -exec rm \{\} \;
 	@find . -name '*.tmp' -exec rm \{\} \;
 	@if [ -d output ]; then rm -rf output; mkdir output; fi
+	@if [ -e build-stamp ]; then rm -f build-stamp; fi
+	@if [ -e chronicle.1 ]; then rm -f chronicle.1 ; fi
+
 #
 #  Show what has been changed in the local copy vs. the CVS repository.
 #
