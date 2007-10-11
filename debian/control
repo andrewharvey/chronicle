@@ -1,0 +1,23 @@
+Source: chronicle
+Section: web
+Priority: extra
+Maintainer: Felipe Sateler <fsateler@gmail.com>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+Homepage: http://www.steve.org.uk/Software/chronicle/
+
+Package: chronicle
+Architecture: all
+Depends: ${perl:Depends}, libtimedate-perl, libhtml-template-perl
+Suggests: memcached
+Description: a blog compiler
+ Chronicle is a tool which will convert a directory of simple
+ text files into a static HTML weblog, (or blog if you prefer).
+ .
+  The system is intentionally simple, but it does support:
+ .
+  * Template based output.
+ .
+  * RSS feeds.
+ .
+  * Tagged entries.
