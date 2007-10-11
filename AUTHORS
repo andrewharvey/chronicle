@@ -15,5 +15,8 @@ Contributions
    - Added better base URL detection.
    - Added chronological sorting for months & shorter month-URLs.
 
+  Felipe Sateler [fsateler [@] com.gmail]
+   - Produced a Debian package for the software.
 
-$Id: AUTHORS,v 1.1 2007-10-10 10:02:09 steve Exp $
+
+$Id: AUTHORS,v 1.2 2007-10-11 07:43:15 steve Exp $
