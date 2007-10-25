@@ -155,7 +155,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.23 2007-10-25 12:52:55 steve Exp $
+ $Id: chronicle,v 1.24 2007-10-25 18:36:32 steve Exp $
 
 =cut
 
@@ -462,7 +462,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.23 $';
+        my $REVISION      = '$Revision: 1.24 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1177,6 +1177,10 @@ sub outputStaticPage
     {
         $basename=$2;
     }
+    if ( $basename =~ /^(.*)\.(.*)$/ )
+    {
+        $basename = $1;
+    }
 
     #
     #  Read the entry
@@ -1366,11 +1370,6 @@ sub readBlogEntry
     }
 
     #
-    #  Get the link
-    #
-    my $link = fileToTitle( $title );
-
-    #
     #  If the date isn't set then use todays.
     #
     if ( ! defined($date) ||( !length( $date ) ) )
@@ -1390,9 +1389,34 @@ c );
     #
     $entry{'title'} = $title;
     $entry{'body'}  = $body if ( $body );
-    $entry{'link'}  = $link;
     $entry{'date'}  = $date;
     $entry{'tags'}  = $entryTags if ( $entryTags );
+
+    #
+    #  No title?
+    #
+    if ( !defined($entry{'title'}) ||
+         !length($entry{'title'}) )
+    {
+        my $basename = $filename;
+        if ( $basename =~ /(.*)\/(.*)/ )
+        {
+            $basename=$2;
+        }
+        if ( $basename =~ /^(.*)\.(.*)$/ )
+        {
+            $basename = $1;
+        }
+
+        $entry{'title'} = $basename;
+    }
+
+    #
+    #  Get the link - after ensuring we have a title.
+    #
+    my $link = fileToTitle( $entry{'title'} );
+    $entry{'link'}  = $link;
+
 
     #
     #  Store the read file in the cache if we're using it.
