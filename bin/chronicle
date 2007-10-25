@@ -155,7 +155,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.22 2007-10-10 21:31:32 steve Exp $
+ $Id: chronicle,v 1.23 2007-10-25 12:52:55 steve Exp $
 
 =cut
 
@@ -462,7 +462,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.22 $';
+        my $REVISION      = '$Revision: 1.23 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -679,8 +679,24 @@ sub findAllMonths
         my $h    = $data{$f};
         next if ( !$h );
 
-        my $date = time2str("%Y-%m", str2time($h->{'date'})) || undef;
-        next if ( !$date );
+        my $date = $h->{'date'};
+
+        #
+        #  Not a date?  Use the file.
+        #
+        if ( !defined( $date ) || !length($date) )
+        {
+            #
+            # Test the file for creation time.
+            #
+            my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+                $atime,$mtime,$ctime,$blksize,$blocks)
+              = stat($f);
+
+            $date = localtime( $ctime );
+        }
+
+        $date = time2str("%Y-%m", str2time($date));
 
         $allDates{$date}+=1;
     }
@@ -1047,7 +1063,24 @@ sub outputArchivePage
     foreach my $f ( keys %data )
     {
         my $h    = $data{$f};
-        my $date = time2str("%Y-%m", str2time($h->{'date'})) || undef;
+        my $date = $h->{'date'};
+
+        #
+        #  Not a date?  Use the file.
+        #
+        if ( !defined( $date ) || !length($date) )
+        {
+            #
+            # Test the file for creation time.
+            #
+            my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+                $atime,$mtime,$ctime,$blksize,$blocks)
+              = stat($f);
+
+            $date = localtime( $ctime );
+        }
+
+        $date = time2str("%Y-%m", str2time($date));
 
         push @{$dateEntries{$date}}, $f ;
     }
@@ -1156,7 +1189,17 @@ sub outputStaticPage
     my $title = $static->{'title'} || $basename;
     my $tags  = $static->{'tags'};
     my $body  = $static->{'body'};
-    my $date  = $static->{'date'} || "";
+    my $date  = $static->{'date'};
+
+    if ( !defined($date) )
+    {
+        my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+            $atime,$mtime,$ctime,$blksize,$blocks)
+          = stat($filename);
+
+        $date = localtime( $ctime );
+
+    }
 
     $CONFIG{'verbose'} && print "\t$filename\n";
 
