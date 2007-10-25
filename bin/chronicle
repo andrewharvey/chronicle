@@ -11,6 +11,7 @@ chronicle - A blog compiler.
 
   Path Options:
 
+   --config      Specify a configuration file to read.
    --input       Specify the input directory to use.
    --output      Specify the directory to write output to.
    --templates   Specify the path to the theme templates.
@@ -155,7 +156,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.24 2007-10-25 18:36:32 steve Exp $
+ $Id: chronicle,v 1.25 2007-10-25 18:43:41 steve Exp $
 
 =cut
 
@@ -215,6 +216,12 @@ readConfigurationFile( $ENV{'HOME'} . "/.chroniclerc" );
 #  Parse the command line arguments.
 #
 parseCommandLineArguments();
+
+
+#
+#  Another configuration file?
+#
+readConfigurationFile( $CONFIG{'config'} ) if ( defined $CONFIG{'config'} );
 
 
 #
@@ -433,6 +440,7 @@ sub parseCommandLineArguments
                "version",      \$VERSION,
 
                # paths
+               "config=s",     \$CONFIG{'config'},
                "input=s",      \$CONFIG{'input'},
                "output=s",     \$CONFIG{'output'},
                "templates=s",  \$CONFIG{'template'},
@@ -462,7 +470,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.24 $';
+        my $REVISION      = '$Revision: 1.25 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
