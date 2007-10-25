@@ -8,14 +8,14 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.13 2007-10-11 07:42:21 steve Exp $
+# $Id: Makefile,v 1.14 2007-10-25 18:36:50 steve Exp $
 
 
 #
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = ${TMP}
-VERSION     = 0.8
+VERSION     = 0.9
 BASE        = chronicle
 
 
