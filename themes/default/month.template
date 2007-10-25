@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
  <head>
-  <title>Blog : Entries from <!-- tmpl_var name='month_name' --> <!-- tmpl_var name='year' --></title>
+  <title><!-- tmpl_var name='blog_title' -->: entries from <!-- tmpl_var name='month_name' --> <!-- tmpl_var name='year' --></title>
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
   <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='month' escape='html' -->.rss" type="application/rss+xml">
  </head>

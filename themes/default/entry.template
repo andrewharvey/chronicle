@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
  <head>
-  <title>Blog: <!-- tmpl_var name='title' --></title>
+  <title><!-- tmpl_var name='blog_title' -->: <!-- tmpl_var name='title' --></title>
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
  </head>
  <body>
