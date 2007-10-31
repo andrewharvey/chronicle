@@ -89,19 +89,32 @@ chronicle - A blog compiler.
 =for example end
 
   In this example we can see that the entry itself has been prefaced
- with a small header.  The header must contain a 'Title:' line.  The
- 'Date:' line is optional, as is the 'Tags:' line.
+ with a small header.  An entry header is contains three optional lines,
+ if these are not present then there are sensible defaults as described
+ below:
+
+=over 8
+
+=item Title:
+Describes the title of the post.  If not present the filename of the entry
+is used instead.
+
+=item Date:
+The date the post was written.  If not present the creation time of the
+file is used instead.
+
+=item Tags:
+Any tags which should be associated with the entry, separated by commas.
+
+=back
 
   The text of the entry itself is assumed to be HTML, however if you
  have the optional modules installed you may write it in Markdown or
- Textile formats.
+ Textile formats - if they are not present you will receive a message
+ informing you of the names of the required modules.
 
-  Simply add 'format = [ markdown | textile | html]' to the configuration
- file to specify which you wish to use.  (Or use the --format) command
- line argument.
-
-  If you're missing the required Perl module to support your chosen
- input format you will be told this.
+  You may specify the format of your entries either in the configuration
+ file, or via the command line flag B<--format>.
 
 =cut
 
@@ -110,10 +123,14 @@ chronicle - A blog compiler.
 
   The configuration of the software is minimal, and generally performed
  via the command line arguments.  However it is possible to save settings
- either in the file /etc/chroniclerc or the per-user ~/.chroniclerc
+ either in the file global /etc/chroniclerc or the per-user ~/.chroniclerc
  file.
 
-  These files contain lines of the form:
+  If you wish you may pass the name of another configuration file to
+ the script with the B<--config> flag.  This will be read after the
+ previous two files, and may override any settings which are present.
+
+  The configuration file contains lines like these:
 
 =for example begin
 
@@ -132,8 +149,8 @@ chronicle - A blog compiler.
 
 =head1 OPTIONAL CACHING
 
-  To speed the rebuilding of a large blog the compiler may use the
- Memcached deaemon, if installed and available upon the local machine.
+  To speed the rebuilding of a large blog the compiler may use a local
+ Memcached deaemon, if installed and available.
 
   To install this, under a Debian GNU/Linux system please run:
 
@@ -156,7 +173,7 @@ chronicle - A blog compiler.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.25 2007-10-25 18:43:41 steve Exp $
+ $Id: chronicle,v 1.26 2007-10-31 00:10:39 steve Exp $
 
 =cut
 
@@ -302,7 +319,7 @@ foreach my $file ( keys %data )
 
 
 #
-#  Build an output page for each tag which has ever been used.
+#  Build an output page for every tag which has ever been used.
 #
 foreach my $tagName ( sort keys %all_tags )
 {
@@ -314,7 +331,7 @@ foreach my $tagName ( sort keys %all_tags )
 
 
 #
-#  Now build the archives.
+#  Now build the archive pages.
 #
 foreach my $date ( keys( %all_dates ) )
 {
@@ -470,7 +487,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.25 $';
+        my $REVISION      = '$Revision: 1.26 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -655,9 +672,12 @@ sub createTagCloud
 
     foreach my $key ( sort keys( %unique ) )
     {
+        # count.
         my $count = $unique{$key};
+
+        # size for the HTML.
         my $size  = 10 + ( $count * 5 );
-        $size = 40 if ( $size >= 40 );
+        $size     = 40 if ( $size >= 40 );
 
         push( @$results,
             { tag   => $key,
@@ -684,13 +704,13 @@ sub findAllMonths
     my %allDates;
     foreach my $f ( keys %data )
     {
-        my $h    = $data{$f};
+        my $h = $data{$f};
         next if ( !$h );
 
         my $date = $h->{'date'};
 
         #
-        #  Not a date?  Use the file.
+        #  Not a date?  Use the ctime of the file.
         #
         if ( !defined( $date ) || !length($date) )
         {
@@ -1460,8 +1480,8 @@ sub fileToTitle
     $file =~ s/\///g;
     $file =~ s/\\//g;
 
-    my $suffix = $CONFIG{'suffix'} ||".html";
-    $file .= $suffix;
+    my $suffix = $CONFIG{'suffix'} || ".html";
+    $file     .= $suffix;
 
     #
     #  Lower case?
