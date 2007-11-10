@@ -1,3 +1,15 @@
+chronicle (1.0-1) stable; urgency=low
+
+  * New upstream release.
+ 
+ -- Steve Kemp <steve@steve.org.uk>  Sat, 10 Nov 2007 17:06:21 +0000
+
+chronicle (0.9-1) unstable; urgency=low
+
+  * New upstream release.
+ 
+ -- Steve Kemp <steve@steve.org.uk>  Thu, 25 Oct 2007 19:34:41 +0000
+
 chronicle (0.8-1) unstable; urgency=low
 
   * Initial release
