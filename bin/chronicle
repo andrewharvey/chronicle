@@ -174,7 +174,7 @@ Any tags which should be associated with the entry, separated by commas.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.27 2007-11-10 00:01:04 steve Exp $
+ $Id: chronicle,v 1.28 2007-11-10 00:13:21 steve Exp $
 
 =cut
 
@@ -507,7 +507,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.27 $';
+        my $REVISION      = '$Revision: 1.28 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -564,6 +564,7 @@ EOF
         #
         next if ( -d $file );
 
+        my $tags    = '';
         my $title   = '';
         my $date    = '';
         my $private = 0;
@@ -573,10 +574,13 @@ EOF
         open( INPUT, "<", $file ) or die "Failed to open blog file $file - $!";
         while( my $line = <INPUT> )
         {
-            if ( $line =~ /^tags:(.*)/i )
+            #
+            #  Get the tags
+            #
+            if ( ( $line =~ /^tags:(.*)/i ) && !length($tags) )
             {
-                my $tag .= $1;
-                foreach my $t ( split( /,/, $tag ) )
+                $tags = $1;
+                foreach my $t ( split( /,/, $tags ) )
                 {
                     # strip leading and trailing space.
                     $t =~ s/^\s+//;
@@ -586,12 +590,15 @@ EOF
                     next if ( !length($t) );
 
                     # lowercase and store the tags.
-                    $tag = lc($tag);
+                    $t = lc($t);
                     push ( @tags, $t );
                 }
             }
             elsif (( $line =~ /^title:(.*)/i ) && !length($title) )
             {
+                #
+                #  Get the title.
+                #
                 $title = $1;
 
                 # strip leading and trailing space.
@@ -600,6 +607,9 @@ EOF
             }
             elsif (( $line =~ /^date:(.*)/i ) && !length($date) )
             {
+                #
+                #  Get the date.
+                #
                 $date = $1;
 
                 # strip leading and trailing space.
@@ -609,6 +619,10 @@ EOF
             }
             elsif ( $line =~ /^status:(.*)/i )
             {
+                #
+                #  The security level.
+                #
+
                 my $level = $1;
 
                 # strip leading and trailing space.
@@ -795,57 +809,6 @@ sub createDateCloud
                        months => $months } );
 
     return $results;
-}
-
-
-
-=begin doc
-
-  This function will return a hash containing our tag information,
- the values of the hash will be an array of filenames which contain
- that entry.
-
-=end doc
-
-=cut
-
-sub readTagInformation
-{
-    my( @files ) = (@_);
-
-    my %results;
-
-    foreach my $file ( @files )
-    {
-        my $tag;
-        open( FILE, "<", $file ) or die "Failed to read: $file - $!";
-        foreach my $line ( <FILE> )
-        {
-            next unless $line =~ /^tags:(.*)/i;
-
-            my $tags = $1;
-
-            foreach my $t ( split( /,/ , $tags ) )
-            {
-                # strip leading and trailing space.
-                $t =~ s/^\s+//;
-                $t =~ s/\s+$//;
-
-                # skip empty tags.
-                next if ( !length($t) );
-
-                # lowercase all tags
-                $t = lc($t);
-
-                # Store the filename in the hash for this tag.
-                my $cur = $results{$t};
-                push @$cur, $file;
-                $results{$t} = $cur;
-            }
-        }
-        close( FILE );
-    }
-    return %results;
 }
 
 
@@ -1323,9 +1286,6 @@ sub readBlogEntry
         }
     }
 
-    #
-    #  I
-    #
 
     my $title  = "";   # entry title.
     my $tags   = "";   # entry tags.
@@ -1338,14 +1298,17 @@ sub readBlogEntry
     while( my $line = <ENTRY> )
     {
         #
-        #  Append any tags.
+        #  Get the tags.
         #
-        if ( $line =~ /^tags: (.*)/i )
+        if (( $line =~ /^tags: (.*)/i ) && !length( $tags ) )
         {
-            $tags .= $1;
+            $tags = $1;
         }
         elsif (( $line =~ /^title: (.*)/i ) && !length($title) )
         {
+            #
+            #  Get the title
+            #
             $title = $1;
 
             # strip leading and trailing space.
@@ -1354,6 +1317,9 @@ sub readBlogEntry
         }
         elsif (( $line =~ /^date: (.*)/i ) && !length($date) )
         {
+            #
+            #  Get the date.
+            #
             $date = $1;
 
             # strip leading and trailing space.
@@ -1362,10 +1328,16 @@ sub readBlogEntry
         }
         elsif (( $line =~ /^status:(.*)/ ) && !length ( $status ) )
         {
+            #
+            #  Security level?
+            #
             $status = $1;
         }
         else
         {
+            #
+            #  Just a piece of body text.
+            #
             $body .= $line;
         }
     }
@@ -1411,6 +1383,8 @@ sub readBlogEntry
 
         # skip empty tags.
         next if ( !length($tag) );
+
+        # tags are lowercase.
         $tag = lc($tag);
         push ( @$entryTags, { tag => $tag } );
     }
@@ -1551,7 +1525,7 @@ sub loadTemplate
 
   The template file $file was not found in the theme directory.
 
-  Theme          :  $CONFIG{'theme'}
+  Theme          : $CONFIG{'theme'}
   Theme Directory: $CONFIG{'theme-dir'}
 
   We expected to find $dir$file;
