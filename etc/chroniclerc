@@ -40,9 +40,14 @@ output = ./output
 
 
 #
-#  Directory containing the templates
+#  Directory containing the theme subdirectories.
 #
-template = /usr/share/chronicle/themes/default
+theme-dir = /usr/share/chronicle/themes
+
+#
+#  The theme to use.
+#
+theme = default
 
 
 #

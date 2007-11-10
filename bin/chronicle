@@ -11,12 +11,13 @@ chronicle - A blog compiler.
 
   Path Options:
 
-   --config      Specify a configuration file to read.
-   --input       Specify the input directory to use.
-   --output      Specify the directory to write output to.
-   --templates   Specify the path to the theme templates.
-   --pattern     Specify the pattern of files to work with.
-   --url-prefix  Specify the prefix to the live blog.
+   --config         Specify a configuration file to read.
+   --input          Specify the input directory to use.
+   --output         Specify the directory to write output to.
+   --theme-dir      Specify the path to the theme templates.
+   --theme          Specify the theme to use.
+   --pattern        Specify the pattern of files to work with.
+   --url-prefix     Specify the prefix to the live blog.
 
 
   Pre & Post-Build Commands:
@@ -173,7 +174,7 @@ Any tags which should be associated with the entry, separated by commas.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.26 2007-10-31 00:10:39 steve Exp $
+ $Id: chronicle,v 1.27 2007-11-10 00:01:04 steve Exp $
 
 =cut
 
@@ -242,6 +243,24 @@ readConfigurationFile( $CONFIG{'config'} ) if ( defined $CONFIG{'config'} );
 
 
 #
+#  Make sure we have arguments which are sane.
+#
+#  Specifically we want to cope with the "new" 'theme-dir', and 'theme'
+# arguments.
+#
+#
+sanityCheckArguments();
+
+
+#
+#  Listing themes?
+#
+if ( $CONFIG{'list-themes'} )
+{
+    listThemes( $CONFIG{'theme-dir'} );
+    exit;
+}
+
 #  Should we run something before we start?
 #
 if ( $CONFIG{'pre-build'} )
@@ -400,9 +419,10 @@ sub setupDefaultOptions
     $CONFIG{'output'}     = "./output";
 
     #
-    #  Theme directory.
+    #  Theme setup
     #
-    $CONFIG{'template'}   = "./themes/default";
+    $CONFIG{'theme-dir'}   = "./themes/";
+    $CONFIG{'theme'}       = "default";
 
     #
     #  prefix for all links.
@@ -434,8 +454,6 @@ sub setupDefaultOptions
 
   Parse the command line arguments this script was given.
 
-  TODO:  Document these in the POD.
-
 =end doc
 
 =cut
@@ -455,12 +473,14 @@ sub parseCommandLineArguments
                "manual",       \$MANUAL,
                "verbose",      \$CONFIG{'verbose'},
                "version",      \$VERSION,
+               "list-themes",  \$CONFIG{'list-themes'},
 
                # paths
                "config=s",     \$CONFIG{'config'},
                "input=s",      \$CONFIG{'input'},
                "output=s",     \$CONFIG{'output'},
-               "templates=s",  \$CONFIG{'template'},
+               "theme-dir=s",  \$CONFIG{'theme-dir'},
+               "theme=s",      \$CONFIG{'theme'},
                "pattern=s",    \$CONFIG{'pattern'},
 
                # optional
@@ -487,7 +507,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.26 $';
+        my $REVISION      = '$Revision: 1.27 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1051,8 +1071,6 @@ sub outputTagPage
   This function is a *mess* and iterates over the data structure much
  more often than it needs to.
 
-  TODO:  FIXME
-
 =end doc
 
 =cut
@@ -1507,14 +1525,36 @@ sub loadTemplate
     my( $file, %params ) = (@_);
 
     #
+    #  Get the directory.
+    #
+    my $dir = $CONFIG{'theme-dir'};
+
+    #
+    #  XML files go in theme-dir/xml/
+    #
+    if ( $file =~ /\.xml\./i )
+    {
+        $dir .= "/xml/";
+    }
+    else
+    {
+        $dir .= "/" . $CONFIG{'theme'} . "/";
+    }
+
+
+    #
     #  Make sure the file exists.
     #
-    if ( ! -e $CONFIG{'template'} . "/" . $file )
+    if ( ! -e $dir . $file )
     {
         print <<EOF;
 
-  The template file $file was not found in our template directory
- of $CONFIG{'template'}.
+  The template file $file was not found in the theme directory.
+
+  Theme          :  $CONFIG{'theme'}
+  Theme Directory: $CONFIG{'theme-dir'}
+
+  We expected to find $dir$file;
 
   Aborting.
 EOF
@@ -1522,7 +1562,7 @@ EOF
     }
 
     my $t = HTML::Template->new( filename          => $file,
-                                 path              => $CONFIG{'template'},
+                                 path              => $dir,
                                  loop_context_vars => 1,
                                  global_vars       => 1,
                                  %params );
@@ -1649,6 +1689,77 @@ sub readConfigurationFile
 
 =begin doc
 
+  Sanity check our arguments:
+
+  1.  Make sure we have a theme-directory
+
+  2.  Make sure we have a theme.
+
+=end doc
+
+=cut
+
+sub sanityCheckArguments
+{
+    if ( !$CONFIG{'theme-dir'} )
+    {
+        print <<EOF;
+
+  Error - You don't have a theme directory setup.
+
+  Please specify --theme-dir=/some/path, or add this to your configuration
+ file:
+
+theme-dir = /path/to/use/
+EOF
+
+        exit;
+    }
+
+    if ( ! -d $CONFIG{'theme-dir'} )
+    {
+        print "The theme directory you specified doesn't exist:\n";
+        print "\t" . $CONFIG{'theme-dir'} . "\n";
+        exit;
+    }
+
+    if ( !$CONFIG{'theme'} )
+    {
+        print <<EOF;
+
+  You've not specified a theme.
+
+  Please specify --theme=xx
+
+  Or add this to your configuration file:
+
+theme = xx
+
+
+  [You may list themes with --list-themes]
+
+EOF
+
+        exit;
+    }
+
+
+    if ( ! -d $CONFIG{'theme-dir'} . "/" . $CONFIG{'theme'} )
+    {
+        print "The theme directory you specified doesn't exist in the theme directory:\n";
+        print "\tTheme    :" . $CONFIG{'theme'}     . "\n";
+        print "\tTheme dir:" . $CONFIG{'theme-dir'} . "\n";
+        print "\tExpected :" . $CONFIG{'theme-dir'} . "/" . $CONFIG{'theme'} . "\n";
+        exit;
+    }
+
+}
+
+
+
+
+=begin doc
+
   Copy any static files from the theme directory into the "live" location
  in the output.
 
@@ -1665,7 +1776,7 @@ sub copyStaticFiles
     #
     #  Soure and destination for the copy
     #
-    my $input  = $CONFIG{'template'};
+    my $input  = $CONFIG{'theme-dir'} . "/" . $CONFIG{'theme'};
     my $output = $CONFIG{'output'};
 
     foreach my $pattern ( qw! *.css *.jpg *.gif *.png *.js *.ico ! )
@@ -1777,3 +1888,21 @@ EOF
 
 
 
+sub listThemes
+{
+    my( $dir ) = ( @_ );
+
+    $CONFIG{'verbose'} && print "Listhing themes beneath : $dir\n";
+
+    foreach my $name ( sort( glob( $dir . "/*" ) ) )
+    {
+        next unless( -d $name );
+
+        next if ( $name =~ /\/xml$/ );
+
+        if ( $name =~ /^(.*)\/([^\/\\]*)$/ )
+        {
+            print $2 . "\n";
+        }
+    }
+}

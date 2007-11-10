@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.14 2007-10-25 18:36:50 steve Exp $
+# $Id: Makefile,v 1.15 2007-11-10 00:01:04 steve Exp $
 
 
 #
@@ -63,6 +63,8 @@ install:
 	cp ./etc/chroniclerc ${prefix}/etc/chroniclerc
 	mkdir -p ${prefix}/usr/local/bin
 	cp ./bin/chronicle ${prefix}/usr/local/bin
+	mkdir -p ${prefix}/usr/share/chronicle/themes/xml
+	cp -r ./themes/xml/*.* ${prefix}/usr/share/chronicle/themes/xml
 	mkdir -p ${prefix}/usr/share/chronicle/themes/default
 	cp -r ./themes/default/*.* ${prefix}/usr/share/chronicle/themes/default
 	mkdir -p ${prefix}/usr/share/chronicle/themes/copyrighteous
