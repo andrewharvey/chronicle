@@ -48,6 +48,11 @@ Created by <a href="http://steve.org.uk/Software/chronicle">Chronicle v<!-- tmpl
 
 
 <div id="rightmenu">
+
+<!-- tmpl_if name='calendar' -->
+  <!-- tmpl_var name='calendar_month' -->
+<!-- /tmpl_if name='calendar' -->
+
 <!-- tmpl_if name='datecloud' -->
 <span class="rightMenu">Archives</span><br />
 <ul>

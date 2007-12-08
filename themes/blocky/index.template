@@ -56,6 +56,10 @@
 </td>
 <td width="20%" valign="top">
 
+<!-- tmpl_if name='calendar' -->
+  <!-- tmpl_var name='calendar_month' -->
+<!-- /tmpl_if name='calendar' -->
+
 <!-- tmpl_if name='datecloud' -->
 <fieldset><legend>Archive</legend>
 <ul>

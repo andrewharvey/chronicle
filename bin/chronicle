@@ -34,6 +34,7 @@ chronicle - A blog compiler.
    --force       Force the copying of static files from the blog theme.
    --no-archive  Don't create an archive page.
    --no-cache    Don't use the optional memcached features, even if available.
+   --no-calander Don't use the optional calendar upon the index.
    --no-tags     Don't produce any tag pages.
    --lower-case  Lower-case all filenames which are output.
 
@@ -167,12 +168,23 @@ Any tags which should be associated with the entry, separated by commas.
 
 =cut
 
+=head1 OPTIONAL CALENDAR
+
+  If the 'HTML::CalendarMonthSimple' module is available each blog will
+ contain a simple month-view of the current month upon the index.
+
+  To disable this invoke the program with '--no-calendar'.
+
+=cut
+
 
 =head1 AUTHOR
 
  Steve
  --
  http://www.steve.org.uk/
+
+ $Id: chronicle,v 1.28 2007-11-10 00:13:21 steve Exp $
 
 =cut
 
@@ -207,8 +219,7 @@ use Time::Local;
 #
 #  NOTE:  Set by 'make release'.
 #
-my $RELEASE = 'UNRELEASED';
-
+my $RELEASE = '1.0';
 
 #
 #  The names of the months.  Posted early to allow i18n users.
@@ -283,7 +294,6 @@ if ( $CONFIG{'pre-build'} )
 #
 #
 my %data = createDataStructure();
-
 
 #
 #  Find each unique tag used within our entries.
@@ -830,8 +840,8 @@ sub bywhen
     #
     # Abort if we didn't work.
     #
-    die "Couldn't find first year"  unless defined($year1);
-    die "Couldn't find second year" unless defined($year2);
+    die "Couldn't find first year:  $a->{'date'}"  unless defined($year1);
+    die "Couldn't find second year: $b->{'date'}" unless defined($year2);
 
     #
     #  Convert to compare
@@ -872,7 +882,6 @@ sub outputIndexPage
     }
     my @tmp2 = sort bywhen @$tmp;
 
-
     #
     #  The number of entries to display upon the index.
     #
@@ -888,6 +897,23 @@ sub outputIndexPage
     #
     my $template = loadTemplate( "index.template",
                                  die_on_bad_params => 0 );
+
+
+    #
+    # create the calendar if we can.
+    #
+    my $calendar = createCalendar();
+    if ( defined( $calendar ) )
+    {
+        my $text = $calendar->as_HTML();
+
+        $text =~ s/<\/?b>//g;
+        $text =~ s/<\/?p>//g;
+
+        $template->param( calendar       => 1,
+                          calendar_month => $text );
+    }
+
 
     #
     #  The entries.
@@ -1209,7 +1235,6 @@ sub outputStaticPage
           = stat($filename);
 
         $date = localtime( $ctime );
-
     }
 
     $CONFIG{'verbose'} && print "\t$filename\n";
@@ -1392,8 +1417,7 @@ sub readBlogEntry
     #
     if ( ! defined($date) ||( !length( $date ) ) )
     {
-        my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov De
-c );
+        my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
         my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
           localtime(time);
 
@@ -1877,4 +1901,76 @@ sub listThemes
             print $2 . "\n";
         }
     }
+}
+
+
+
+=begin doc
+
+Create and configure a calendar for the index, if and only iff the
+HTML::CalendarMonthSimple module is installed.
+
+=end doc
+
+=cut
+
+sub createCalendar
+{
+    #
+    #  Attempt to load the module.
+    #
+    my $test  = "use HTML::CalendarMonthSimple;";
+    eval( $test );
+
+    #
+    #  If there was an error, or the calander is disabled then
+    # return undef.
+    #
+    if ( ( $@ ) || ( $CONFIG{'no-calendar'} ) )
+    {
+        print "Calander not available: $@";
+        return undef;
+    }
+
+    #
+    #  Continue
+    #
+    my $cal = new HTML::CalendarMonthSimple();
+
+    # configuration of the calendar
+    $cal->border(0);
+    $cal->weekstartsonmonday(1);
+    $cal->showweekdayheaders(1);
+    $cal->sunday('Sun');
+    $cal->saturday('Sat');
+    $cal->weekdays('Mo','Tue','We','Thu','Fr');
+
+    # get 4th element from localtime aka month in form of (0..11)
+    my $curmonth = (localtime)[4] + 1;
+
+    foreach my $f (%data)
+    {
+        my $h = $data{$f};
+        next if ( !$h );
+        my $entrydate          = $h->{'date'};
+
+        if ( !$entrydate )
+        {
+            my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+                $atime,$mtime,$ctime,$blksize,$blocks)
+              = stat($f);
+
+            $entrydate = localtime( $ctime );
+        }
+
+        my $date               = time2str("%Y-%m-%d", str2time($entrydate));
+        my ($year,$month,$day) = split(/-/,$date);
+
+
+        if ($month eq $curmonth)
+        {
+            $cal->setdatehref($day,fileToTitle($data{$f}->{'title'}));
+        }
+    }
+    return ($cal);
 }

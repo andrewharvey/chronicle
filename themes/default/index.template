@@ -41,6 +41,11 @@
 
 <div id="sidebar">
 
+<!-- tmpl_if name='calendar' -->
+<!-- tmpl_var name='calendar_month' -->
+<!-- /tmpl_if name='calendar' -->
+
+
 <!-- tmpl_if name='datecloud' -->
 <h2>Archive</h2>
 <ul>
