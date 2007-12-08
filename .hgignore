@@ -1,3 +1,6 @@
 (^|/)CVS($|/)
 (^|/)\.hg($|/)
 (^|/)\.hgtags($|/)
+
+syntax: glob
+./blog/*.txt
