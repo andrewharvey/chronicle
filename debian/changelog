@@ -1,3 +1,10 @@
+chronicle (1.1-1) stable; urgency=low
+
+  * New upstream release:
+    - Allows support for calandar in the index.
+ 
+ -- Steve Kemp <steve@steve.org.uk>  Sat, 8 Dec 2007 16:53:16 +0000
+
 chronicle (1.0-1) stable; urgency=low
 
   * New upstream release.
