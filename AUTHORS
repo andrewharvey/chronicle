@@ -15,6 +15,9 @@ Contributions
    - Added better base URL detection.
    - Added chronological sorting for months & shorter month-URLs.
 
+  Sascha Korzen [korzen [@] .de.fh-luh.cc]
+   - Added the optional calendar.
+
   Felipe Sateler [fsateler [@] com.gmail]
    - Produced a Debian package for the software.
 
