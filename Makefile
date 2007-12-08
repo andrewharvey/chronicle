@@ -82,6 +82,7 @@ release: clean
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	perl -pi.bak -e "s/UNRELEASED/$(VERSION)/g" $(DIST_PREFIX)/$(BASE)-$(VERSION)/bin/chronicle
 	find  $(DIST_PREFIX)/$(BASE)-$(VERSION) -name ".hg*" -print | xargs rm -rf
+	find  $(DIST_PREFIX)/$(BASE)-$(VERSION)/blog -name "*.txt" -print | xargs rm -rf
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/debian
 	cd $(DIST_PREFIX) && tar -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
