@@ -81,8 +81,9 @@ theme = default
 #
 #  We can disable the sidebar if we want
 #
-#  no-tags = 1
-#  no-archive = 1
+#  no-tags     = 1
+#  no-archive  = 1
+#  no-calander = 1
 #
 
 
