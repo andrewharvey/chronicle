@@ -219,7 +219,7 @@ use Time::Local;
 #
 #  NOTE:  Set by 'make release'.
 #
-my $RELEASE = '1.0';
+my $RELEASE = 'UNRELEASED';
 
 #
 #  The names of the months.  Posted early to allow i18n users.
