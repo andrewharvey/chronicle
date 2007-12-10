@@ -815,7 +815,11 @@ sub createDateCloud
     push( @$results, { year => $year,
                        months => $months } );
 
-    return $results;
+    #
+    #  Make sure this is sorted by reverse chronilogical order.
+    #
+    my @sorted = sort { $b->{'year'} <=> $a->{'year'} } @$results;
+    return \@sorted;
 }
 
 
@@ -1490,6 +1494,9 @@ sub fileToTitle
         $file = $1;
     }
     $file =~ s/ /_/g;
+    $file =~ s/'/_/g;
+    $file =~ s/!/_/g;
+    $file =~ s/\?/_/g;
     $file =~ s/\///g;
     $file =~ s/\\//g;
 
