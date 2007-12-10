@@ -184,8 +184,6 @@ Any tags which should be associated with the entry, separated by commas.
  --
  http://www.steve.org.uk/
 
- $Id: chronicle,v 1.28 2007-11-10 00:13:21 steve Exp $
-
 =cut
 
 =head1 LICENSE

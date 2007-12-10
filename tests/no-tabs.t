@@ -4,7 +4,6 @@
 #
 # Steve
 # --
-# $Id: no-tabs.t,v 1.2 2007-08-13 22:55:11 steve Exp $
 
 
 use strict;

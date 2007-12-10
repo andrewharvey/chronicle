@@ -5,7 +5,6 @@
 #
 # Steve
 # --
-# $Id: pod-check.t,v 1.1 2007-10-10 10:06:24 steve Exp $
 #
 
 use strict;
