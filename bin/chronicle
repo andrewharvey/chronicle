@@ -806,9 +806,9 @@ sub createDateCloud
         }
         $year = $1;
 
-        push( @$months, { month => $2,
-                month_name => $names[$2-1],
-                count => $entry_dates{$date} } );
+        push( @$months, { month      => $2,
+                          month_name => $names[$2-1],
+                          count      => $entry_dates{$date} } );
 
     }
 
@@ -1421,49 +1421,44 @@ sub readBlogEntry
     #
     if ( ! defined($date) ||( !length( $date ) ) )
     {
-        my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
-        my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
-          localtime(time);
-
-        $year += 1900;
-
-        $date = "$mday $abbr[$mon] $year";
+        my @lt = localtime(time);
+        $date = strftime( "%d %B %Y", @lt);
     }
 
     #
-    #  Make an entry date for the XML feed
+    #  Make an entry date for the XML feed, if we have a date.
     #
-    if ( $date )
+    my $time = str2time($date);
+    if ( $time )
     {
-        my $time = str2time($date);
-        if ( $time )
-        {
-            #
-            #  Get the details of the file.
-            #
-            my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
-                $atime,$mtime,$ctime,$blksize,$blocks)
-              = stat($filename);
+        #
+        #  Get the details of the file.
+        #
+        my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+            $atime,$mtime,$ctime,$blksize,$blocks)
+          = stat($filename);
 
-            #
-            #  Get the modification hours.
-            #
-            my ($sec,$min,$hour) = localtime( $mtime );
+        #
+        #  Get the modification hours.
+        #
+        my ($sec,$min,$hour) = localtime( $mtime );
 
-            #
-            #  Pad
-            #
-            $sec  = "0$sec" if ( length( $sec ) < 2 );
-            $min  = "0$min" if ( length( $min ) < 2 );
-            $hour = "0$hour" if ( length( $hour ) < 2 );
-            
+        #
+        #  Pad to two digits for each of the hours, minutes, and seconds.
+        #
+        my $hms = sprintf("%02d:%02d:%02d", $hour, $min, $sec );
 
-            #
-            $entry{'pubdate'} = time2str("%a, %e %b %Y $hour:$min:$sec GMT", $time );
-            $entry{'pubdate'} =~ s/  / /g;
-        }
+        #
+        #  Store the published date & time away.  Collapsing multiple
+        # spaces
+        #
+        $entry{'pubdate'} = time2str("%a, %e %b %Y $hms GMT", $time );
+        $entry{'pubdate'} =~ s/  +/ /g;
     }
-
+    else
+    {
+        print "Failed to parse date: '$date' to generate pubDate of entry.\n";
+    }
 
     #
     #  Store the entry.
