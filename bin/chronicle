@@ -1438,7 +1438,28 @@ sub readBlogEntry
         my $time = str2time($date);
         if ( $time )
         {
-            $entry{'pubdate'} = time2str("%a, %e %b %Y 00:00:00 GMT", $time );
+            #
+            #  Get the details of the file.
+            #
+            my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+                $atime,$mtime,$ctime,$blksize,$blocks)
+              = stat($filename);
+
+            #
+            #  Get the modification hours.
+            #
+            my ($sec,$min,$hour) = localtime( $mtime );
+
+            #
+            #  Pad
+            #
+            $sec  = "0$sec" if ( length( $sec ) < 2 );
+            $min  = "0$min" if ( length( $min ) < 2 );
+            $hour = "0$hour" if ( length( $hour ) < 2 );
+            
+
+            #
+            $entry{'pubdate'} = time2str("%a, %e %b %Y $hour:$min:$sec GMT", $time );
             $entry{'pubdate'} =~ s/  / /g;
         }
     }

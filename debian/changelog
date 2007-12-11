@@ -1,3 +1,13 @@
+chronicle (1.2-1) unstable; urgency=low
+
+  * Initial upload to Debian.
+    (Closes: #455761)
+  * New upstream release:
+    - Reverse sort the date-cloud.
+    - Add 'pubDate' attributes to our RSS feed(s)
+
+ -- Steve Kemp <skx@debian.org>  Mon, 11 Dec 2007 11:58:11 +0000
+
 chronicle (1.1-1) stable; urgency=low
 
   * New upstream release:
