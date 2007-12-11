@@ -1439,6 +1439,7 @@ sub readBlogEntry
         if ( $time )
         {
             $entry{'pubdate'} = time2str("%a, %e %b %Y 00:00:00 GMT", $time );
+            $entry{'pubdate'} =~ s/  / /g;
         }
     }
 
