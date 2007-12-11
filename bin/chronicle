@@ -881,6 +881,7 @@ sub outputIndexPage
     foreach my $file ( keys ( %data ) )
     {
         my $blog = readBlogEntry( $file );
+
         push( @$tmp, $blog ) if (keys( %$blog ) );
     }
     my @tmp2 = sort bywhen @$tmp;
@@ -1428,6 +1429,19 @@ sub readBlogEntry
 
         $date = "$mday $abbr[$mon] $year";
     }
+
+    #
+    #  Make an entry date for the XML feed
+    #
+    if ( $date )
+    {
+        my $time = str2time($date);
+        if ( $time )
+        {
+            $entry{'pubdate'} = time2str("%a, %e %b %Y 00:00:00 GMT", $time );
+        }
+    }
+
 
     #
     #  Store the entry.
