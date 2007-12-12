@@ -2,6 +2,7 @@
 <h3>Add A Comment</h3>
 <blockquote>
 <form action="/cgi-bin/comments.cgi" method="post">
+<input type="hidden" name="id" value="<!-- tmpl_var name='link' escape='html' -->">
 <table>
 <tr><td>Your Name</td>
     <td><input type="text" size="55" name="name"></td></tr>
