@@ -29,6 +29,9 @@
    <!-- /tmpl_if -->
   </div>
 
+<!-- tmpl_include name="comment-loop.inc" -->
+<!-- tmpl_include name="comment-form.inc" -->
+
 <div id="sidebar">
 <!-- tmpl_if name='datecloud' -->
 <h2>Archive</h2>

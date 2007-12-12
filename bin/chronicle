@@ -11,6 +11,7 @@ chronicle - A blog compiler.
 
   Path Options:
 
+   --comments       Specify the path to the optional comments directory.
    --config         Specify a configuration file to read.
    --input          Specify the input directory to use.
    --output         Specify the directory to write output to.
@@ -66,7 +67,7 @@ chronicle - A blog compiler.
 
   The obvious deficiencies are:
 
-   * Lack of support for commenting.
+   * Lack of support for instant commenting.
 
    * Lack of pingback/trackback support.
 
@@ -174,6 +175,33 @@ Any tags which should be associated with the entry, separated by commas.
  contain a simple month-view of the current month upon the index.
 
   To disable this invoke the program with '--no-calendar'.
+
+=cut
+
+
+=head1 OPTIONAL COMMENTING
+
+  Included with the chronicle code you should find the file
+ cgi-bin/comments.cgi.
+
+  This file is designed to write submitted comments to the local
+ filesystem of your webserver.  If you install that, and edit the
+ path at the start of teh script you should be able to include
+ comments in your blog.
+
+  In short there are three things you need to do:
+
+=over 8
+
+=item  Install the CGI script and edit the path at the start.
+
+=item  Copy the output comments to your local blog source.
+
+=item  Run this script again with --comments=./path/to/comments
+
+=back
+
+  This should include the comments in the static output.
 
 =cut
 
@@ -418,6 +446,7 @@ sub setupDefaultOptions
     #  Text directory.
     #
     $CONFIG{'input'}      = "./blog";
+    $CONFIG{'comments'}   = '';
 
     #
     #  Output directory.
@@ -482,6 +511,7 @@ sub parseCommandLineArguments
                "list-themes",  \$CONFIG{'list-themes'},
 
                # paths
+               "comments=s",   \$CONFIG{'comments'},
                "config=s",     \$CONFIG{'config'},
                "input=s",      \$CONFIG{'input'},
                "output=s",     \$CONFIG{'output'},
@@ -1248,6 +1278,28 @@ sub outputStaticPage
     #
     my $file = fileToTitle($title);
 
+
+    #
+    #  Get comments, if present.
+    #
+    if( !$CONFIG{'no-comments'} )
+    {
+        my $comments = getComments( $CONFIG{'comments'}, $file );
+
+        if ( defined($comments) )
+        {
+            my $count = scalar( @$comments );
+
+            $template->param( comments      => $comments,
+                              comment_count => $count );
+
+            $CONFIG{'verbose'} && print "$file [$filename] has $count comments\n";
+        }
+
+        $template->param( comments_enabled => 1 );
+    }
+
+
     #
     #  The entry.
     #
@@ -1468,6 +1520,7 @@ sub readBlogEntry
     $entry{'date'}  = $date;
     $entry{'tags'}  = $entryTags if ( $entryTags );
 
+
     #
     #  No title?
     #
@@ -1492,6 +1545,11 @@ sub readBlogEntry
     #
     my $link = fileToTitle( $entry{'title'} );
     $entry{'link'}  = $link;
+
+    #
+    #  Count comments.
+    #
+    $entry{'comment_count' } = countComments( $CONFIG{'comments'}, $entry{'link'} );
 
 
     #
@@ -1547,6 +1605,98 @@ sub fileToTitle
 
 =begin doc
 
+  Look for comments.
+
+=end doc
+
+=cut
+
+sub getComments
+{
+    my( $dir, $title ) = (@_);
+
+    my $results;
+
+    if ( $title  =~ /^(.*)\.([^.]+)$/ )
+    {
+        $title = $1;
+    }
+
+    foreach my $file ( sort( glob( $dir . "/" . $title . "*" ) ) )
+    {
+        my $date = "";
+        my $name = "";
+        my $body = "";
+        my $mail = "";
+
+        if ( $file =~ /^(.*)\.([^.]+)$/ )
+        {
+            $date = $2;
+        }
+        open( COMMENT, "<", $file )
+          or next;
+
+        foreach my $line ( <COMMENT> )
+        {
+            next if ( !defined( $line ) );
+
+            chomp( $line );
+            if ( !length( $name ) && $line =~ /^Name: (.*)/i )
+            {
+                $name = $1;
+            }
+            elsif ( !length( $mail ) && $line =~ /^Mail: (.*)/i )
+            {
+                $mail = $1;
+            }
+            else
+            {
+                $body .= $line . "\n";
+            }
+        }
+        close( COMMENT );
+
+        if ( length($name) &&
+             length($mail) &&
+             length($body) )
+        {
+            push( @$results,
+                { name => $name,
+                  mail => $mail,
+                  body => $body,
+                  date => $date } );
+
+        }
+    }
+    return( $results );
+}
+
+
+
+sub countComments
+{
+    my( $dir, $title ) = (@_);
+
+    return( 0 ) if ( $CONFIG{'no-comments'} );
+
+    if ( $title  =~ /^(.*)\.([^.]+)$/ )
+    {
+        $title = $1;
+    }
+
+    my $count = 0;
+    foreach my $f ( sort glob( $dir . "/" . $title . "*" ) )
+    {
+        $count += 1;
+    }
+
+    return( $count );
+}
+
+
+
+=begin doc
+
   Load a template file.
 
 =end doc
@@ -1573,7 +1723,6 @@ sub loadTemplate
     {
         $dir .= "/" . $CONFIG{'theme'} . "/";
     }
-
 
     #
     #  Make sure the file exists.
