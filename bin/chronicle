@@ -1307,6 +1307,7 @@ sub outputStaticPage
     $template->param( tags => $tags ) if ( $tags );
     $template->param( date => $date ) if ( $date );
     $template->param( body => $body );
+    $template->param( link => $static->{'link'} );
 
     #
     #  Our clouds
