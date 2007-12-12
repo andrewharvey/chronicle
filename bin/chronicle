@@ -524,6 +524,7 @@ sub parseCommandLineArguments
                "no-tags",      \$CONFIG{'no-tags'},
                "no-cache",     \$CONFIG{'no-cache'},
                "no-calendar",  \$CONFIG{'no-calendar'},
+               "no-comments",  \$CONFIG{'no-comments'},
                "no-archive",   \$CONFIG{'no-archive'},
                "lower-case",   \$CONFIG{'lower-case'},
 
