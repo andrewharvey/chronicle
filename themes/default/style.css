@@ -79,6 +79,10 @@ div.entry div.tags {
 	font-size: 90%;
 	text-align: right;
 }
+div.entry div.tags span.comments {
+        padding-left: 5px;
+        float: left;
+}
 
 
 div#sidebar {

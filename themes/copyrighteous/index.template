@@ -35,6 +35,12 @@
 <!-- tmpl_var name='body' -->
 </div>
 <a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='link' -->">Permalink</a>
+   <!-- tmpl_if name='comment_count' -->
+   <span class="comments">
+   <!-- tmpl_var name='comment_count' --> comment(s).
+   </span>
+   <!-- /tmpl_if -->
+
 <span class="tags"><!-- tmpl_if name='tags' -->| <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' -->"><!-- tmpl_var name='tag' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop --><!-- /tmpl_if --> </span> 
 </div>
 </div>

@@ -66,7 +66,9 @@
   <div class="body"><!-- tmpl_var name='body' --></div>
   <div class="tags">
    <!-- tmpl_if name='comment_count' -->
-   <!-- tmpl_var name='comment_count' --> comments.  
+   <span class="comments">
+   <!-- tmpl_var name='comment_count' --> comment(s).
+   </span>
    <!-- /tmpl_if -->
 
    <!-- tmpl_if name='tags' -->
