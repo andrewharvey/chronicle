@@ -1642,6 +1642,10 @@ sub getComments
             next if ( !defined( $line ) );
 
             chomp( $line );
+
+            next if ($line =~ /^IP-Address:/ );
+            next if ($line =~ /^User-Agent:/ );
+
             if ( !length( $name ) && $line =~ /^Name: (.*)/i )
             {
                 $name = $1;
