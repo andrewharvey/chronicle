@@ -2115,7 +2115,6 @@ sub createCalendar
     #
     if ( ( $@ ) || ( $CONFIG{'no-calendar'} ) )
     {
-        print "Calander not available: $@";
         return undef;
     }
 
