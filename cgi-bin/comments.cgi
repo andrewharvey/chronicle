@@ -14,7 +14,11 @@
 
 use strict;
 use warnings;
+
 use CGI;
+use POSIX qw(strftime);
+
+
 
 #
 #  The directory to store comments in
@@ -59,13 +63,12 @@ if ( $id =~ /^(.*)[\/\\](.*)$/ ){
 #
 # get the current time
 #
-my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
-  localtime(time);
+my $timestr = strftime "%e-%B-%Y-%H:%M:%S", gmtime;
 
 #
 #  Open the file.
 #
-my $file = $COMMENT . "/" . $id . "." . "$mday-$mon-$year-$hour-$min-$sec";
+my $file = $COMMENT . "/" . $id . "." . $timestr;
 open( FILE, ">", $file );
 print FILE "Name: $name\n";
 print FILE "Mail: $mail\n";
