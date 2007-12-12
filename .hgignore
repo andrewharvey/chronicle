@@ -4,3 +4,7 @@
 
 syntax: glob
 ./blog/*.txt
+./output/*
+./comments/*
+./debian/*.substvars
+./debian/files
