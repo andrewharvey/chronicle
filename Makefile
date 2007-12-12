@@ -66,6 +66,8 @@ install:
 	cp -r ./themes/xml/*.* ${prefix}/usr/share/chronicle/themes/xml
 	mkdir -p ${prefix}/usr/share/chronicle/themes/default
 	cp -r ./themes/default/*.* ${prefix}/usr/share/chronicle/themes/default
+	mkdir -p ${prefix}/usr/share/chronicle/themes/blog.steve.org.uk
+	cp -r ./themes/blog.steve.org.uk/*.* ${prefix}/usr/share/chronicle/themes/default
 	mkdir -p ${prefix}/usr/share/chronicle/themes/copyrighteous
 	cp -r ./themes/copyrighteous/*.* ${prefix}/usr/share/chronicle/themes/copyrighteous
 	mkdir -p ${prefix}/usr/share/chronicle/themes/blocky
