@@ -1633,7 +1633,17 @@ sub getComments
         if ( $file =~ /^(.*)\.([^.]+)$/ )
         {
             $date = $2;
+
+            if ( $date =~ /(.*)-([0-9:]+)/ )
+            {
+                my $d = $1;
+                my $t = $2;
+
+                $d =~ s/-/ /g;
+                $date = "Submitted at $t on $d";
+            }
         }
+
         open( COMMENT, "<", $file )
           or next;
 
