@@ -79,11 +79,12 @@ theme = default
 
 
 #
-#  We can disable the sidebar if we want
+#  We can parts of the output if we wish
 #
 #  no-tags     = 1
 #  no-archive  = 1
 #  no-calander = 1
+no-comments = 1
 #
 
 
