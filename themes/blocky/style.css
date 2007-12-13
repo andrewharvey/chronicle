@@ -43,3 +43,11 @@ legend a:hover {
 legend {
         font-weight: bold;
 }
+
+pre {
+	overflow:	auto;
+	background:	rgb(230,230,230);
+	border:		solid;
+	border-width:	thin;
+	padding: 5px  10px;
+}
