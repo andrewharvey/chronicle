@@ -71,7 +71,7 @@
  </div>
  <div class="tags">
    <!-- tmpl_if name='comment_count' -->
-   <!-- tmpl_var name='comment_count' --> comments.  
+   <a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='link' escape='html' -->#comments"><!-- tmpl_var name='comment_count' --> comment(s)</a>
    <!-- /tmpl_if -->
 
  <!-- tmpl_if name='tags' -->

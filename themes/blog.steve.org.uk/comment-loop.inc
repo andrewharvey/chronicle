@@ -1,5 +1,5 @@
 <!-- tmpl_if name='comments' -->
- <h3>Comments On This Entry</h3>
+ <h3 id="comments">Comments On This Entry</h3>
  <blockquote>
  <!-- tmpl_loop name='comments' -->
   <div class="entry">
