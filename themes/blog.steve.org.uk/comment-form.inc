@@ -12,7 +12,7 @@
 <tr><td colspan="2">Your Comment<br />
 <textarea name="body" rows="10" cols="60">
 </textarea>
-<tr><td></td><td><input type="submit"></td></tr>
+<tr><td></td><td align="right"><input type="submit" name="submit" value="Post Comment"></td></tr>
 </table>
 </form>
 <p>Your submission will be ignored if any field is left blank.  But your email address will not be displayed.</p>
