@@ -88,6 +88,11 @@ if ( defined( $cap ) && length( $cap ) )
 
 
 #
+#  Convert the message to crude HTML.
+#
+$body =~ s/\n$/<br>\n/mg;
+
+#
 #  Otherwise save them away.
 #
 #
