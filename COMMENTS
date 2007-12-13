@@ -1,46 +1,103 @@
 
 
-   Chronicle, since version 2.0, supports the submission of post
- comments.
-
-  The way this works is rather non-standard so please read this 
- document to understand it.
+  Chronicle, since version 2.0, supports the submission of comments
+ upon published posts.  This document describes how you would go
+ about enabling this support.
 
 
-Basic Usage
------------
+
+Introduction
+------------
 
   The basic use of chronicle is to convert a collection of text files
  into a HTML & RSS blog.
 
-  Generally it appears that people will do this upon a local machine,
- then scp, rsync, or otherwise move the output into place upon their
- remote webserver.
+  There are two ways this software is typically used:
 
-  This process looks something like this:
+   Single Machine
+     The blog input is stored upon your webserver and you generate
+    the output directly to a web-accessible location upon that
+    machine.
 
-        chronicle --input=./blog --output=./html
-        rsync html user@host:/path/to/blog
+   Multiple Machines
+     The blog input lives upon a machine, and once you've generated
+    the output you copy it over to a remote webserver where it may
+    be viewed.
+
+  Depending upon which of these ways you use the software the 
+ comment support will need to be handled differently.
 
 
-Advanced Usage
+
+Common Setup
+------------
+
+  Install the included file cgi-bin/comments.cgi upon the webserver
+ which hosts the blog, and adjust the settings at the start of that
+ file to specify:
+
+   1.  The location to save the comments to.
+
+   2.  The source and destination email addresses to use for notication
+      purposes.
+
+
+
+Single Machine
 --------------
 
-  Since the blog, once produced, is typically stored upon a remote 
- system there is no easy way for comments which are stored upon that
- system to be integrated into the main blog.
+   If you have only a single machine then you may configure the
+  comments.cgi script to save the comments in text files directly
+  within your blog tree.
 
-  The solution to this problem is to merely record comments upon
- the webserver in simple text files.
+   Assuming you have something like this:
 
-  Later these can be fetched to the machine which is building the
- blog, and integrated for the next rebuild:
-
-
-       scp uesr@host://path/to/comments/* ./comments/
-       chronicle --input=./blog --output=./html --comments=./comments
-       rsync html user@host:/path/to/blog       
+    comments/
+      A directory to contain the comments.
+    data/
+      The directory where your blog posts are loaded from.
 
 
+   You may then regenerate your blog via:
+
+     chronicle --input=./date/  --comments=./comments/ --output=/var/www/blog/
+
+   This will ensure that the comments saved by your webserver into the
+  comments directory are included in the (re)generated blog.
+
+    
+
+
+Multiple Machines
+-----------------
+
+  If you have the blog input files upon machine "local" and the
+ hosted blog upon the machine "remote" then you will run into
+ problems:
+
+   1.  The comments are saved by your webserver to a local directory
+      upon the machine "remote".
+
+   2.  To rebuild the blog upon your local machine, "local", you must
+      have those files.
+
+  The solution is to generate your blog in a three-step process:
+
+   1.  Copy the comment files, if any from "remote" to "local".
+
+   2.  Rebuild the blog.
+
+   3.  Upload the built blog.
+
+  With the "pre-build" and "post-build" arguments to chronicle
+ you can automate this:
+
+ chronicle
+   --pre-build="rsync varz user@remote:/path/to/comments comments/" \
+   --comments=./comments
+   --output=./output
+   --post-build="rsync vazr ./output user@remote:/path/to/location"
+
+   
 Steve
---
+-- 
