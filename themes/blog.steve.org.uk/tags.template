@@ -29,15 +29,7 @@
  <!-- left -->
  <td width="20%" valign="top"> 
 
-<div class="box" >
-<h2>About This Site</h2>
-<p>This is a simple concentrating upon Debian &amp; Free Software.</p>
-<ul>
-<li><a href="http://debian-administration.org/">Debian Administration</a></li>
-<li><a href="http://www.steve.org.uk/">My Website</a></li>
-<li><a href="http://www.steve.org.uk/contact/">Get In Touch</a></li>
-</ul>
-</div>
+<!-- tmpl_include name='box.inc' -->
 
 <!-- tmpl_if name='calendar' -->
   <!-- tmpl_var name='calendar_month' -->
