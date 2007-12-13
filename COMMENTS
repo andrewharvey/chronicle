@@ -1,0 +1,46 @@
+
+
+   Chronicle, since version 2.0, supports the submission of post
+ comments.
+
+  The way this works is rather non-standard so please read this 
+ document to understand it.
+
+
+Basic Usage
+-----------
+
+  The basic use of chronicle is to convert a collection of text files
+ into a HTML & RSS blog.
+
+  Generally it appears that people will do this upon a local machine,
+ then scp, rsync, or otherwise move the output into place upon their
+ remote webserver.
+
+  This process looks something like this:
+
+        chronicle --input=./blog --output=./html
+        rsync html user@host:/path/to/blog
+
+
+Advanced Usage
+--------------
+
+  Since the blog, once produced, is typically stored upon a remote 
+ system there is no easy way for comments which are stored upon that
+ system to be integrated into the main blog.
+
+  The solution to this problem is to merely record comments upon
+ the webserver in simple text files.
+
+  Later these can be fetched to the machine which is building the
+ blog, and integrated for the next rebuild:
+
+
+       scp uesr@host://path/to/comments/* ./comments/
+       chronicle --input=./blog --output=./html --comments=./comments
+       rsync html user@host:/path/to/blog       
+
+
+Steve
+--

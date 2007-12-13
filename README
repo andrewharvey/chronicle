@@ -8,8 +8,11 @@ Mercurial Repository:
 Sample Output:
     http://www.steve.org.uk/Software/chronicle/demo/
 
+Real World Use:
+    http://blog.steve.org.uk/
 
-         
+
+
 chronicle - A blog compiler
 ---------------------------
 
@@ -19,11 +22,9 @@ chronicle - A blog compiler
   The system is intentionally simple, but it does support:
 
   * Template based output.
-
   * Support for RSS feeds.
-
   * Support for tagged entries.
-
+  * Optional support for comments.
 
 
 
@@ -41,7 +42,7 @@ Installation
   This will give you:
 
     /usr/share/chronicle        <-  The theme directories.
-    /usr/local/bin/chronicle    <-  The main binary.
+    /usr/bin/chronicle          <-  The main binary.
     /etc/chroniclerc            <-  The main configuration file.
 
   If you wish to customise the templates it is recommended you
@@ -71,6 +72,15 @@ Blog Format
 
   The tags are optional, but recommended, similarly the date of the post
  is used in preference to the current date if none is present.
+
+
+
+Comment Support
+---------------
+
+  The system supports the submission of user-supplied comments upon
+ posts, for more details please see the included file COMMENTS.
+
 
 
 Bugs?
