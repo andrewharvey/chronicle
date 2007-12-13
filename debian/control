@@ -3,7 +3,7 @@ Section: web
 Priority: extra
 Maintainer: Steve Kemp <skx@debian.org>
 Build-Depends: debhelper (>= 5)
-Standards-Version: 3.7.2
+Standards-Version: 3.7.3
 Homepage: http://www.steve.org.uk/Software/chronicle/
 
 Package: chronicle
