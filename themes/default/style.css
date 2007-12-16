@@ -6,6 +6,9 @@ body {
 	background-color: white;
 	color: black;
 	margin: 0;
+	margin-right: 185px;
+	border-right: 1px solid rgb(128, 128, 128);
+
 }
 
 div.title {
