@@ -6,8 +6,10 @@ chronicle (2.0-1) unstable; urgency=low
     - HTML Entity escaping of links, and tag-names.
     - Simplified date & time handling.
     - The addition of a new theme 'blog.steve.org.uk'.
+  * Consistent spelling for 'calendar' and the ability to work
+    without this module.  (Closes: #456772)
 
- -- Steve Kemp <skx@debian.org>  Wed, 12 Dec 2007 11:58:11 +0000
+ -- Steve Kemp <skx@debian.org>  Wed, 20 Dec 2007 11:53:11 +0000
 
 chronicle (1.2-1) unstable; urgency=low
 
