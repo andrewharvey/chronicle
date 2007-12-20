@@ -54,6 +54,9 @@ Single Machine
 
     comments/
       A directory to contain the comments.
+      NOTE:  You will need to ensure your webserver has the permissions
+      to save files to this directory.
+
     data/
       The directory where your blog posts are loaded from.
 
@@ -65,7 +68,7 @@ Single Machine
    This will ensure that the comments saved by your webserver into the
   comments directory are included in the (re)generated blog.
 
-    
+
 
 
 Multiple Machines
@@ -98,6 +101,6 @@ Multiple Machines
    --output=./output
    --post-build="rsync vazr ./output user@remote:/path/to/location"
 
-   
+
 Steve
 -- 
