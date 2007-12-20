@@ -59,7 +59,7 @@
   <div class="tags">
    <!-- tmpl_if name='comment_count' -->
    <span class="comments">
-   <a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='link' escape='html' -->#comments"><!-- tmpl_var name='comment_count' --> comment(s)</a>
+   <a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='link' escape='html' -->#comments"><!-- tmpl_var name='comment_count' --> comment<!-- tmpl_if name='comment_plural' -->s<!-- /tmpl_if --></a>
    </span>
    <!-- /tmpl_if -->
 

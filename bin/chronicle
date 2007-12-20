@@ -1289,10 +1289,13 @@ sub outputStaticPage
 
         if ( defined($comments) )
         {
-            my $count = scalar( @$comments );
+            my $count  = scalar( @$comments );
+            my $plural = 1;
+            $plural    = 0 if ( $count == 1 );
 
-            $template->param( comments      => $comments,
-                              comment_count => $count );
+            $template->param( comments       => $comments,
+                              comment_count  => $count,
+                              comment_plural => $plural );
 
             $CONFIG{'verbose'} && print "$file [$filename] has $count comments\n";
         }
@@ -1552,7 +1555,11 @@ sub readBlogEntry
     #  Count comments.
     #
     $entry{'comment_count' } = countComments( $CONFIG{'comments'}, $entry{'link'} );
-
+    if ( defined $entry{'comment_count'} &&
+         $entry{'comment_count'} != 1 )
+    {
+        $entry{'comment_plural'} = 1;
+    }
 
     #
     #  Store the read file in the cache if we're using it.
