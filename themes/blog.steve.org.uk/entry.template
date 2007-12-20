@@ -4,6 +4,23 @@
  <head>
   <title><!-- tmpl_var name='blog_title' -->: <!-- tmpl_var name='title' --></title>
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
+  <link rel="stylesheet" href="<!-- tmpl_var name='top' -->bubbles.css" type="text/css" media="screen" charset="utf-8" />
+  <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->rounded_corners.inc.js"></script>
+  <script type="text/JavaScript">
+	  window.onload = function() {
+	      settings = {
+	          tl: { radius: 10 },
+	          tr: { radius: 10 },
+	          bl: { radius: 10 },
+	          br: { radius: 10 },
+	          antiAlias: true,
+	          autoPad: true
+	      }
+	      var myBoxObject = new curvyCorners(settings, "rounded");
+	      myBoxObject.applyCornersToAll();
+	  }
+	</script>
+
  </head>
  <body>
 

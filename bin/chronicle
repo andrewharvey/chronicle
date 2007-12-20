@@ -35,7 +35,7 @@ chronicle - A blog compiler.
    --force       Force the copying of static files from the blog theme.
    --no-archive  Don't create an archive page.
    --no-cache    Don't use the optional memcached features, even if available.
-   --no-calander Don't use the optional calendar upon the index.
+   --no-calendar Don't use the optional calendar upon the index.
    --no-tags     Don't produce any tag pages.
    --lower-case  Lower-case all filenames which are output.
 
@@ -2125,7 +2125,7 @@ sub createCalendar
     eval( $test );
 
     #
-    #  If there was an error, or the calander is disabled then
+    #  If there was an error, or the calendar is disabled then
     # return undef.
     #
     if ( ( $@ ) || ( $CONFIG{'no-calendar'} ) )
