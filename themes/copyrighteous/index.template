@@ -37,7 +37,7 @@
 <a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='link' escape='html' -->">Permalink</a>
    <!-- tmpl_if name='comment_count' -->
    <span class="comments">
-   <!-- tmpl_var name='comment_count' --> comment(s).
+   <!-- tmpl_var name='comment_count' --> comment<!-- tmpl_if name='comment_plural' -->s<!-- /tmpl_if -->.
    </span>
    <!-- /tmpl_if -->
 
