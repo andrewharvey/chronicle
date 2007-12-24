@@ -8,7 +8,7 @@
 <tr><td>Your Name</td>
     <td><input type="text" size="55" name="name"></td></tr>
 <tr><td>Your EMail</td>
-    <td><input type="text" size="55" name="email"></td></tr>
+    <td><input type="text" size="55" name="mail"></td></tr>
 <tr><td colspan="2">Your Comment<br />
 <textarea name="body" rows="10" cols="60">
 </textarea>
