@@ -1,3 +1,5 @@
+    - Fixed the handling of comments on the default theme.
+
 chronicle (2.0-1) unstable; urgency=low
 
   * New upstream release:
