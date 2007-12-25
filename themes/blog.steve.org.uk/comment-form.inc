@@ -11,7 +11,7 @@
     <td><input type="text" size="55" name="mail"></td></tr>
 <tr><td colspan="2">Your Comment<br />
 <textarea name="body" rows="10" cols="60">
-</textarea>
+</textarea></td></tr>
 <tr><td></td><td align="right"><input type="submit" name="submit" value="Post Comment"></td></tr>
 </table>
 </form>
