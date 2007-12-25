@@ -1,4 +1,6 @@
     - Fixed the handling of comments on the default theme.
+	- Updated output to add 'alt', 'height', and 'width' to <img>s.
+	- Produce valid HTML output, and added test to ensure that is the case.
 
 chronicle (2.0-1) unstable; urgency=low
 
