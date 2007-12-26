@@ -63,7 +63,7 @@ theme = default
 #  Valid choices are:
 #
 #   html
-#   ----  
+#   ----
 #    The blog entries aren't touched and are inserted as-is.
 #
 #   markdown
@@ -83,7 +83,7 @@ theme = default
 #
 #  no-tags     = 1
 #  no-archive  = 1
-#  no-calander = 1
+#  no-calendar = 1
 no-comments = 1
 #
 
