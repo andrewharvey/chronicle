@@ -201,7 +201,9 @@ Any tags which should be associated with the entry, separated by commas.
 
 =back
 
-  This should include the comments in the static output.
+  This should include the comments in the static output.  More
+ explicit instructions are provided within the file 'COMMENTS'
+ included within the distribution.
 
 =cut
 
@@ -545,12 +547,6 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.28 $';
-        if ( $REVISION =~ /1.([0-9.]+) / )
-        {
-            $REVISION = $1;
-        }
-
         print( "chronicle release $RELEASE\n" );
         exit;
     }
@@ -576,18 +572,6 @@ sub parseCommandLineArguments
 sub createDataStructure
 {
     my %results;
-
-    if ( ! -d $CONFIG{'input'} )
-    {
-        print <<EOF;
-
-  The blog input directory $CONFIG{'input'} does not exist.
-
-  Aborting.
-EOF
-
-        exit
-    }
 
     #
     #  Did the user override the default pattern?
@@ -1894,11 +1878,8 @@ sub readConfigurationFile
 
 =begin doc
 
-  Sanity check our arguments:
-
-  1.  Make sure we have a theme-directory
-
-  2.  Make sure we have a theme.
+  Sanity check our arguments, and setup to make sure there is nothing
+ obviously broken.
 
 =end doc
 
@@ -1906,6 +1887,21 @@ sub readConfigurationFile
 
 sub sanityCheckArguments
 {
+    #
+    #  Make sure we have an input directory.
+    #
+    if ( ! -d $CONFIG{'input'} )
+    {
+        print <<EOF;
+
+  The blog input directory $CONFIG{'input'} does not exist.
+
+  Aborting.
+EOF
+
+        exit;
+    }
+
     if ( !$CONFIG{'theme-dir'} )
     {
         print <<EOF;
