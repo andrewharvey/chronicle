@@ -16,15 +16,15 @@ Introduction
 
    Single Machine
      The blog input is stored upon your webserver and you generate
-    the output directly to a web-accessible location upon that
+    the output directly to a http-accessible directory upon that
     machine.
 
    Multiple Machines
-     The blog input lives upon a machine, and once you've generated
+     The blog input lives upon one machine, and once you've generated
     the output you copy it over to a remote webserver where it may
     be viewed.
 
-  Depending upon which of these ways you use the software the 
+  Depending upon which of these ways you use the software the
  comment support will need to be handled differently.
 
 
@@ -36,7 +36,7 @@ Common Setup
  which hosts the blog, and adjust the settings at the start of that
  file to specify:
 
-   1.  The location to save the comments to.
+   1.  The local directory to save the comments within.
 
    2.  The source and destination email addresses to use for notication
       purposes.
@@ -101,6 +101,20 @@ Multiple Machines
    --output=./output
    --post-build="rsync vazr ./output user@remote:/path/to/location"
 
+
+
+Spam Filtering
+--------------
+
+  In the modern world many blogs will receive comments which are
+ just spam, and not related to your content at all.
+
+  My solution to this is to use an email spam filter upon the
+ comments.  So my comments are saved to a directory, and later
+ tested automatically.  If they are non-spam they are kept, if
+ they are spam they are deleted.
+
+  You might need to do something similar for your own installation.
 
 Steve
 -- 
