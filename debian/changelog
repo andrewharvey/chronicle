@@ -1,6 +1,10 @@
+chronicle (2.0-1) unstable; urgency=low
+
     - Fixed the handling of comments on the default theme.
-	- Updated output to add 'alt', 'height', and 'width' to <img>s.
-	- Produce valid HTML output, and added test to ensure that is the case.
+    - Updated output to add 'alt', 'height', and 'width' to <img>s.
+    - Produce valid HTML output, and added test to ensure that is the case.
+
+ -- Steve Kemp <skx@debian.org>  Wed, 20 Dec 2007 11:53:11 +0000
 
 chronicle (2.0-1) unstable; urgency=low
 
