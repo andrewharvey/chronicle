@@ -8,7 +8,7 @@ Homepage: http://www.steve.org.uk/Software/chronicle/
 
 Package: chronicle
 Architecture: all
-Depends: ${perl:Depends}, libtimedate-perl, libhtml-template-perl
+Depends: ${perl:Depends}, libtimedate-perl, libhtml-template-perl, perl-modules
 Suggests: memcached
 Description: HTML & RSS blog compiler
  This is a tool which will convert a directory of simple
@@ -16,8 +16,10 @@ Description: HTML & RSS blog compiler
  .
   The system is intentionally simple, but it supports:
  .
+  * RSS feed creation.
+ .
   * Template based output.
  .
-  * RSS feeds.
+  * The tagging of entries.
  .
-  * Tagged entries.
+  * User comments upon entries.
