@@ -20,5 +20,5 @@ Contributions
 
   Felipe Sateler [fsateler [@] com.gmail]
    - Produced a Debian package for the software.
-
+   - Provided fixup for the default comment handling of the default theme.
 
