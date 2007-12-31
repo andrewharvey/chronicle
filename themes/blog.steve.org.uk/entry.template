@@ -6,6 +6,9 @@
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
   <link rel="stylesheet" href="<!-- tmpl_var name='top' -->bubbles.css" type="text/css" media="screen" charset="utf-8" />
   <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->rounded_corners.inc.js"></script>
+<!-- tmpl_if name='comments_enabled' -->
+  <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->ajax.js"></script>
+<!-- /tmpl_if -->
   <script type="text/JavaScript">
 	  window.onload = function() {
 	      settings = {

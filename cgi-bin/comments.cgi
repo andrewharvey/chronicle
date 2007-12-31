@@ -44,11 +44,9 @@ my $COMMENT = $ENV{'DOCUMENT_ROOT'} . "../comments/";
 #
 #  The notification addresses - leave blank to disable
 #
-# my $TO   = 'weblog@steve.org.uk';
-# my $FROM = 'weblog@steve.org.uk';
+my $TO   = 'weblog@steve.org.uk';
+my $FROM = 'weblog@steve.org.uk';
 #
-my $TO   = '';
-my $FROM = '';
 
 
 
@@ -63,7 +61,7 @@ my $mail = $cgi->param('mail') || undef;
 my $body = $cgi->param('body') || undef;
 my $id   = $cgi->param('id')   || undef;
 my $cap  = $cgi->param('captcha') || undef;
-
+my $ajax = $cgi->param( "ajax" ) || 0;
 
 #
 #  If any are missing just redirect back to the blog homepage.
@@ -73,7 +71,15 @@ if ( !defined( $name )  || !length( $name ) ||
      !defined( $body )  || !length( $body ) ||
      !defined( $id )    || !length( $id ) )
 {
-    print "Location: http://" . $ENV{'HTTP_HOST'} . "/\n\n";
+    if ( $ajax )
+    {
+        print "Content-type: text/html\n\n";
+        print "Missing fields.\n";
+    }
+    else
+    {
+        print "Location: http://" . $ENV{'HTTP_HOST'} . "/\n\n";
+    }
     exit;
 }
 
@@ -82,7 +88,15 @@ if ( !defined( $name )  || !length( $name ) ||
 #
 if ( defined( $cap ) && length( $cap ) )
 {
-    print "Location: http://" . $ENV{'HTTP_HOST'} . "/\n\n";
+    if ( $ajax )
+    {
+        print "Content-type: text/html\n\n";
+        print "Missing fields.\n";
+    }
+    else
+    {
+        print "Location: http://" . $ENV{'HTTP_HOST'} . "/\n\n";
+    }
     exit;
 }
 
@@ -134,7 +148,7 @@ close( FILE );
 #
 if ( length($TO) && length($FROM) )
 {
-    open  ( SENDMAIL, "|/usr/lib/sendmail -t");
+    open  ( SENDMAIL, "|/usr/lib/sendmail -t -f $FROM");
     print SENDMAIL "To: $TO\n";
     print SENDMAIL "From: $FROM\n";
     print SENDMAIL "Subject: New Comment [$id]\n";
@@ -143,12 +157,21 @@ if ( length($TO) && length($FROM) )
     close ( SENDMAIL );
 }
 
-
 #
 #  Now show the user the thanks message..
 #
+if ( $cgi->param( "ajax" ) )
+{
+    print <<EOF;
 
-print <<EOF;
+<p>Thanks for your comment, it will be made live when the queue is moderated next.</p>
+
+EOF
+    exit;
+}
+else
+{
+    print <<EOF;
 <html>
  <head>
   <title>Thanks For Your Comment</title>
@@ -160,4 +183,4 @@ print <<EOF;
  </body>
 </html>
 EOF
-
+}
