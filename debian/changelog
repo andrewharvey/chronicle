@@ -1,11 +1,12 @@
-chronicle (2.1-1) unstable; urgency=low
+chronicle (2.1-1) unstable; urgency=medium
 
   * New upstream release:
     - Fixed the handling of comments on the default theme.
     - Updated output to add 'alt', 'height', and 'width' to all <img> tags.
     - Produce valid HTML output, and added test to ensure that is the case.
+    - Added AJAX support to the blog.steve.org.uk theme for comment submission.
 
- -- Steve Kemp <skx@debian.org>  Fri, 28 Dec 2007 14:29:41 +0000
+ -- Steve Kemp <skx@debian.org>  Tue, 1 Jan 2008 22:22:22 +0000
 
 chronicle (2.0-1) unstable; urgency=low
 
