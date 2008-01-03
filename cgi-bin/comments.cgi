@@ -46,7 +46,7 @@ my $COMMENT = $ENV{'DOCUMENT_ROOT'} . "../comments/";
 #
 my $TO   = 'weblog@steve.org.uk';
 my $FROM = 'weblog@steve.org.uk';
-#
+
 
 
 
@@ -56,12 +56,13 @@ my $FROM = 'weblog@steve.org.uk';
 #  Get the parameters from the request.
 #
 my $cgi  = new CGI();
-my $name = $cgi->param('name') || undef;
-my $mail = $cgi->param('mail') || undef;
-my $body = $cgi->param('body') || undef;
-my $id   = $cgi->param('id')   || undef;
+my $name = $cgi->param('name')    || undef;
+my $mail = $cgi->param('mail')    || undef;
+my $body = $cgi->param('body')    || undef;
+my $id   = $cgi->param('id')      || undef;
 my $cap  = $cgi->param('captcha') || undef;
-my $ajax = $cgi->param( "ajax" ) || 0;
+my $ajax = $cgi->param( "ajax" )  || 0;
+
 
 #
 #  If any are missing just redirect back to the blog homepage.
