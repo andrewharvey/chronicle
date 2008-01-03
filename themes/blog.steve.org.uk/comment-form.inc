@@ -13,7 +13,7 @@
 <tr><td colspan="2">Your Comment<br />
 <textarea name="body" rows="10" cols="60">
 </textarea></td></tr>
-<tr><td></td><td align="right"><input type="submit" name="submit" value="Post Comment" onClick="submitAjax(); return false;"></td></tr>
+<tr><td></td><td align="right"><div id="progress" style="display:none;"><img src="progress.gif" alt="" width="36" height="36"></div><input type="submit" name="submit" value="Post Comment" onClick="submitComment(); return false;"></td></tr>
 </table>
 </form>
 <p>Your submission will be ignored if any field is left blank.  But your email address will not be displayed.</p>
