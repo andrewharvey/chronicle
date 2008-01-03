@@ -1,7 +1,7 @@
 <!-- tmpl_if name='comments_enabled' -->
+<div id="output">
 <h3>Add A Comment</h3>
 <blockquote>
-<div id="output">
 <form action="/cgi-bin/comments.cgi" method="post">
 <input type="hidden" name="id" value="<!-- tmpl_var name='link' escape='html' -->">
 <input type="hidden" name="captcha" value="">
@@ -17,6 +17,6 @@
 </table>
 </form>
 <p>Your submission will be ignored if any field is left blank.  But your email address will not be displayed.</p>
-</div>
 </blockquote>
+</div>
 <!-- /tmpl_if -->

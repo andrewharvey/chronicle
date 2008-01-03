@@ -134,6 +134,8 @@ my $timestr = strftime "%e-%B-%Y-%H:%M:%S", gmtime;
 #  Open the file.
 #
 my $file = $COMMENT . "/" . $id . "." . $timestr;
+$file =~ s/[ \t]//g;
+
 open( FILE, ">", $file );
 print FILE "Name: $name\n";
 print FILE "Mail: $mail\n";
@@ -149,13 +151,13 @@ close( FILE );
 #
 if ( length($TO) && length($FROM) )
 {
-    open  ( SENDMAIL, "|/usr/lib/sendmail -t -f $FROM");
-    print SENDMAIL "To: $TO\n";
-    print SENDMAIL "From: $FROM\n";
-    print SENDMAIL "Subject: New Comment [$id]\n";
-    print SENDMAIL "\n\n";
-    print ( SENDMAIL  `cat $file` );
-    close ( SENDMAIL );
+    open ( SENDMAIL, "|/usr/lib/sendmail -t -f $FROM");
+    print  SENDMAIL "To: $TO\n";
+    print  SENDMAIL "From: $FROM\n";
+    print  SENDMAIL "Subject: New Comment [$id]\n";
+    print  SENDMAIL "\n\n";
+    print  SENDMAIL  `cat $file`;
+    close( SENDMAIL );
 }
 
 #
@@ -164,8 +166,10 @@ if ( length($TO) && length($FROM) )
 if ( $cgi->param( "ajax" ) )
 {
     print <<EOF;
-
+<h3>Comment Submitted</h3>
+<blockquote>
 <p>Thanks for your comment, it will be made live when the queue is moderated next.</p>
+</blockquote>
 
 EOF
     exit;
