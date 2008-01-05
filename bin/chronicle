@@ -1162,6 +1162,7 @@ sub outputStaticPage
     #
     my $template = loadTemplate( "entry.template",
                                  die_on_bad_params => 0 );
+    $template->param( release => $RELEASE );
 
     #
     #  Just the name of the file.
