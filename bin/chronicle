@@ -970,6 +970,7 @@ sub outputTagPage
     #
     $template->param( entries => $entries )   if ( $entries );
     $template->param( tagname => $tagName );
+    $template->param( release => $RELEASE );
 
     #
     #  The clouds
@@ -1093,6 +1094,7 @@ sub outputArchivePage
     #
     my $template = loadTemplate( "month.template",
                                  die_on_bad_params => 0 );
+    $template->param( release => $RELEASE );
 
 
     #
