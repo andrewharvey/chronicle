@@ -1,3 +1,7 @@
+  * New upstream release:
+    - Bugfix to allow comments to be inserted correctly.
+    - Allow comment form to be limited to "recent" posts.
+
 chronicle (2.1-1) unstable; urgency=medium
 
   * New upstream release:
