@@ -89,6 +89,11 @@ no-comments = 1
 
 
 #
+#  The maximum age of posts which are allowed to accept comments.
+#
+# comment-days = 10
+
+#
 #  The filename to use for tag links
 #
 # filename = index.html

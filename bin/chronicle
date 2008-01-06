@@ -21,23 +21,25 @@ chronicle - A blog compiler.
    --url-prefix     Specify the prefix to the live blog.
 
 
+  Blog Entry Options:
+
+   --format      Specify the format of your entries, HTML/textile/markdown.
+
   Pre & Post-Build Commands:
 
    --pre-build   Specify a command to execute prior to building the blog.
    --post-build  Specify a command to execute once the blog has been built.
 
-  Blog Entry Options:
-
-   --format      Specify the format of your entries, HTML/textile/markdown.
-
   Optional Features:
 
-   --force       Force the copying of static files from the blog theme.
-   --no-archive  Don't create an archive page.
-   --no-cache    Don't use the optional memcached features, even if available.
-   --no-calendar Don't use the optional calendar upon the index.
-   --no-tags     Don't produce any tag pages.
-   --lower-case  Lower-case all filenames which are output.
+   --force        Force the copying of static files from the blog theme.
+   --no-archive   Don't create an archive page.
+   --no-cache     Don't use the optional memcached features, even if available.
+   --no-calendar  Don't use the optional calendar upon the index.
+   --no-comments  Don't allow comments to be posted.
+   --comment-days Specify the number maximum age of posts to accept comments.
+   --no-tags      Don't produce any tag pages.
+   --lower-case   Lower-case all filenames which are output.
 
 
   Help Options:
@@ -480,6 +482,12 @@ sub setupDefaultOptions
     #
     $CONFIG{'force'} = 0;
 
+    #
+    #  Comments enabled globally.
+    #
+    $CONFIG{'comment-days'} = 0;
+
+
     return( %CONFIG );
 }
 
@@ -521,13 +529,14 @@ sub parseCommandLineArguments
                "pattern=s",    \$CONFIG{'pattern'},
 
                # optional
-               "force",        \$CONFIG{'force'},
-               "no-tags",      \$CONFIG{'no-tags'},
-               "no-cache",     \$CONFIG{'no-cache'},
-               "no-calendar",  \$CONFIG{'no-calendar'},
-               "no-comments",  \$CONFIG{'no-comments'},
-               "no-archive",   \$CONFIG{'no-archive'},
-               "lower-case",   \$CONFIG{'lower-case'},
+               "force",          \$CONFIG{'force'},
+               "no-tags",        \$CONFIG{'no-tags'},
+               "no-cache",       \$CONFIG{'no-cache'},
+               "no-calendar",    \$CONFIG{'no-calendar'},
+               "no-comments",    \$CONFIG{'no-comments'},
+               "no-archive",     \$CONFIG{'no-archive'},
+               "lower-case",     \$CONFIG{'lower-case'},
+               "comment-days=s", \$CONFIG{'comment-days'},
 
                # input format.
                "format=s",     \$CONFIG{'format'},
@@ -1227,7 +1236,37 @@ sub outputStaticPage
             $CONFIG{'verbose'} && print "$file [$filename] has $count comments\n";
         }
 
-        $template->param( comments_enabled => 1 );
+        #
+        #  If we have no date restrictions then enable comments
+        #
+        if ( $CONFIG{'comment-days'} == 0 )
+        {
+            $template->param( comments_enabled => 1 );
+        }
+        else
+        {
+            #
+            #  The number of seconds past the epoch of today and the
+            # date the blog is supposed to be published is used.
+            #
+            my $time = str2time($date);
+            my $today = time;
+
+            #
+            #  The number of days that should be allowd.
+            #
+            my $days = $CONFIG{'comment-days'} * 60 * 60 * 24;
+
+            if ( ($time + $days) > $today )
+            {
+                $CONFIG{'verbose'} && print "Comments allowed on post dated $date.\n";
+                $template->param( comments_enabled => 1 );
+            }
+            else
+            {
+                $CONFIG{'verbose'} && print "Comments disabled on post dated $date.\n";
+            }
+        }
     }
 
 
