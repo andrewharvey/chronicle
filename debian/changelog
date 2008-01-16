@@ -1,6 +1,11 @@
+chronicle (2.2-1) unstable; urgency=medium
+
   * New upstream release:
     - Bugfix to allow comments to be inserted correctly.
     - Allow comment form to be limited to "recent" posts.
+    - Sort the tags on each entry alphabetically.
+
+ -- Steve Kemp <skx@debian.org>  Tue, 1 Jan 2008 22:22:22 +0000
 
 chronicle (2.1-1) unstable; urgency=medium
 
