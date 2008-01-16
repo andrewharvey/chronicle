@@ -13,7 +13,7 @@
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = ${TMP}
-VERSION     = 2.1
+VERSION     = 2.2
 BASE        = chronicle
 
 

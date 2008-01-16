@@ -5,7 +5,7 @@ chronicle (2.2-1) unstable; urgency=medium
     - Allow comment form to be limited to "recent" posts.
     - Sort the tags on each entry alphabetically.
 
- -- Steve Kemp <skx@debian.org>  Tue, 1 Jan 2008 22:22:22 +0000
+ -- Steve Kemp <skx@debian.org>  Wed, 16 Jan 2008 18:47:18 +0000
 
 chronicle (2.1-1) unstable; urgency=medium
 
