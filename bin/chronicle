@@ -1415,6 +1415,7 @@ sub readBlogEntry
     #  If we have tags then we should use them.
     #
     my $entryTags;
+    my @tmpTags;
 
     foreach my $tag ( split( /,/, $tags ) )
     {
@@ -1427,8 +1428,19 @@ sub readBlogEntry
 
         # tags are lowercase.
         $tag = lc($tag);
-        push ( @$entryTags, { tag => $tag } );
+
+        # store the tag away - so we can have a sorted list later.
+        push( @tmpTags, $tag );
     }
+
+    #
+    #  Push the sorted tags into the entry
+    #
+    foreach my $t ( sort @tmpTags )
+    {
+        push ( @$entryTags, { tag => $t } );
+    }
+
 
     #
     #  If the date isn't set then use todays.
