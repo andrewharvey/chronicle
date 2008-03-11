@@ -1,3 +1,10 @@
+chronicle (2.3-1) unstable; urgency=medium
+
+  * New upstream release:
+    - Allow entries to be cut via <cut text="AAAA"></cut>
+
+ -- Steve Kemp <skx@debian.org>  Tue, 11 Mar 2008 20:19:18 +0000
+
 chronicle (2.2-1) unstable; urgency=medium
 
   * New upstream release:
@@ -44,19 +51,19 @@ chronicle (1.1-1) stable; urgency=low
 
   * New upstream release:
     - Allows support for calandar in the index.
- 
+
  -- Steve Kemp <steve@steve.org.uk>  Sat, 8 Dec 2007 16:53:16 +0000
 
 chronicle (1.0-1) stable; urgency=low
 
   * New upstream release.
- 
+
  -- Steve Kemp <steve@steve.org.uk>  Sat, 10 Nov 2007 17:06:21 +0000
 
 chronicle (0.9-1) unstable; urgency=low
 
   * New upstream release.
- 
+
  -- Steve Kemp <steve@steve.org.uk>  Thu, 25 Oct 2007 19:34:41 +0000
 
 chronicle (0.8-1) unstable; urgency=low
