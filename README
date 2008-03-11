@@ -32,7 +32,7 @@ chronicle - A blog compiler
 Installation
 ------------
 
-  It is possible to run the software without installing it, just 
+  It is possible to run the software without installing it, just
  by placing blog entries in the ./blog directory and running
  ./bin/chronicle.
 
@@ -73,6 +73,33 @@ Blog Format
   The tags are optional, but recommended, similarly the date of the post
  is used in preference to the current date if none is present.
 
+
+Entry Cutting
+-------------
+
+  If you wish to truncate an entry you may do so via the <cut> tags.
+
+  For example:
+
+
+/--------------------------\
+This is a line of text
+<cut>This is hidden
+So is this
+</cut>
+This is displayed.
+\==========================/
+
+
+  Or, with specific test:
+
+/-------------------------------------------------\
+This is a line of text
+<cut text="Click to read more...">This is hidden
+So is this
+</cut>
+This is displayed.
+\=================================================/
 
 
 Comment Support

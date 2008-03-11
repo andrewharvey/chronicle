@@ -837,6 +837,11 @@ sub outputIndexPage
     {
         my $blog = readBlogEntry( $file );
 
+        if ( $blog->{'body'} =~ /<cut/i )
+        {
+            $blog->{'body'} = processCut( $blog->{'body'}, $blog->{'link'} );
+        }
+
         push( @$tmp, $blog ) if (keys( %$blog ) );
     }
     my @tmp2 = sort bywhen @$tmp;
@@ -963,6 +968,11 @@ sub outputTagPage
         my $blog = readBlogEntry( $f );
         if (keys( %$blog ) )
         {
+            if ( $blog->{'body'} =~ /<cut/i )
+            {
+                $blog->{'body'} = processCut( $blog->{'body'}, $blog->{'link'} );
+            }
+
             $CONFIG{'verbose'} && print "\tAdded: $f\n";
             push( @$entries, $blog );
         }
@@ -1094,6 +1104,10 @@ sub outputArchivePage
         my $blog = readBlogEntry( $f );
         if (keys( %$blog ) )
         {
+            if ( $blog->{'body'} =~ /<cut/i )
+            {
+                $blog->{'body'} = processCut( $blog->{'body'}, $blog->{'link'} );
+            }
             push( @$entries, $blog );
         }
     }
@@ -1151,6 +1165,52 @@ sub outputArchivePage
     outputTemplate( $template, "$dir/$month.rss" );
 }
 
+
+
+=begin doc
+
+  Process the body for <cut text="xx"></cut>
+
+=end doc
+
+=cut
+
+sub processCut
+{
+    my( $body, $link ) = ( @_ );
+
+    $link = $CONFIG{'url_prefix'} . $link;
+
+    my $cut_text = "";
+
+    if ( $body =~ /(.*)<cut([^>]*)>(.*)<\/cut>(.*)/gis )
+    {
+        my $pre  = $1;
+        my $cut  = $2;
+        my $hid  = $3;
+        my $post = $4;
+
+        #
+        #  See if they supplied text="xxxxx"
+        #
+        if ( defined( $cut ) && ( $cut =~ /text=['"]([^'"]+)['"]/i ) )
+        {
+            $cut_text = $1;
+        }
+
+        $body = $pre;
+
+        if (! length( $cut_text ) )
+        {
+            $cut_text = "This entry has been cut, click to read on.";
+        }
+        $body .= " <a href=\"$link\">$cut_text</a> ";
+        $body .= $post;
+
+    }
+
+    return( $body );
+}
 
 
 
