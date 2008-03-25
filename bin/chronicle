@@ -979,6 +979,11 @@ sub outputTagPage
     }
 
     #
+    #  Sort the entries by date
+    #
+    my @sortedEntries = reverse sort bywhen @$entries;
+
+    #
     #  Now write the output as a HTML page.
     #
     my $template = loadTemplate( "tags.template",
@@ -987,7 +992,7 @@ sub outputTagPage
     #
     #  The entries.
     #
-    $template->param( entries => $entries )   if ( $entries );
+    $template->param( entries => \@sortedEntries )   if ( @sortedEntries );
     $template->param( tagname => $tagName );
     $template->param( release => $RELEASE );
 
@@ -1021,7 +1026,7 @@ sub outputTagPage
     $template = loadTemplate( "tags.xml.template", die_on_bad_params => 0 );
     $template->param( blog_title => $CONFIG{'blog_title'} )
       if ( $CONFIG{'blog_title'} );
-    $template->param( entries => $entries ) if ( $entries );
+    $template->param( entries => \@sortedEntries ) if ( @sortedEntries );
     $template->param( tagname => $tagName ) if ( $tagName );
     outputTemplate( $template, "$dir/$tagName.rss" );
 }
@@ -1113,6 +1118,11 @@ sub outputArchivePage
     }
 
     #
+    #  Sort the entries by date
+    #
+    my @sortedEntries = reverse sort bywhen @$entries;
+
+    #
     #  Now write the output as a HTML page.
     #
     my $template = loadTemplate( "month.template",
@@ -1123,7 +1133,7 @@ sub outputArchivePage
     #
     #  The entries
     #
-    $template->param( entries => $entries )   if ( $entries );
+    $template->param( entries => \@sortedEntries )   if ( @sortedEntries );
 
     #
     #  Output the month + year.
@@ -1159,7 +1169,7 @@ sub outputArchivePage
     $template = loadTemplate( "month.xml.template", die_on_bad_params => 0 );
     $template->param( blog_title => $CONFIG{'blog_title'} )
       if ( $CONFIG{'blog_title'} );
-    $template->param( entries => $entries ) if ( $entries );
+    $template->param( entries => \@sortedEntries ) if ( @sortedEntries );
     $template->param( month => $month, year => $year );
     $template->param( month_name => $names[$month - 1 ] );
     outputTemplate( $template, "$dir/$month.rss" );
