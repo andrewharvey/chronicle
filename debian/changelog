@@ -1,3 +1,11 @@
+chronicle (2.4-1) unstable; urgency=medium
+
+  * New upstream release:
+    - Entries in the 'tag' view are sorted by date.
+    - Entries in the 'archive' view are sorted by date.
+
+ -- Steve Kemp <skx@debian.org>  Tue, 25 Mar 2008 22:50:05 +0000
+
 chronicle (2.3-1) unstable; urgency=medium
 
   * New upstream release:
