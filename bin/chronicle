@@ -116,7 +116,7 @@ Any tags which should be associated with the entry, separated by commas.
   The text of the entry itself is assumed to be HTML, however if you
  have the optional modules installed you may write it in Markdown or
  Textile formats - if they are not present you will receive a message
- informing you of the names of the required modules.
+ informing you of the names of the required Perl modules.
 
   You may specify the format of your entries either in the configuration
  file, or via the command line flag B<--format>.
@@ -220,7 +220,7 @@ Any tags which should be associated with the entry, separated by commas.
 
 =head1 LICENSE
 
-Copyright (c) 2007 by Steve Kemp.  All rights reserved.
+Copyright (c) 2007-2008 by Steve Kemp.  All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under
@@ -285,7 +285,7 @@ readConfigurationFile( $CONFIG{'config'} ) if ( defined $CONFIG{'config'} );
 #
 #  Make sure we have arguments which are sane.
 #
-#  Specifically we want to cope with the "new" 'theme-dir', and 'theme'
+#  Specifically we want to cope with the "new", "theme-dir", and "theme"
 # arguments.
 #
 #
@@ -2206,12 +2206,19 @@ EOF
 }
 
 
+=begin doc
+
+  List the names of all globally installed themes.
+
+=end doc
+
+=cut
 
 sub listThemes
 {
     my ($dir) = (@_);
 
-    $CONFIG{'verbose'} && print "Listhing themes beneath : $dir\n";
+    $CONFIG{'verbose'} && print "Listing themes beneath : $dir\n";
 
     foreach my $name ( sort( glob( $dir . "/*" ) ) )
     {
