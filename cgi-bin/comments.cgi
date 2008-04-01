@@ -49,30 +49,31 @@ my $FROM = 'weblog@steve.org.uk';
 
 
 
-
-
-
 #
 #  Get the parameters from the request.
 #
 my $cgi  = new CGI();
-my $name = $cgi->param('name')    || undef;
-my $mail = $cgi->param('mail')    || undef;
-my $body = $cgi->param('body')    || undef;
-my $id   = $cgi->param('id')      || undef;
+my $name = $cgi->param('name') || undef;
+my $mail = $cgi->param('mail') || undef;
+my $body = $cgi->param('body') || undef;
+my $id   = $cgi->param('id') || undef;
 my $cap  = $cgi->param('captcha') || undef;
-my $ajax = $cgi->param( "ajax" )  || 0;
+my $ajax = $cgi->param("ajax") || 0;
 
 
 #
 #  If any are missing just redirect back to the blog homepage.
 #
-if ( !defined( $name )  || !length( $name ) ||
-     !defined( $mail )  || !length( $mail ) ||
-     !defined( $body )  || !length( $body ) ||
-     !defined( $id )    || !length( $id ) )
+if (    !defined($name)
+     || !length($name)
+     || !defined($mail)
+     || !length($mail)
+     || !defined($body)
+     || !length($body)
+     || !defined($id)
+     || !length($id) )
 {
-    if ( $ajax )
+    if ($ajax)
     {
         print "Content-type: text/html\n\n";
         print "Missing fields.\n";
@@ -87,9 +88,9 @@ if ( !defined( $name )  || !length( $name ) ||
 #
 #  Does the captcha value contain text?  If so spam.
 #
-if ( defined( $cap ) && length( $cap ) )
+if ( defined($cap) && length($cap) )
 {
-    if ( $ajax )
+    if ($ajax)
     {
         print "Content-type: text/html\n\n";
         print "Missing fields.\n";
@@ -113,8 +114,9 @@ $body =~ s/\n$/<br>\n/mg;
 #
 #  ID.
 #
-if ( $id =~ /^(.*)[\/\\](.*)$/ ){
-    $id=$2;
+if ( $id =~ /^(.*)[\/\\](.*)$/ )
+{
+    $id = $2;
 }
 
 
@@ -141,9 +143,9 @@ print FILE "Name: $name\n";
 print FILE "Mail: $mail\n";
 print FILE "User-Agent: $ENV{'HTTP_USER_AGENT'}\n";
 print FILE "IP-Address: $ENV{'REMOTE_ADDR'}\n";
-print FILE  "\n";
+print FILE "\n";
 print FILE $body;
-close( FILE );
+close(FILE);
 
 
 #
@@ -151,19 +153,19 @@ close( FILE );
 #
 if ( length($TO) && length($FROM) )
 {
-    open ( SENDMAIL, "|/usr/lib/sendmail -t -f $FROM");
-    print  SENDMAIL "To: $TO\n";
-    print  SENDMAIL "From: $FROM\n";
-    print  SENDMAIL "Subject: New Comment [$id]\n";
-    print  SENDMAIL "\n\n";
-    print  SENDMAIL  `cat $file`;
-    close( SENDMAIL );
+    open( SENDMAIL, "|/usr/lib/sendmail -t -f $FROM" );
+    print SENDMAIL "To: $TO\n";
+    print SENDMAIL "From: $FROM\n";
+    print SENDMAIL "Subject: New Comment [$id]\n";
+    print SENDMAIL "\n\n";
+    print SENDMAIL `cat $file`;
+    close(SENDMAIL);
 }
 
 #
 #  Now show the user the thanks message..
 #
-if ( $cgi->param( "ajax" ) )
+if ( $cgi->param("ajax") )
 {
     print <<EOF;
 <h3>Comment Submitted</h3>
