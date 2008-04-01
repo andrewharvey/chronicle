@@ -77,7 +77,7 @@ install:
 #
 #  Make a new release tarball, and make a GPG signature.
 #
-release: clean
+release: tidy clean
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
@@ -91,6 +91,13 @@ release: clean
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	gpg --armour --detach-sign $(BASE)-$(VERSION).tar.gz
+
+
+#
+#  Tidy the code
+#
+tidy:
+	perltidy -b -nt -bt=2 -sbt=1 -bl  -mbl=3 -sbl -bbs -bbb -anl  -lp bin/chronicle
 
 
 #
