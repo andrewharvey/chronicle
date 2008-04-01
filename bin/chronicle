@@ -640,7 +640,7 @@ sub findAllTags
 
     foreach my $f ( keys %data )
     {
-        my $h    = $data{$f};
+        my $h = $data{$f};
         my $tags = $h->{'tags'} || undef;
         foreach my $t (@$tags)
         {
@@ -672,6 +672,7 @@ sub createTagCloud
 
     foreach my $key ( sort keys(%unique) )
     {
+
         # count.
         my $count = $unique{$key};
 
@@ -1138,11 +1139,13 @@ sub outputArchivePage
         my $blog = readBlogEntry($f);
         if ( keys(%$blog) )
         {
+
             #
             #  Test for the cut in a quick fashion.
             #
             if ( $blog->{'body'} =~ /<cut/i )
             {
+
                 #
                 #  Properly process a "cut"
                 #
@@ -1492,6 +1495,7 @@ sub readBlogEntry
         }
         elsif ( ( $line =~ /^date:(.*)/i ) && !length($date) )
         {
+
             #
             #  Get the date, strip leading and trailing space.
             #
@@ -1501,6 +1505,7 @@ sub readBlogEntry
         }
         else
         {
+
             #
             #  Just a piece of body text.
             #
