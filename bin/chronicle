@@ -1476,37 +1476,31 @@ sub readBlogEntry
         #
         #  Get the tags.
         #
-        if ( ( $line =~ /^tags: (.*)/i ) && !length($tags) )
+        if ( ( $line =~ /^tags:(.*)/i ) && !length($tags) )
         {
             $tags = $1;
         }
-        elsif ( ( $line =~ /^title: (.*)/i ) && !length($title) )
+        elsif ( ( $line =~ /^title:(.*)/i ) && !length($title) )
         {
 
             #
-            #  Get the title
+            # Get the title, strip leading and trailing space.
             #
             $title = $1;
-
-            # strip leading and trailing space.
             $title =~ s/^\s+// if ( length $title );
             $title =~ s/\s+$// if ( length $title );
         }
-        elsif ( ( $line =~ /^date: (.*)/i ) && !length($date) )
+        elsif ( ( $line =~ /^date:(.*)/i ) && !length($date) )
         {
-
             #
-            #  Get the date.
+            #  Get the date, strip leading and trailing space.
             #
             $date = $1;
-
-            # strip leading and trailing space.
             $date =~ s/^\s+// if ( length $date );
             $date =~ s/\s+$// if ( length $date );
         }
         else
         {
-
             #
             #  Just a piece of body text.
             #
