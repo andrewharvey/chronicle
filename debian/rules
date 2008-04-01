@@ -11,7 +11,7 @@
 
 build: build-stamp
 
-build-stamp: 
+build-stamp:
 	dh_testdir
 	pod2man bin/chronicle > chronicle.1
 	touch $@
@@ -21,16 +21,15 @@ clean:
 	dh_testroot
 	rm -f build-stamp configure-stamp
 	rm -f chronicle.1
-	dh_clean 
+	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
+	dh_clean -k
 	dh_installdirs
-	
+
 	$(MAKE) prefix=$(CURDIR)/debian/chronicle install
-# upstream installs to usr/local
 	mv $(CURDIR)/debian/chronicle/usr/local/bin/chronicle \
 		$(CURDIR)/debian/chronicle/usr/bin
 	rmdir $(CURDIR)/debian/chronicle/usr/local/bin/
