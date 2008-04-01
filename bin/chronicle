@@ -584,6 +584,11 @@ sub createDataStructure
     #
     my $pattern = $CONFIG{'pattern'} || "*";
 
+
+
+    #
+    #  Find the filenames.
+    #
     foreach my $file ( sort( glob( $CONFIG{'input'} . "/" . $pattern ) ) )
     {
 
@@ -606,8 +611,8 @@ sub createDataStructure
     {
         print <<EOF;
 
-  There were no text files found in the input directory
- $CONFIG{'input'} which matched the pattern '$pattern'.
+  There were no files found in the input directory $CONFIG{'input'}
+ which matched the pattern '$pattern'.
 
   Aborting.
 
@@ -635,7 +640,7 @@ sub findAllTags
 
     foreach my $f ( keys %data )
     {
-        my $h = $data{$f};
+        my $h    = $data{$f};
         my $tags = $h->{'tags'} || undef;
         foreach my $t (@$tags)
         {
@@ -667,7 +672,6 @@ sub createTagCloud
 
     foreach my $key ( sort keys(%unique) )
     {
-
         # count.
         my $count = $unique{$key};
 
@@ -1134,8 +1138,14 @@ sub outputArchivePage
         my $blog = readBlogEntry($f);
         if ( keys(%$blog) )
         {
+            #
+            #  Test for the cut in a quick fashion.
+            #
             if ( $blog->{'body'} =~ /<cut/i )
             {
+                #
+                #  Properly process a "cut"
+                #
                 $blog->{'body'} =
                   processCut( $blog->{'body'}, $blog->{'link'} );
             }
@@ -1204,7 +1214,21 @@ sub outputArchivePage
 
 =begin doc
 
-  Process the body for <cut text="xx"></cut>
+  Process the body for any present cut tags which might be present.
+
+  The cut text looks like this:
+
+=for example begin
+
+   Blah blah
+   This is visible
+   <cut [text="xx"]>
+   This is hidden
+   So is this
+   </cut>
+   This is visible
+
+=for example end
 
 =end doc
 
@@ -1669,16 +1693,18 @@ sub fileToTitle
 {
     my ($file) = (@_);
 
+    #
+    #  Strip suffix.
+    #
     if ( $file =~ /(.*)\.(.*)/ )
     {
         $file = $1;
     }
-    $file =~ s/ /_/g;
-    $file =~ s/'/_/g;
-    $file =~ s/!/_/g;
-    $file =~ s/\?/_/g;
-    $file =~ s/\///g;
-    $file =~ s/\\//g;
+
+    #
+    #  Get rid of non-alphanumerical characters
+    #
+    $file =~ s/[^a-z0-9]/_/gi;
 
     my $suffix = $CONFIG{'suffix'} || ".html";
     $file .= $suffix;
