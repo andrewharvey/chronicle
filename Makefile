@@ -13,7 +13,7 @@
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = ${TMP}
-VERSION     = 2.4
+VERSION     = 2.5
 BASE        = chronicle
 
 
@@ -68,6 +68,8 @@ install:
 	cp -r ./themes/default/*.* ${prefix}/usr/share/chronicle/themes/default
 	mkdir -p ${prefix}/usr/share/chronicle/themes/blog.steve.org.uk
 	cp -r ./themes/blog.steve.org.uk/*.* ${prefix}/usr/share/chronicle/themes/blog.steve.org.uk/
+	mkdir -p ${prefix}/usr/share/chronicle/themes/blog.mail-scanning.com
+	cp -r ./themes/blog.mail-scanning.com/*.* ${prefix}/usr/share/chronicle/themes/blog.mail-scanning.com/
 	mkdir -p ${prefix}/usr/share/chronicle/themes/copyrighteous
 	cp -r ./themes/copyrighteous/*.* ${prefix}/usr/share/chronicle/themes/copyrighteous
 	mkdir -p ${prefix}/usr/share/chronicle/themes/blocky
