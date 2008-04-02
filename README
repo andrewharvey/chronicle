@@ -44,7 +44,7 @@ Installation
 
     /usr/share/chronicle        <-  The theme directories.
     /usr/bin/chronicle          <-  The main binary.
-    /etc/chroniclerc            <-  The main configuration file.
+    /etc/chroniclerc            <-  The global configuration file.
 
   If you wish to customise the templates it is recommended you
  make a copy of them with a new name, then edit that copy.  This
@@ -71,16 +71,29 @@ Blog Format
   \--
 
 
-  The tags are optional, but recommended, similarly the date of the post
- is used in preference to the current date if none is present.
+  The three key fields are:
+
+Title:
+   This holds the name of the post.  ("Subject:" may be used as a synonym.)
+   If neither "Title" or "Subject" are present the filename itself is
+ used.
+
+
+Date:
+   The date this entry was created.  If not present the creation time
+ of the file is used.
+
+
+Tags:
+   If any tags are present they will be used to catagorise the entry.
+
 
 
 Entry Cutting
 -------------
 
-  If you wish to truncate an entry you may do so via the <cut> tags.
-
-  For example:
+  If you wish you may truncate a long entry via the special <cut> tag,
+ for example:.
 
 
 /--------------------------\

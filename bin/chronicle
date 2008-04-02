@@ -102,7 +102,10 @@ chronicle - A blog compiler.
 
 =item Title:
 Describes the title of the post.  If not present the filename of the entry
-is used instead.
+is used instead.  "Subject:" may also be used.
+
+=item Subject:
+This is a synonym for 'Title:'.
 
 =item Date:
 The date the post was written.  If not present the creation time of the
@@ -1483,7 +1486,7 @@ sub readBlogEntry
         {
             $tags = $1;
         }
-        elsif ( ( $line =~ /^title:(.*)/i ) && !length($title) )
+        elsif ( ( $line =~ /^(title|subject):(.*)/i ) && !length($title) )
         {
 
             #
