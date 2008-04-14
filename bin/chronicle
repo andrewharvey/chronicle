@@ -1613,11 +1613,18 @@ sub readBlogEntry
         my $hms = sprintf( "%02d:%02d:%02d", $hour, $min, $sec );
 
         #
-        #  Store the published date & time away.  Collapsing multiple
-        # spaces
+        # Store the published date & time away.
+        # [Collapsing multiple spaces]
         #
         $entry{'pubdate'} = time2str( "%a, %e %b %Y $hms GMT", $time );
         $entry{'pubdate'} =~ s/  +/ /g;
+
+        #
+        # Store the W3C date form
+        # http://www.w3.org/TR/NOTE-datetime
+        #
+        $entry{'w3cdate'} = time2str( "%Y-%m-%dT${hms}+00:00", $time );
+
     }
     else
     {
