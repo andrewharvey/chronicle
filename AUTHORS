@@ -1,5 +1,5 @@
 
-        
+
 Primary Author
 --------------
 
@@ -17,6 +17,10 @@ Contributions
 
   Sascha Korzen [korzen [@] .de.fh-luh.cc]
    - Added the optional calendar.
+
+  MJ Ray [mjr [@] coop.phonecoop]
+   - Added RSSv1 date format.
+   - Added reltop.
 
   Felipe Sateler [fsateler [@] com.gmail]
    - Produced a Debian package for the software.

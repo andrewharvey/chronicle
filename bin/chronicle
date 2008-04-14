@@ -1929,6 +1929,11 @@ sub outputTemplate
 {
     my ( $template, $path ) = (@_);
 
+    my $reltop = $path;
+    $reltop =~ s'[^/]+/'../'g;
+    $reltop =~ s'[^/]*$'';
+    $template->param( reltop => $reltop );
+
     #
     # Select relative/absolute URL prefix.
     #
@@ -1939,9 +1944,7 @@ sub outputTemplate
     }
     else
     {
-        $top = $path;
-        $top =~ s'[^/]+/'../'g;
-        $top =~ s'[^/]*$'';
+        $top = $reltop;
     }
     $template->param( top => $top );
 
