@@ -111,6 +111,9 @@ This is a synonym for 'Title:'.
 The date the post was written.  If not present the creation time of the
 file is used instead.
 
+=item Publish:
+This header is removed from all entries, and is used by the chronicle-spooler script.
+
 =item Tags:
 Any tags which should be associated with the entry, separated by commas.
 
@@ -1470,10 +1473,11 @@ sub readBlogEntry
     }
 
 
-    my $title = "";    # entry title.
-    my $tags  = "";    # entry tags.
-    my $body  = "";    # entry body.
-    my $date  = "";    # entry date
+    my $title   = "";    # entry title.
+    my $tags    = "";    # entry tags.
+    my $body    = "";    # entry body.
+    my $date    = "";    # entry date
+    my $publish = "";    # entry publish date - *ignored*
 
     open( ENTRY, "<", $filename ) or die "Failed to read $filename $!";
     while ( my $line = <ENTRY> )
@@ -1485,6 +1489,10 @@ sub readBlogEntry
         if ( ( $line =~ /^tags:(.*)/i ) && !length($tags) )
         {
             $tags = $1;
+        }
+        elsif ( ( $line =~ /^publish:(.*)/i ) && !length($publish) )
+        {
+            $publish = $1;
         }
         elsif ( ( $line =~ /^(Subject|Title):(.*)/i ) && !length($title) )
         {
