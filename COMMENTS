@@ -95,11 +95,11 @@ Multiple Machines
   With the "pre-build" and "post-build" arguments to chronicle
  you can automate this:
 
- chronicle
-   --pre-build="rsync varz user@remote:/path/to/comments comments/" \
-   --comments=./comments
-   --output=./output
-   --post-build="rsync vazr ./output user@remote:/path/to/location"
+ chronicle \
+   --pre-build="rsync -varz user@remote:/path/to/comments comments/" \
+   --comments=./comments \
+   --output=./output \
+   --post-build="rsync -vazr ./output user@remote:/path/to/location"
 
 
 
@@ -117,4 +117,4 @@ Spam Filtering
   You might need to do something similar for your own installation.
 
 Steve
--- 
+--
