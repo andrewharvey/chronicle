@@ -10,7 +10,6 @@ use File::Find;
 use HTML::Lint;
 use Test::More;
 
-
 #
 #  Basically this test validates the HTML which would be produced if
 # a blog is compiled - if one is not present then we have nothing to
@@ -56,9 +55,13 @@ sub checkFile
 
     my $error_count = $lint->errors;
 
-    #    foreach my $error ( $lint->errors ) {
-    #       print $error->as_string, "\n";
-    #  }
+    foreach my $error ( $lint->errors ) {
+        if ( $error->as_string =~ /<cut>/ )
+        {
+            $error_count -= 1;
+        }
+        #print $error->as_string, "\n";
+    }
 
     is( $error_count, 0 , "There are no errors in $file" );
 }
