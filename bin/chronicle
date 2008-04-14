@@ -273,7 +273,7 @@ my %CONFIG = setupDefaultOptions();
 #  Read the global and per-user configuration files, if they exist.
 #
 readConfigurationFile("/etc/chroniclerc");
-readConfigurationFile( $ENV{'HOME'} . "/.chroniclerc" );
+readConfigurationFile( $ENV{ 'HOME' } . "/.chroniclerc" );
 
 
 #
@@ -285,7 +285,7 @@ parseCommandLineArguments();
 #
 #  Another configuration file?
 #
-readConfigurationFile( $CONFIG{'config'} ) if ( defined $CONFIG{'config'} );
+readConfigurationFile( $CONFIG{ 'config' } ) if ( defined $CONFIG{ 'config' } );
 
 
 #
@@ -301,19 +301,19 @@ sanityCheckArguments();
 #
 #  Listing themes?
 #
-if ( $CONFIG{'list-themes'} )
+if ( $CONFIG{ 'list-themes' } )
 {
-    listThemes( $CONFIG{'theme-dir'} );
+    listThemes( $CONFIG{ 'theme-dir' } );
     exit;
 }
 
 #  Should we run something before we start?
 #
-if ( $CONFIG{'pre-build'} )
+if ( $CONFIG{ 'pre-build' } )
 {
-    $CONFIG{'verbose'} && print "Running command: $CONFIG{'pre-build'}\n";
+    $CONFIG{ 'verbose' } && print "Running command: $CONFIG{'pre-build'}\n";
 
-    system( $CONFIG{'pre-build'} );
+    system( $CONFIG{ 'pre-build' } );
 }
 
 
@@ -336,13 +336,13 @@ my %data = createDataStructure();
 #  Find each unique tag used within our entries.
 #
 my %all_tags;
-%all_tags = findAllTags() unless ( $CONFIG{'no-tags'} );
+%all_tags = findAllTags() unless ( $CONFIG{ 'no-tags' } );
 
 #
 #  Find each unique month + year we've used.
 #
 my %all_dates;
-%all_dates = findAllMonths() unless ( $CONFIG{'no-archive'} );
+%all_dates = findAllMonths() unless ( $CONFIG{ 'no-archive' } );
 
 
 #
@@ -350,16 +350,16 @@ my %all_dates;
 # sidebar.
 #
 my %CLOUD;
-$CLOUD{'tag'} = createTagCloud(%all_tags) unless ( $CONFIG{'no-tags'} );
-$CLOUD{'archive'} = createDateCloud(%all_dates)
-  unless ( $CONFIG{'no-archive'} );
+$CLOUD{ 'tag' } = createTagCloud(%all_tags) unless ( $CONFIG{ 'no-tags' } );
+$CLOUD{ 'archive' } = createDateCloud(%all_dates)
+  unless ( $CONFIG{ 'no-archive' } );
 
 
 
 #
 #  Create the output directories.
 #
-mkpath( $CONFIG{'output'}, 0, 0755 ) if ( !-d $CONFIG{'output'} );
+mkpath( $CONFIG{ 'output' }, 0, 0755 ) if ( !-d $CONFIG{ 'output' } );
 foreach my $tag ( keys %all_tags )
 {
     mkpath( "$CONFIG{'output'}/tags/$tag", 0, 0755 );
@@ -374,7 +374,7 @@ foreach my $date ( keys %all_dates )
 #
 #  Output each static page.
 #
-$CONFIG{'verbose'} && print "Creating static pages:\n";
+$CONFIG{ 'verbose' } && print "Creating static pages:\n";
 foreach my $file ( keys %data )
 {
     outputStaticPage($file);
@@ -387,7 +387,7 @@ foreach my $file ( keys %data )
 #
 foreach my $tagName ( sort keys %all_tags )
 {
-    $CONFIG{'verbose'} && print "Creating tag page: $tagName\n";
+    $CONFIG{ 'verbose' } && print "Creating tag page: $tagName\n";
 
     outputTagPage($tagName);
 }
@@ -399,7 +399,7 @@ foreach my $tagName ( sort keys %all_tags )
 #
 foreach my $date ( keys(%all_dates) )
 {
-    $CONFIG{'verbose'} && print "Creating archive page: $date\n";
+    $CONFIG{ 'verbose' } && print "Creating archive page: $date\n";
 
     outputArchivePage($date);
 }
@@ -422,11 +422,11 @@ copyStaticFiles();
 #
 #  Post-build command?
 #
-if ( $CONFIG{'post-build'} )
+if ( $CONFIG{ 'post-build' } )
 {
-    $CONFIG{'verbose'} && print "Running command: $CONFIG{'post-build'}\n";
+    $CONFIG{ 'verbose' } && print "Running command: $CONFIG{'post-build'}\n";
 
-    system( $CONFIG{'post-build'} );
+    system( $CONFIG{ 'post-build' } );
 }
 
 
@@ -452,44 +452,44 @@ sub setupDefaultOptions
     #
     #  Text directory.
     #
-    $CONFIG{'input'}    = "./blog";
-    $CONFIG{'comments'} = '';
+    $CONFIG{ 'input' }    = "./blog";
+    $CONFIG{ 'comments' } = '';
 
     #
     #  Output directory.
     #
-    $CONFIG{'output'} = "./output";
+    $CONFIG{ 'output' } = "./output";
 
     #
     #  Theme setup
     #
-    $CONFIG{'theme-dir'} = "./themes/";
-    $CONFIG{'theme'}     = "default";
+    $CONFIG{ 'theme-dir' } = "./themes/";
+    $CONFIG{ 'theme' }     = "default";
 
     #
     #  prefix for all links.
     #
-    $CONFIG{'url-prefix'} = "";
+    $CONFIG{ 'url-prefix' } = "";
 
     #
     #  Default input format
     #
-    $CONFIG{'format'} = 'html';
+    $CONFIG{ 'format' } = 'html';
 
     #
     #  Entries per-page for the index.
     #
-    $CONFIG{'entry-count'} = 10;
+    $CONFIG{ 'entry-count' } = 10;
 
     #
     #  Don't overwrite files by default
     #
-    $CONFIG{'force'} = 0;
+    $CONFIG{ 'force' } = 0;
 
     #
     #  Comments enabled globally.
     #
-    $CONFIG{'comment-days'} = 0;
+    $CONFIG{ 'comment-days' } = 0;
 
 
     return (%CONFIG);
@@ -519,38 +519,38 @@ sub parseCommandLineArguments
         # Help options
         "help",        \$HELP,
         "manual",      \$MANUAL,
-        "verbose",     \$CONFIG{'verbose'},
+        "verbose",     \$CONFIG{ 'verbose' },
         "version",     \$VERSION,
-        "list-themes", \$CONFIG{'list-themes'},
+        "list-themes", \$CONFIG{ 'list-themes' },
 
         # paths
-        "comments=s",  \$CONFIG{'comments'},
-        "config=s",    \$CONFIG{'config'},
-        "input=s",     \$CONFIG{'input'},
-        "output=s",    \$CONFIG{'output'},
-        "theme-dir=s", \$CONFIG{'theme-dir'},
-        "theme=s",     \$CONFIG{'theme'},
-        "pattern=s",   \$CONFIG{'pattern'},
+        "comments=s",  \$CONFIG{ 'comments' },
+        "config=s",    \$CONFIG{ 'config' },
+        "input=s",     \$CONFIG{ 'input' },
+        "output=s",    \$CONFIG{ 'output' },
+        "theme-dir=s", \$CONFIG{ 'theme-dir' },
+        "theme=s",     \$CONFIG{ 'theme' },
+        "pattern=s",   \$CONFIG{ 'pattern' },
 
         # optional
-        "force",          \$CONFIG{'force'},
-        "no-tags",        \$CONFIG{'no-tags'},
-        "no-cache",       \$CONFIG{'no-cache'},
-        "no-calendar",    \$CONFIG{'no-calendar'},
-        "no-comments",    \$CONFIG{'no-comments'},
-        "no-archive",     \$CONFIG{'no-archive'},
-        "lower-case",     \$CONFIG{'lower-case'},
-        "comment-days=s", \$CONFIG{'comment-days'},
+        "force",          \$CONFIG{ 'force' },
+        "no-tags",        \$CONFIG{ 'no-tags' },
+        "no-cache",       \$CONFIG{ 'no-cache' },
+        "no-calendar",    \$CONFIG{ 'no-calendar' },
+        "no-comments",    \$CONFIG{ 'no-comments' },
+        "no-archive",     \$CONFIG{ 'no-archive' },
+        "lower-case",     \$CONFIG{ 'lower-case' },
+        "comment-days=s", \$CONFIG{ 'comment-days' },
 
         # input format.
-        "format=s", \$CONFIG{'format'},
+        "format=s", \$CONFIG{ 'format' },
 
         # prefix
-        "url-prefix=s", \$CONFIG{'url_prefix'},
+        "url-prefix=s", \$CONFIG{ 'url_prefix' },
 
         # commands
-        "pre-build=s",  \$CONFIG{'pre-build'},
-        "post-build=s", \$CONFIG{'post-build'},
+        "pre-build=s",  \$CONFIG{ 'pre-build' },
+        "post-build=s", \$CONFIG{ 'post-build' },
 
     );
 
@@ -588,14 +588,14 @@ sub createDataStructure
     #
     #  Did the user override the default pattern?
     #
-    my $pattern = $CONFIG{'pattern'} || "*";
+    my $pattern = $CONFIG{ 'pattern' } || "*";
 
 
 
     #
     #  Find the filenames.
     #
-    foreach my $file ( sort( glob( $CONFIG{'input'} . "/" . $pattern ) ) )
+    foreach my $file ( sort( glob( $CONFIG{ 'input' } . "/" . $pattern ) ) )
     {
 
         #
@@ -607,7 +607,7 @@ sub createDataStructure
         #  Read the entry and store all the data away as a
         # hash element keyed upon the (unique) filename.
         #
-        $results{$file} = readBlogEntry($file);
+        $results{ $file } = readBlogEntry($file);
     }
 
     #
@@ -646,13 +646,13 @@ sub findAllTags
 
     foreach my $f ( keys %data )
     {
-        my $h = $data{$f};
-        my $tags = $h->{'tags'} || undef;
+        my $h = $data{ $f };
+        my $tags = $h->{ 'tags' } || undef;
         foreach my $t (@$tags)
         {
-            if ( $t->{'tag'} )
+            if ( $t->{ 'tag' } )
             {
-                $allTags{$t->{'tag'}} += 1;
+                $allTags{ $t->{ 'tag' } } += 1;
             }
         }
     }
@@ -680,7 +680,7 @@ sub createTagCloud
     {
 
         # count.
-        my $count = $unique{$key};
+        my $count = $unique{ $key };
 
         # size for the HTML.
         my $size = 10 + ( $count * 5 );
@@ -689,9 +689,9 @@ sub createTagCloud
         push(
               @$results,
               {
-               tag   => $key,
-               count => $count,
-               size  => $size
+                 tag   => $key,
+                 count => $count,
+                 size  => $size
               }
         );
     }
@@ -715,10 +715,10 @@ sub findAllMonths
     my %allDates;
     foreach my $f ( keys %data )
     {
-        my $h = $data{$f};
+        my $h = $data{ $f };
         next if ( !$h );
 
-        my $date = $h->{'date'};
+        my $date = $h->{ 'date' };
 
         #
         #  Not a date?  Use the ctime of the file.
@@ -740,7 +740,7 @@ sub findAllMonths
 
         $date = time2str( "%Y-%m", str2time($date) );
 
-        $allDates{$date} += 1;
+        $allDates{ $date } += 1;
     }
 
     return (%allDates);
@@ -776,8 +776,8 @@ sub createDateCloud
             push(
                   @$results,
                   {
-                   year   => $year,
-                   months => $months
+                     year   => $year,
+                     months => $months
                   }
             );
             undef $months;
@@ -787,9 +787,9 @@ sub createDateCloud
         push(
               @$months,
               {
-               month      => $2,
-               month_name => $names[ $2 - 1 ],
-               count      => $entry_dates{$date}
+                 month      => $2,
+                 month_name => $names[$2 - 1],
+                 count      => $entry_dates{ $date }
               }
         );
 
@@ -798,15 +798,15 @@ sub createDateCloud
     push(
           @$results,
           {
-           year   => $year,
-           months => $months
+             year   => $year,
+             months => $months
           }
     );
 
     #
     #  Make sure this is sorted by reverse chronilogical order.
     #
-    my @sorted = sort { $b->{'year'} <=> $a->{'year'} } @$results;
+    my @sorted = sort {$b->{ 'year' } <=> $a->{ 'year' }} @$results;
     return \@sorted;
 }
 
@@ -827,9 +827,9 @@ sub bywhen
     #  Parse and return the date
     #
     my ( $ss1, $mm1, $hh1, $day1, $month1, $year1, $zone1 ) =
-      strptime( $a->{'date'} );
+      strptime( $a->{ 'date' } );
     my ( $ss2, $mm2, $hh2, $day2, $month2, $year2, $zone2 ) =
-      strptime( $b->{'date'} );
+      strptime( $b->{ 'date' } );
 
     #
     # Abort if we didn't work.
@@ -872,9 +872,10 @@ sub outputIndexPage
     {
         my $blog = readBlogEntry($file);
 
-        if ( $blog->{'body'} =~ /<cut/i )
+        if ( $blog->{ 'body' } =~ /<cut/i )
         {
-            $blog->{'body'} = processCut( $blog->{'body'}, $blog->{'link'} );
+            $blog->{ 'body' } =
+              processCut( $blog->{ 'body' }, $blog->{ 'link' } );
         }
 
         push( @$tmp, $blog ) if ( keys(%$blog) );
@@ -884,7 +885,7 @@ sub outputIndexPage
     #
     #  The number of entries to display upon the index.
     #
-    my $max = $CONFIG{'entry-count'};
+    my $max = $CONFIG{ 'entry-count' };
     foreach my $f (@tmp2)
     {
         push( @$entries, $f ) if ( $max > 0 );
@@ -922,25 +923,25 @@ sub outputIndexPage
     #
     #  The clouds
     #
-    $template->param( tagcloud => $CLOUD{'tag'} )
-      if ( $CLOUD{'tag'} );
-    $template->param( datecloud => $CLOUD{'archive'} )
-      if ( $CLOUD{'archive'} );
+    $template->param( tagcloud => $CLOUD{ 'tag' } )
+      if ( $CLOUD{ 'tag' } );
+    $template->param( datecloud => $CLOUD{ 'archive' } )
+      if ( $CLOUD{ 'archive' } );
 
     #
     #  Blog title and subtitle, if present.
     #
-    $template->param( blog_title => $CONFIG{'blog_title'} )
-      if ( $CONFIG{'blog_title'} );
-    $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
-      if ( $CONFIG{'blog_subtitle'} );
+    $template->param( blog_title => $CONFIG{ 'blog_title' } )
+      if ( $CONFIG{ 'blog_title' } );
+    $template->param( blog_subtitle => $CONFIG{ 'blog_subtitle' } )
+      if ( $CONFIG{ 'blog_subtitle' } );
     $template->param( release => $RELEASE );
 
 
     #
     #  Page to use
     #
-    my $index = $CONFIG{'filename'} || "index.html";
+    my $index = $CONFIG{ 'filename' } || "index.html";
 
     outputTemplate( $template, $index );
 
@@ -948,10 +949,10 @@ sub outputIndexPage
     #  Output the RSS feed
     #
     $template = loadTemplate( "index.xml.template", die_on_bad_params => 0 );
-    $template->param( blog_title => $CONFIG{'blog_title'} )
-      if ( $CONFIG{'blog_title'} );
-    $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
-      if ( $CONFIG{'blog_subtitle'} );
+    $template->param( blog_title => $CONFIG{ 'blog_title' } )
+      if ( $CONFIG{ 'blog_title' } );
+    $template->param( blog_subtitle => $CONFIG{ 'blog_subtitle' } )
+      if ( $CONFIG{ 'blog_subtitle' } );
     $template->param( entries => $entries ) if ($entries);
     outputTemplate( $template, "index.rss" );
 }
@@ -977,19 +978,19 @@ sub outputTagPage
     my %tagEntries;
     foreach my $f ( keys %data )
     {
-        my $h = $data{$f};
-        my $tags = $h->{'tags'} || undef;
+        my $h = $data{ $f };
+        my $tags = $h->{ 'tags' } || undef;
         foreach my $t (@$tags)
         {
-            my $name = $t->{'tag'};
-            $allTags{$name} += 1;
-            my $a = $tagEntries{$name};
+            my $name = $t->{ 'tag' };
+            $allTags{ $name } += 1;
+            my $a = $tagEntries{ $name };
             push @$a, $f;
-            $tagEntries{$name} = $a;
+            $tagEntries{ $name } = $a;
         }
     }
 
-    my $matching = $tagEntries{$tagName};
+    my $matching = $tagEntries{ $tagName };
 
     my $entries;
 
@@ -1001,13 +1002,13 @@ sub outputTagPage
         my $blog = readBlogEntry($f);
         if ( keys(%$blog) )
         {
-            if ( $blog->{'body'} =~ /<cut/i )
+            if ( $blog->{ 'body' } =~ /<cut/i )
             {
-                $blog->{'body'} =
-                  processCut( $blog->{'body'}, $blog->{'link'} );
+                $blog->{ 'body' } =
+                  processCut( $blog->{ 'body' }, $blog->{ 'link' } );
             }
 
-            $CONFIG{'verbose'} && print "\tAdded: $f\n";
+            $CONFIG{ 'verbose' } && print "\tAdded: $f\n";
             push( @$entries, $blog );
         }
     }
@@ -1032,24 +1033,24 @@ sub outputTagPage
     #
     #  The clouds
     #
-    $template->param( tagcloud => $CLOUD{'tag'} )
-      if ( $CLOUD{'tag'} );
-    $template->param( datecloud => $CLOUD{'archive'} )
-      if ( $CLOUD{'archive'} );
+    $template->param( tagcloud => $CLOUD{ 'tag' } )
+      if ( $CLOUD{ 'tag' } );
+    $template->param( datecloud => $CLOUD{ 'archive' } )
+      if ( $CLOUD{ 'archive' } );
 
     #
     #  Blog title and subtitle, if present.
     #
-    $template->param( blog_title => $CONFIG{'blog_title'} )
-      if ( $CONFIG{'blog_title'} );
-    $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
-      if ( $CONFIG{'blog_subtitle'} );
+    $template->param( blog_title => $CONFIG{ 'blog_title' } )
+      if ( $CONFIG{ 'blog_title' } );
+    $template->param( blog_subtitle => $CONFIG{ 'blog_subtitle' } )
+      if ( $CONFIG{ 'blog_subtitle' } );
 
 
     #
     #  Page to use
     #
-    my $index = $CONFIG{'filename'} || "index.html";
+    my $index = $CONFIG{ 'filename' } || "index.html";
 
     outputTemplate( $template, "$dir/$index" );
 
@@ -1057,8 +1058,8 @@ sub outputTagPage
     #  Now output the .xml file
     #
     $template = loadTemplate( "tags.xml.template", die_on_bad_params => 0 );
-    $template->param( blog_title => $CONFIG{'blog_title'} )
-      if ( $CONFIG{'blog_title'} );
+    $template->param( blog_title => $CONFIG{ 'blog_title' } )
+      if ( $CONFIG{ 'blog_title' } );
     $template->param( entries => \@sortedEntries ) if (@sortedEntries);
     $template->param( tagname => $tagName )        if ($tagName);
     outputTemplate( $template, "$dir/$tagName.rss" );
@@ -1084,9 +1085,9 @@ sub outputArchivePage
     #
     #  Should we abort?
     #
-    if ( $CONFIG{'no-archive'} )
+    if ( $CONFIG{ 'no-archive' } )
     {
-        $CONFIG{'verbose'} && print "Ignoring archive page, as instructed.\n";
+        $CONFIG{ 'verbose' } && print "Ignoring archive page, as instructed.\n";
         return;
     }
 
@@ -1110,8 +1111,8 @@ sub outputArchivePage
     my %dateEntries;
     foreach my $f ( keys %data )
     {
-        my $h    = $data{$f};
-        my $date = $h->{'date'};
+        my $h    = $data{ $f };
+        my $date = $h->{ 'date' };
 
         #
         #  Not a date?  Use the file.
@@ -1133,14 +1134,14 @@ sub outputArchivePage
 
         $date = time2str( "%Y-%m", str2time($date) );
 
-        push @{$dateEntries{$date}}, $f;
+        push @{ $dateEntries{ $date } }, $f;
     }
 
 
-    my $matching = $dateEntries{$date};
+    my $matching = $dateEntries{ $date };
     foreach my $f ( reverse @$matching )
     {
-        $CONFIG{'verbose'} && print "\tAdded: $f\n";
+        $CONFIG{ 'verbose' } && print "\tAdded: $f\n";
 
         my $blog = readBlogEntry($f);
         if ( keys(%$blog) )
@@ -1149,14 +1150,14 @@ sub outputArchivePage
             #
             #  Test for the cut in a quick fashion.
             #
-            if ( $blog->{'body'} =~ /<cut/i )
+            if ( $blog->{ 'body' } =~ /<cut/i )
             {
 
                 #
                 #  Properly process a "cut"
                 #
-                $blog->{'body'} =
-                  processCut( $blog->{'body'}, $blog->{'link'} );
+                $blog->{ 'body' } =
+                  processCut( $blog->{ 'body' }, $blog->{ 'link' } );
             }
             push( @$entries, $blog );
         }
@@ -1183,39 +1184,39 @@ sub outputArchivePage
     #  Output the month + year.
     #
     $template->param( year => $year, month => $month );
-    $template->param( month_name => $names[ $month - 1 ] );
+    $template->param( month_name => $names[$month - 1] );
 
     #
     #  The clouds
     #
-    $template->param( tagcloud => $CLOUD{'tag'} )
-      if ( $CLOUD{'tag'} );
-    $template->param( datecloud => $CLOUD{'archive'} )
-      if ( $CLOUD{'archive'} );
+    $template->param( tagcloud => $CLOUD{ 'tag' } )
+      if ( $CLOUD{ 'tag' } );
+    $template->param( datecloud => $CLOUD{ 'archive' } )
+      if ( $CLOUD{ 'archive' } );
 
     #
     #  Blog title and subtitle, if present.
     #
-    $template->param( blog_title => $CONFIG{'blog_title'} )
-      if ( $CONFIG{'blog_title'} );
-    $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
-      if ( $CONFIG{'blog_subtitle'} );
+    $template->param( blog_title => $CONFIG{ 'blog_title' } )
+      if ( $CONFIG{ 'blog_title' } );
+    $template->param( blog_subtitle => $CONFIG{ 'blog_subtitle' } )
+      if ( $CONFIG{ 'blog_subtitle' } );
 
     #
     #  Page to use
     #
-    my $index = $CONFIG{'filename'} || "index.html";
+    my $index = $CONFIG{ 'filename' } || "index.html";
     outputTemplate( $template, "$dir/$index" );
 
     #
     #  Now the RSS page.
     #
     $template = loadTemplate( "month.xml.template", die_on_bad_params => 0 );
-    $template->param( blog_title => $CONFIG{'blog_title'} )
-      if ( $CONFIG{'blog_title'} );
+    $template->param( blog_title => $CONFIG{ 'blog_title' } )
+      if ( $CONFIG{ 'blog_title' } );
     $template->param( entries => \@sortedEntries ) if (@sortedEntries);
     $template->param( month => $month, year => $year );
-    $template->param( month_name => $names[ $month - 1 ] );
+    $template->param( month_name => $names[$month - 1] );
     outputTemplate( $template, "$dir/$month.rss" );
 }
 
@@ -1247,7 +1248,7 @@ sub processCut
 {
     my ( $body, $link ) = (@_);
 
-    $link = $CONFIG{'url_prefix'} . $link;
+    $link = $CONFIG{ 'url_prefix' } . $link;
 
     my $cut_text = "";
 
@@ -1321,10 +1322,10 @@ sub outputStaticPage
     #
     #  Get the pieces of information.
     #
-    my $title = $static->{'title'} || $basename;
-    my $tags  = $static->{'tags'};
-    my $body  = $static->{'body'};
-    my $date  = $static->{'date'};
+    my $title = $static->{ 'title' } || $basename;
+    my $tags  = $static->{ 'tags' };
+    my $body  = $static->{ 'body' };
+    my $date  = $static->{ 'date' };
 
     if ( !defined($date) )
     {
@@ -1337,7 +1338,7 @@ sub outputStaticPage
         $date = localtime($ctime);
     }
 
-    $CONFIG{'verbose'} && print "\t$filename\n";
+    $CONFIG{ 'verbose' } && print "\t$filename\n";
 
     #
     #  Convert to suitable filename.
@@ -1348,9 +1349,9 @@ sub outputStaticPage
     #
     #  Get comments, if present.
     #
-    if ( !$CONFIG{'no-comments'} )
+    if ( !$CONFIG{ 'no-comments' } )
     {
-        my $comments = getComments( $CONFIG{'comments'}, $file );
+        my $comments = getComments( $CONFIG{ 'comments' }, $file );
 
         if ( defined($comments) )
         {
@@ -1364,14 +1365,14 @@ sub outputStaticPage
                               comment_plural => $plural
             );
 
-            $CONFIG{'verbose'}
+            $CONFIG{ 'verbose' }
               && print "$file [$filename] has $count comments\n";
         }
 
         #
         #  If we have no date restrictions then enable comments
         #
-        if ( $CONFIG{'comment-days'} == 0 )
+        if ( $CONFIG{ 'comment-days' } == 0 )
         {
             $template->param( comments_enabled => 1 );
         }
@@ -1388,17 +1389,17 @@ sub outputStaticPage
             #
             #  The number of days that should be allowd.
             #
-            my $days = $CONFIG{'comment-days'} * 60 * 60 * 24;
+            my $days = $CONFIG{ 'comment-days' } * 60 * 60 * 24;
 
             if ( ( $time + $days ) > $today )
             {
-                $CONFIG{'verbose'}
+                $CONFIG{ 'verbose' }
                   && print "Comments allowed on post dated $date.\n";
                 $template->param( comments_enabled => 1 );
             }
             else
             {
-                $CONFIG{'verbose'}
+                $CONFIG{ 'verbose' }
                   && print "Comments disabled on post dated $date.\n";
             }
         }
@@ -1412,21 +1413,22 @@ sub outputStaticPage
     $template->param( tags  => $tags ) if ($tags);
     $template->param( date  => $date ) if ($date);
     $template->param( body  => $body );
-    $template->param( link  => $static->{'link'} );
+    $template->param( link  => $static->{ 'link' } );
 
     #
     #  Our clouds
     #
-    $template->param( tagcloud  => $CLOUD{'tag'} )     if ( $CLOUD{'tag'} );
-    $template->param( datecloud => $CLOUD{'archive'} ) if ( $CLOUD{'archive'} );
+    $template->param( tagcloud => $CLOUD{ 'tag' } ) if ( $CLOUD{ 'tag' } );
+    $template->param( datecloud => $CLOUD{ 'archive' } )
+      if ( $CLOUD{ 'archive' } );
 
     #
     #  Blog title and subtitle, if present.
     #
-    $template->param( blog_title => $CONFIG{'blog_title'} )
-      if ( $CONFIG{'blog_title'} );
-    $template->param( blog_subtitle => $CONFIG{'blog_subtitle'} )
-      if ( $CONFIG{'blog_subtitle'} );
+    $template->param( blog_title => $CONFIG{ 'blog_title' } )
+      if ( $CONFIG{ 'blog_title' } );
+    $template->param( blog_subtitle => $CONFIG{ 'blog_subtitle' } )
+      if ( $CONFIG{ 'blog_subtitle' } );
 
     outputTemplate( $template, $file );
 }
@@ -1453,22 +1455,22 @@ sub readBlogEntry
     my $cache = undef;
     my $test  = "use Cache::Memcached;";
     eval($test);
-    if ( ( !$@ ) && ( !$CONFIG{'no-cache'} ) )
+    if ( ( !$@ ) && ( !$CONFIG{ 'no-cache' } ) )
     {
 
         # create the cache object
-        $cache = new Cache::Memcached {'servers' => ["localhost:11211"]};
+        $cache = new Cache::Memcached { 'servers' => ["localhost:11211"] };
 
         # fetch from the cache if it is present.
         my $cached = $cache->get("file_$filename");
         if ( defined($cached) )
         {
-            $CONFIG{'verbose'} && print "memcache-get: $filename\n";
+            $CONFIG{ 'verbose' } && print "memcache-get: $filename\n";
             return ( \%$cached );
         }
         else
         {
-            $CONFIG{'verbose'} && print "memcache-fail: $filename\n";
+            $CONFIG{ 'verbose' } && print "memcache-fail: $filename\n";
         }
     }
 
@@ -1528,7 +1530,7 @@ sub readBlogEntry
     #
     #  Determine the input format to use.
     #
-    my $format = lc( $CONFIG{'format'} );
+    my $format = lc( $CONFIG{ 'format' } );
 
     #
     #  Now process accordingly.
@@ -1581,7 +1583,7 @@ sub readBlogEntry
     #
     foreach my $t ( sort @tmpTags )
     {
-        push( @$entryTags, {tag => $t} );
+        push( @$entryTags, { tag => $t } );
     }
 
 
@@ -1624,14 +1626,14 @@ sub readBlogEntry
         # Store the published date & time away.
         # [Collapsing multiple spaces]
         #
-        $entry{'pubdate'} = time2str( "%a, %e %b %Y $hms GMT", $time );
-        $entry{'pubdate'} =~ s/  +/ /g;
+        $entry{ 'pubdate' } = time2str( "%a, %e %b %Y $hms GMT", $time );
+        $entry{ 'pubdate' } =~ s/  +/ /g;
 
         #
         # Store the W3C date form
         # http://www.w3.org/TR/NOTE-datetime
         #
-        $entry{'w3cdate'} = time2str( "%Y-%m-%dT${hms}+00:00", $time );
+        $entry{ 'w3cdate' } = time2str( "%Y-%m-%dT${hms}+00:00", $time );
 
     }
     else
@@ -1642,17 +1644,17 @@ sub readBlogEntry
     #
     #  Store the entry.
     #
-    $entry{'title'} = $title;
-    $entry{'body'}  = $body if ($body);
-    $entry{'date'}  = $date;
-    $entry{'tags'}  = $entryTags if ($entryTags);
+    $entry{ 'title' } = $title;
+    $entry{ 'body' }  = $body if ($body);
+    $entry{ 'date' }  = $date;
+    $entry{ 'tags' }  = $entryTags if ($entryTags);
 
 
     #
     #  No title?
     #
-    if (    !defined( $entry{'title'} )
-         || !length( $entry{'title'} ) )
+    if (    !defined( $entry{ 'title' } )
+         || !length( $entry{ 'title' } ) )
     {
         my $basename = $filename;
         if ( $basename =~ /(.*)\/(.*)/ )
@@ -1664,24 +1666,24 @@ sub readBlogEntry
             $basename = $1;
         }
 
-        $entry{'title'} = $basename;
+        $entry{ 'title' } = $basename;
     }
 
     #
     #  Get the link - after ensuring we have a title.
     #
-    my $link = fileToTitle( $entry{'title'} );
-    $entry{'link'} = $link;
+    my $link = fileToTitle( $entry{ 'title' } );
+    $entry{ 'link' } = $link;
 
     #
     #  Count comments.
     #
-    $entry{'comment_count'} =
-      countComments( $CONFIG{'comments'}, $entry{'link'} );
-    if ( defined $entry{'comment_count'}
-         && $entry{'comment_count'} != 1 )
+    $entry{ 'comment_count' } =
+      countComments( $CONFIG{ 'comments' }, $entry{ 'link' } );
+    if ( defined $entry{ 'comment_count' }
+         && $entry{ 'comment_count' } != 1 )
     {
-        $entry{'comment_plural'} = 1;
+        $entry{ 'comment_plural' } = 1;
     }
 
     #
@@ -1689,7 +1691,7 @@ sub readBlogEntry
     #
     if ( defined($cache) )
     {
-        $CONFIG{'verbose'} && print "memcache-set: $filename\n";
+        $CONFIG{ 'verbose' } && print "memcache-set: $filename\n";
         $cache->set( "file_$filename", \%entry );
     }
     return \%entry;
@@ -1723,13 +1725,13 @@ sub fileToTitle
     #
     $file =~ s/[^a-z0-9]/_/gi;
 
-    my $suffix = $CONFIG{'suffix'} || ".html";
+    my $suffix = $CONFIG{ 'suffix' } || ".html";
     $file .= $suffix;
 
     #
     #  Lower case?
     #
-    $file = lc($file) if ( $CONFIG{'lower-case'} );
+    $file = lc($file) if ( $CONFIG{ 'lower-case' } );
 
     return ($file);
 
@@ -1812,10 +1814,10 @@ sub getComments
             push(
                   @$results,
                   {
-                   name => $name,
-                   mail => $mail,
-                   body => $body,
-                   date => $date
+                     name => $name,
+                     mail => $mail,
+                     body => $body,
+                     date => $date
                   }
             );
 
@@ -1838,7 +1840,7 @@ sub countComments
 {
     my ( $dir, $title ) = (@_);
 
-    return (0) if ( $CONFIG{'no-comments'} );
+    return (0) if ( $CONFIG{ 'no-comments' } );
 
     if ( $title =~ /^(.*)\.([^.]+)$/ )
     {
@@ -1871,7 +1873,7 @@ sub loadTemplate
     #
     #  Get the directory.
     #
-    my $dir = $CONFIG{'theme-dir'};
+    my $dir = $CONFIG{ 'theme-dir' };
 
     #
     #  XML files go in theme-dir/xml/
@@ -1882,7 +1884,7 @@ sub loadTemplate
     }
     else
     {
-        $dir .= "/" . $CONFIG{'theme'} . "/";
+        $dir .= "/" . $CONFIG{ 'theme' } . "/";
     }
 
     #
@@ -1938,9 +1940,9 @@ sub outputTemplate
     # Select relative/absolute URL prefix.
     #
     my $top;
-    if ( $CONFIG{'url_prefix'} )
+    if ( $CONFIG{ 'url_prefix' } )
     {
-        $top = $CONFIG{'url_prefix'};
+        $top = $CONFIG{ 'url_prefix' };
     }
     else
     {
@@ -2027,7 +2029,7 @@ sub readConfigurationFile
             }
 
             # Store value.
-            $CONFIG{$key} = $val;
+            $CONFIG{ $key } = $val;
         }
     }
 
@@ -2051,7 +2053,7 @@ sub sanityCheckArguments
     #
     #  Make sure we have an input directory.
     #
-    if ( !-d $CONFIG{'input'} )
+    if ( !-d $CONFIG{ 'input' } )
     {
         print <<EOF;
 
@@ -2063,7 +2065,7 @@ EOF
         exit;
     }
 
-    if ( !$CONFIG{'theme-dir'} )
+    if ( !$CONFIG{ 'theme-dir' } )
     {
         print <<EOF;
 
@@ -2078,14 +2080,14 @@ EOF
         exit;
     }
 
-    if ( !-d $CONFIG{'theme-dir'} )
+    if ( !-d $CONFIG{ 'theme-dir' } )
     {
         print "The theme directory you specified doesn't exist:\n";
-        print "\t" . $CONFIG{'theme-dir'} . "\n";
+        print "\t" . $CONFIG{ 'theme-dir' } . "\n";
         exit;
     }
 
-    if ( !$CONFIG{'theme'} )
+    if ( !$CONFIG{ 'theme' } )
     {
         print <<EOF;
 
@@ -2106,15 +2108,15 @@ EOF
     }
 
 
-    if ( !-d $CONFIG{'theme-dir'} . "/" . $CONFIG{'theme'} )
+    if ( !-d $CONFIG{ 'theme-dir' } . "/" . $CONFIG{ 'theme' } )
     {
         print
 "The theme directory you specified doesn't exist in the theme directory:\n";
-        print "\tTheme    :" . $CONFIG{'theme'} . "\n";
-        print "\tTheme dir:" . $CONFIG{'theme-dir'} . "\n";
+        print "\tTheme    :" . $CONFIG{ 'theme' } . "\n";
+        print "\tTheme dir:" . $CONFIG{ 'theme-dir' } . "\n";
         print "\tExpected :"
-          . $CONFIG{'theme-dir'} . "/"
-          . $CONFIG{'theme'} . "\n";
+          . $CONFIG{ 'theme-dir' } . "/"
+          . $CONFIG{ 'theme' } . "\n";
         exit;
     }
 
@@ -2141,8 +2143,8 @@ sub copyStaticFiles
     #
     #  Soure and destination for the copy
     #
-    my $input  = $CONFIG{'theme-dir'} . "/" . $CONFIG{'theme'};
-    my $output = $CONFIG{'output'};
+    my $input  = $CONFIG{ 'theme-dir' } . "/" . $CONFIG{ 'theme' };
+    my $output = $CONFIG{ 'output' };
 
     foreach my $pattern (qw! *.css *.jpg *.gif *.png *.js *.ico !)
     {
@@ -2156,9 +2158,9 @@ sub copyStaticFiles
             {
                 $file = $2;
             }
-            if ( $CONFIG{'force'} || ( !-e "$output/$file" ) )
+            if ( $CONFIG{ 'force' } || ( !-e "$output/$file" ) )
             {
-                $CONFIG{'verbose'} && print "Copying static file: $file\n";
+                $CONFIG{ 'verbose' } && print "Copying static file: $file\n";
                 copy( "$input/$file", "$output/$file" );
             }
         }
@@ -2264,7 +2266,7 @@ sub listThemes
 {
     my ($dir) = (@_);
 
-    $CONFIG{'verbose'} && print "Listing themes beneath : $dir\n";
+    $CONFIG{ 'verbose' } && print "Listing themes beneath : $dir\n";
 
     foreach my $name ( sort( glob( $dir . "/*" ) ) )
     {
@@ -2303,7 +2305,7 @@ sub createCalendar
     #  If there was an error, or the calendar is disabled then
     # return undef.
     #
-    if ( ($@) || ( $CONFIG{'no-calendar'} ) )
+    if ( ($@) || ( $CONFIG{ 'no-calendar' } ) )
     {
         return undef;
     }
@@ -2326,9 +2328,9 @@ sub createCalendar
 
     foreach my $f (%data)
     {
-        my $h = $data{$f};
+        my $h = $data{ $f };
         next if ( !$h );
-        my $entrydate = $h->{'date'};
+        my $entrydate = $h->{ 'date' };
 
         if ( !$entrydate )
         {
@@ -2347,7 +2349,7 @@ sub createCalendar
 
         if ( $month eq $curmonth )
         {
-            $cal->setdatehref( $day, fileToTitle( $data{$f}->{'title'} ) );
+            $cal->setdatehref( $day, fileToTitle( $data{ $f }->{ 'title' } ) );
         }
     }
     return ($cal);

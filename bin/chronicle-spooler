@@ -429,7 +429,7 @@ sub shouldBeLive
     #  OK we got a header - is it current / past?
     #
     my $today = time;
-    if ( !defined( $today ) )
+    if ( !defined($today) )
     {
         print "FAILED TO FIND TODAY\n";
         return 0;
@@ -439,7 +439,7 @@ sub shouldBeLive
     #  Date of entry
     #
     my $ent = str2time($header);
-    if ( !defined( $ent ) )
+    if ( !defined($ent) )
     {
         print "FAILED TO PARSE: '$header'\n";
         return 0;
@@ -498,8 +498,7 @@ sub makeEntryLive
         #
         #  Moving
         #
-        File::Copy::move( $file,
-                          $CONFIG{ 'live-dir' } . "/" . $base );
+        File::Copy::move( $file, $CONFIG{ 'live-dir' } . "/" . $base );
     }
     else
     {
