@@ -1,3 +1,11 @@
+chronicle (2.6-1) unstable; urgency=low
+
+  * New upstream release:
+    - Allow pending posts to be spooled, via chronicle-spool.
+    - Updated script to allow RSS v1.0 dates.
+
+ -- Steve Kemp <skx@debian.org>  Mon, 14 Apr 2008 20:00:02 +0000
+
 chronicle (2.5-1) unstable; urgency=low
 
   * New upstream release:
