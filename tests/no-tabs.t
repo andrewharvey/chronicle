@@ -34,6 +34,9 @@ sub checkFile
     # Nor about backup files.
     return if ( $file =~ /~$/ );
 
+    # or Makefiles
+    return if ( $file =~ /Makefile$/ );
+
     # Nor about files which start with ./debian/
     return if ( $file =~ /^\.\/debian\// );
 
