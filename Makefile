@@ -62,6 +62,7 @@ install:
 	cp ./etc/chroniclerc ${prefix}/etc/chroniclerc
 	mkdir -p ${prefix}/usr/local/bin
 	cp ./bin/chronicle ${prefix}/usr/local/bin
+	cp ./bin/chronicle-spooler ${prefix}/usr/local/bin
 	mkdir -p ${prefix}/usr/share/chronicle/themes/xml
 	cp -r ./themes/xml/*.* ${prefix}/usr/share/chronicle/themes/xml
 	mkdir -p ${prefix}/usr/share/chronicle/themes/default
