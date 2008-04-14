@@ -35,7 +35,10 @@ use POSIX qw(strftime);
 
 
 #
-#  The directory to store comments in
+#  The directory to store comments in.
+#
+# NOTE:  This should be writeable to the www-data user, and shouldn't
+#        be inside your web-root - or you open up a security hole.
 #
 # my $COMMENT = "/home/www/comments/";
 #
@@ -53,12 +56,12 @@ my $FROM = 'weblog@steve.org.uk';
 #  Get the parameters from the request.
 #
 my $cgi  = new CGI();
-my $name = $cgi->param('name') || undef;
-my $mail = $cgi->param('mail') || undef;
-my $body = $cgi->param('body') || undef;
-my $id   = $cgi->param('id') || undef;
+my $name = $cgi->param('name')    || undef;
+my $mail = $cgi->param('mail')    || undef;
+my $body = $cgi->param('body')    || undef;
+my $id   = $cgi->param('id')      || undef;
 my $cap  = $cgi->param('captcha') || undef;
-my $ajax = $cgi->param("ajax") || 0;
+my $ajax = $cgi->param("ajax")    || 0;
 
 
 #
@@ -136,7 +139,7 @@ my $timestr = strftime "%e-%B-%Y-%H:%M:%S", gmtime;
 #  Open the file.
 #
 my $file = $COMMENT . "/" . $id . "." . $timestr;
-$file =~ s/[ \t]//g;
+$file =~ s/[^a-z0-9]/_/gi;
 
 open( FILE, ">", $file );
 print FILE "Name: $name\n";
