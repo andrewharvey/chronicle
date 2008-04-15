@@ -166,7 +166,7 @@ foreach my $entry ( sort(@files) )
 #
 #  If we should run our command do so.
 #
-if ( $CONFIG{ 'post-move' } )
+if ( ( $CONFIG{ 'post-move' } ) && $live )
 {
     if ( $CONFIG{ 'test' } )
     {

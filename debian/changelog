@@ -1,3 +1,10 @@
+chronicle (2.6-2) unstable; urgency=low
+
+  * Include manpage for chronicle-spooler.
+  * Include patch from MJ Ray for correct time handling of entries.
+
+ -- Steve Kemp <skx@debian.org>  Mon, 14 Apr 2008 20:00:02 +0000
+
 chronicle (2.6-1) unstable; urgency=low
 
   * New upstream release:

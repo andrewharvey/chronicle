@@ -13,14 +13,15 @@ build: build-stamp
 
 build-stamp:
 	dh_testdir
-	pod2man bin/chronicle > chronicle.1
+	pod2man bin/chronicle         > chronicle.1
+	pod2man bin/chronicle-spooler > chronicle-spooler.1
 	touch $@
 
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
-	rm -f chronicle.1
+	rm -f chronicle.1 chronicle-spooler.1
 	dh_clean
 
 install: build
@@ -32,6 +33,8 @@ install: build
 	$(MAKE) prefix=$(CURDIR)/debian/chronicle install
 	mv $(CURDIR)/debian/chronicle/usr/local/bin/chronicle \
 		$(CURDIR)/debian/chronicle/usr/bin
+	mv $(CURDIR)/debian/chronicle/usr/local/bin/chronicle-spooler \
+		$(CURDIR)/debian/chronicle/usr/bin
 	rmdir $(CURDIR)/debian/chronicle/usr/local/bin/
 	rmdir $(CURDIR)/debian/chronicle/usr/local
 
@@ -42,7 +45,7 @@ binary-indep: build install
 	dh_testroot
 	dh_installchangelogs
 	dh_installdocs
-	dh_installman chronicle.1
+	dh_installman chronicle.1 chronicle-spooler.1
 	dh_compress
 	dh_fixperms
 	dh_perl

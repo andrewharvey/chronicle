@@ -1597,14 +1597,21 @@ sub readBlogEntry
     }
 
     #
-    #  Make an entry date for the XML feed, if we have a date.
+    #  Get the Hours::Mins::Seconds from the Date: psuedo-header
     #
     my $time = str2time($date);
-    if ($time)
+    my $hms  = time2str("%H:%M:%S",$time);
+
+
+    #
+    #  If the time is missing from the Date: psuedo-header
+    # we need to magic them up.  Use the mtime of the file.
+    #
+    if ($hms eq '00:00:00')
     {
 
         #
-        #  Get the details of the file.
+        #  Find all the details from the file.
         #
         my (
              $dev,   $ino,     $mode, $nlink, $uid,
@@ -1612,19 +1619,18 @@ sub readBlogEntry
              $ctime, $blksize, $blocks
         ) = stat($filename);
 
-        #
-        #  Get the modification hours.
-        #
-        my ( $sec, $min, $hour ) = localtime($mtime);
 
-        #
-        #  Pad to two digits for each of the hours, minutes, and seconds.
-        #
-        my $hms = sprintf( "%02d:%02d:%02d", $hour, $min, $sec );
+        $hms = time2str("%H:%M:%S",$mtime);
+    }
 
+
+    #
+    #  If we found a time then we're OK, and can store it away.
+    #
+    if ( $time )
+    {
         #
-        # Store the published date & time away.
-        # [Collapsing multiple spaces]
+        #  RSS 2
         #
         $entry{ 'pubdate' } = time2str( "%a, %e %b %Y $hms GMT", $time );
         $entry{ 'pubdate' } =~ s/  +/ /g;
