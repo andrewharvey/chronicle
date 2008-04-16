@@ -15,13 +15,13 @@ Introduction
   There are two ways this software is typically used:
 
    Single Machine
-     The blog input is stored upon your webserver and you generate
+     The blog input is stored upon your web-server and you generate
     the output directly to a http-accessible directory upon that
     machine.
 
    Multiple Machines
      The blog input lives upon one machine, and once you've generated
-    the output you copy it over to a remote webserver where it may
+    the output you copy it over to a remote web-server where it may
     be viewed.
 
   Depending upon which of these ways you use the software the
@@ -32,14 +32,14 @@ Introduction
 Common Setup
 ------------
 
-  Install the included file cgi-bin/comments.cgi upon the webserver
+  Install the included file cgi-bin/comments.cgi upon the web-server
  which hosts the blog, and adjust the settings at the start of that
  file to specify:
 
    1.  The local directory to save the comments within.
 
-   2.  The source and destination email addresses to use for notication
-      purposes.
+   2.  The source and destination email addresses to use for
+      notification purposes.
 
 
 
@@ -54,7 +54,7 @@ Single Machine
 
     comments/
       A directory to contain the comments.
-      NOTE:  You will need to ensure your webserver has the permissions
+      NOTE:  You will need to ensure your web-server has the permissions
       to save files to this directory.
 
     data/
@@ -65,7 +65,7 @@ Single Machine
 
      chronicle --input=./date/  --comments=./comments/ --output=/var/www/blog/
 
-   This will ensure that the comments saved by your webserver into the
+   This will ensure that the comments saved by your web-server into the
   comments directory are included in the (re)generated blog.
 
 
@@ -78,7 +78,7 @@ Multiple Machines
  hosted blog upon the machine "remote" then you will run into
  problems:
 
-   1.  The comments are saved by your webserver to a local directory
+   1.  The comments are saved by your web-server to a local directory
       upon the machine "remote".
 
    2.  To rebuild the blog upon your local machine, "local", you must
