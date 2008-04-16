@@ -161,7 +161,7 @@ Any tags which should be associated with the entry, separated by commas.
 =head1 OPTIONAL CACHING
 
   To speed the rebuilding of a large blog the compiler may use a local
- Memcached deaemon, if installed and available.
+ Memcached daemon, if installed and available.
 
   To install this, under a Debian GNU/Linux system please run:
 
@@ -193,8 +193,8 @@ Any tags which should be associated with the entry, separated by commas.
  cgi-bin/comments.cgi.
 
   This file is designed to write submitted comments to the local
- filesystem of your webserver.  If you install that, and edit the
- path at the start of teh script you should be able to include
+ filesystem of your web-server.  If you install that, and edit the
+ path at the start of the script you should be able to include
  comments in your blog.
 
   In short there are three things you need to do:
@@ -318,7 +318,7 @@ if ( $CONFIG{ 'pre-build' } )
 
 
 #
-#  Parse each of the given text files, and build up a datastructure
+#  Parse each of the given text files, and build up a data-structure
 # we can use to create our pages.
 #
 #  The data-structure is a hash of arrays.  The hash key is the blog
@@ -568,7 +568,7 @@ sub parseCommandLineArguments
 
 =begin doc
 
-  Create our global datastructure, by reading each of the blog
+  Create our global data-structure, by reading each of the blog
  files and extracting:
 
   1.  The title of the entry.
@@ -804,7 +804,7 @@ sub createDateCloud
     );
 
     #
-    #  Make sure this is sorted by reverse chronilogical order.
+    #  Make sure this is sorted by reverse chronological order.
     #
     my @sorted = sort {$b->{ 'year' } <=> $a->{ 'year' }} @$results;
     return \@sorted;
@@ -1450,7 +1450,7 @@ sub readBlogEntry
     my %entry;
 
     #
-    #  Do we have the memcache module available?
+    #  Do we have the memcached module available?
     #
     my $cache = undef;
     my $test  = "use Cache::Memcached;";
@@ -1550,7 +1550,7 @@ sub readBlogEntry
     }
     else
     {
-        print "Unkown blog entry format ($CONFIG{'format'}).\n";
+        print "Unknown blog entry format ($CONFIG{'format'}).\n";
         print "Treating as HTML.\n";
     }
 
@@ -1597,14 +1597,14 @@ sub readBlogEntry
     }
 
     #
-    #  Get the Hours::Mins::Seconds from the Date: psuedo-header
+    #  Get the Hours::Mins::Seconds from the Date: pseudo-header
     #
     my $time = str2time($date);
     my $hms  = time2str("%H:%M:%S",$time);
 
 
     #
-    #  If the time is missing from the Date: psuedo-header
+    #  If the time is missing from the Date: pseudo-header
     # we need to magic them up.  Use the mtime of the file.
     #
     if ($hms eq '00:00:00')
@@ -1727,7 +1727,7 @@ sub fileToTitle
     }
 
     #
-    #  Get rid of non-alphanumerical characters
+    #  Get rid of non-alphanumeric Al characters
     #
     $file =~ s/[^a-z0-9]/_/gi;
 
@@ -2147,7 +2147,7 @@ sub copyStaticFiles
 {
 
     #
-    #  Soure and destination for the copy
+    #  Source and destination for the copy
     #
     my $input  = $CONFIG{ 'theme-dir' } . "/" . $CONFIG{ 'theme' };
     my $output = $CONFIG{ 'output' };
