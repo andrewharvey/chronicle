@@ -1600,14 +1600,14 @@ sub readBlogEntry
     #  Get the Hours::Mins::Seconds from the Date: pseudo-header
     #
     my $time = str2time($date);
-    my $hms  = time2str("%H:%M:%S",$time);
+    my $hms = time2str( "%H:%M:%S", $time );
 
 
     #
     #  If the time is missing from the Date: pseudo-header
     # we need to magic them up.  Use the mtime of the file.
     #
-    if ($hms eq '00:00:00')
+    if ( $hms eq '00:00:00' )
     {
 
         #
@@ -1620,15 +1620,16 @@ sub readBlogEntry
         ) = stat($filename);
 
 
-        $hms = time2str("%H:%M:%S",$mtime);
+        $hms = time2str( "%H:%M:%S", $mtime );
     }
 
 
     #
     #  If we found a time then we're OK, and can store it away.
     #
-    if ( $time )
+    if ($time)
     {
+
         #
         #  RSS 2
         #
