@@ -46,7 +46,7 @@ chronicle-spooler - Automatically post pre-written entries.
 =head1 DATE SPECIFICATION
 
   To specify the date a particular entry should be made live you
- must add another psuedo-header to your blog entry files, as follows:
+ must add another pseudo-header to your blog entry files, as follows:
 
 =for example begin
 
@@ -382,7 +382,7 @@ sub findPendingPosts
 =begin doc
 
   Read the given file and see if it should be published now.
-  That means that the file containes a "Publish:" psuedo-header
+  That means that the file contained a "Publish:" pseudo-header
  which is either in the past, or equal to todays date.
 
 =end doc
