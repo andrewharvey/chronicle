@@ -73,7 +73,7 @@ Blog Format
 
 
 
-  The entries are aided by a psuedo-header.  This header contains
+  The entries are aided by a pseudo-header.  This header contains
  entries which are used by Chronicle to build your blog.  The entries
  themselves are not included in your output HTML.
 
@@ -94,7 +94,7 @@ Publish:
 
 
 Tags:
-   If any tags are present they will be used to catagorise the entry.
+   If any tags are present they will be used to categorise the entry.
 
 
 
