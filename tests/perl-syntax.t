@@ -37,8 +37,9 @@ sub checkFile
     # Or makefiles
     return if ( $file =~ /Makefile/ );
 
-    # `modules.sh` is a false positive.
-    return if ( $file =~ /modules.sh$/ );
+    # False positives
+    return if ( ( $file =~ /modules.sh$/ ) ||
+                ( $file =~ /html-validator.t/ ) );
 
     # See if it is a perl file.
     my $isPerl = 0;
