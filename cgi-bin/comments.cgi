@@ -42,7 +42,7 @@ use POSIX qw(strftime);
 #
 # my $COMMENT = "/home/www/comments/";
 #
-my $COMMENT = $ENV{'DOCUMENT_ROOT'} . "../comments/";
+my $COMMENT = $ENV{ 'DOCUMENT_ROOT' } . "../comments/";
 
 #
 #  The notification addresses - leave blank to disable
@@ -56,12 +56,12 @@ my $FROM = 'weblog@steve.org.uk';
 #  Get the parameters from the request.
 #
 my $cgi  = new CGI();
-my $name = $cgi->param('name')    || undef;
-my $mail = $cgi->param('mail')    || undef;
-my $body = $cgi->param('body')    || undef;
-my $id   = $cgi->param('id')      || undef;
+my $name = $cgi->param('name') || undef;
+my $mail = $cgi->param('mail') || undef;
+my $body = $cgi->param('body') || undef;
+my $id   = $cgi->param('id') || undef;
 my $cap  = $cgi->param('captcha') || undef;
-my $ajax = $cgi->param("ajax")    || 0;
+my $ajax = $cgi->param("ajax") || 0;
 
 
 #
@@ -83,7 +83,7 @@ if (    !defined($name)
     }
     else
     {
-        print "Location: http://" . $ENV{'HTTP_HOST'} . "/\n\n";
+        print "Location: http://" . $ENV{ 'HTTP_HOST' } . "/\n\n";
     }
     exit;
 }
@@ -100,7 +100,7 @@ if ( defined($cap) && length($cap) )
     }
     else
     {
-        print "Location: http://" . $ENV{'HTTP_HOST'} . "/\n\n";
+        print "Location: http://" . $ENV{ 'HTTP_HOST' } . "/\n\n";
     }
     exit;
 }
