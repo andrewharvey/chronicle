@@ -1720,14 +1720,6 @@ sub fileToTitle
     my ($file) = (@_);
 
     #
-    #  Strip suffix.
-    #
-    if ( $file =~ /(.*)\.(.*)/ )
-    {
-        $file = $1;
-    }
-
-    #
     #  Get rid of non-alphanumeric Al characters
     #
     $file =~ s/[^a-z0-9]/_/gi;
