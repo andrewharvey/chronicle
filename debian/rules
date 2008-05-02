@@ -45,6 +45,7 @@ binary-indep: build install
 	dh_testroot
 	dh_installchangelogs
 	dh_installdocs
+	dh_installexamples bin/chronicle-rss-importer bin/check-titles
 	dh_installman chronicle.1 chronicle-spooler.1
 	dh_compress
 	dh_fixperms
