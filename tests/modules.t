@@ -10,6 +10,10 @@
 
 use Test::More qw( no_plan );
 
+BEGIN{ use_ok( 'CGI' ); }
+require_ok( 'CGI' );
+
+
 BEGIN{ use_ok( 'Date::Format' ); }
 require_ok( 'Date::Format' );
 
@@ -34,12 +38,28 @@ BEGIN{ use_ok( 'Getopt::Long' ); }
 require_ok( 'Getopt::Long' );
 
 
+BEGIN{ use_ok( 'HTML::Entities' ); }
+require_ok( 'HTML::Entities' );
+
+
+BEGIN{ use_ok( 'HTML::Lint' ); }
+require_ok( 'HTML::Lint' );
+
+
 BEGIN{ use_ok( 'HTML::Template' ); }
 require_ok( 'HTML::Template' );
 
 
+BEGIN{ use_ok( 'LWP' ); }
+require_ok( 'LWP' );
+
+
 BEGIN{ use_ok( 'Pod::Usage' ); }
 require_ok( 'Pod::Usage' );
+
+
+BEGIN{ use_ok( 'POSIX' ); }
+require_ok( 'POSIX' );
 
 
 BEGIN{ use_ok( 'strict' ); }
@@ -56,5 +76,9 @@ require_ok( 'Time::Local' );
 
 BEGIN{ use_ok( 'warnings' ); }
 require_ok( 'warnings' );
+
+
+BEGIN{ use_ok( 'XML::RSSLite' ); }
+require_ok( 'XML::RSSLite' );
 
 
