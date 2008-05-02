@@ -58,23 +58,20 @@ diff:
 #
 #  Install to /usr/local/bin
 #
+#  Install the themes without hardwiring a list of them.
+#
 install:
+	mkdir -p ${prefix}/etc
 	cp ./etc/chroniclerc ${prefix}/etc/chroniclerc
 	mkdir -p ${prefix}/usr/local/bin
 	cp ./bin/chronicle ${prefix}/usr/local/bin
 	cp ./bin/chronicle-spooler ${prefix}/usr/local/bin
 	mkdir -p ${prefix}/usr/share/chronicle/themes/xml
 	cp -r ./themes/xml/*.* ${prefix}/usr/share/chronicle/themes/xml
-	mkdir -p ${prefix}/usr/share/chronicle/themes/default
-	cp -r ./themes/default/*.* ${prefix}/usr/share/chronicle/themes/default
-	mkdir -p ${prefix}/usr/share/chronicle/themes/blog.steve.org.uk
-	cp -r ./themes/blog.steve.org.uk/*.* ${prefix}/usr/share/chronicle/themes/blog.steve.org.uk/
-	mkdir -p ${prefix}/usr/share/chronicle/themes/blog.mail-scanning.com
-	cp -r ./themes/blog.mail-scanning.com/*.* ${prefix}/usr/share/chronicle/themes/blog.mail-scanning.com/
-	mkdir -p ${prefix}/usr/share/chronicle/themes/copyrighteous
-	cp -r ./themes/copyrighteous/*.* ${prefix}/usr/share/chronicle/themes/copyrighteous
-	mkdir -p ${prefix}/usr/share/chronicle/themes/blocky
-	cp -r ./themes/blocky/*.* ${prefix}/usr/share/chronicle/themes/blocky
+	for i in themes/*/; do \
+		mkdir -p ${prefix}/usr/share/chronicle/themes/$$(basename $$i) ;\
+		cp -r ./themes/$$(basename $$i)/*.* ${prefix}/usr/share/chronicle/themes/$$(basename $$i)/ ;\
+	done
 
 
 #
@@ -135,3 +132,4 @@ steve:
 	./bin/chronicle --theme-dir=./themes --theme=default --url-prefix=http://www.steve.org.uk/Software/chronicle/demo/ --pre-build="/bin/rm -rf ./output" --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo/" --no-comments --no-cache
 	./bin/chronicle  --theme-dir=./themes --theme=copyrighteous --url-prefix=http://www.steve.org.uk/Software/chronicle/demo2/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo2/" --no-comments --no-cache
 	./bin/chronicle --theme-dir=./themes --theme=blocky --url-prefix=http://www.steve.org.uk/Software/chronicle/demo3/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo3/" --no-comments --no-cache
+	./bin/chronicle --theme-dir=./themes --theme=leftbar --url-prefix=http://www.steve.org.uk/Software/chronicle/demo4/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo4/" --no-comments --no-cache
