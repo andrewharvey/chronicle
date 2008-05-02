@@ -13,7 +13,7 @@
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = ${TMP}
-VERSION     = 2.6
+VERSION     = 2.7
 BASE        = chronicle
 
 
@@ -47,6 +47,7 @@ clean:
 	@if [ -d output   ]; then rm -rf output; fi
 	@if [ -e build-stamp ]; then rm -f build-stamp; fi
 	@if [ -e chronicle.1 ]; then rm -f chronicle.1 ; fi
+	@if [ -e debian/chronicle.debhelper.log ]; then rm debian/chronicle.debhelper.log; fi
 
 #
 #  Show what has been changed in the local copy vs. the remote repository.
