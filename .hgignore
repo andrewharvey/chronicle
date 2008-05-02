@@ -9,3 +9,4 @@ syntax: glob
 ./debian/*.substvars
 ./debian/files
 ./debian/chronicle/*
+./debian/chronicle.debhelper.log
