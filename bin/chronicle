@@ -552,6 +552,11 @@ sub parseCommandLineArguments
         "pre-build=s",  \$CONFIG{ 'pre-build' },
         "post-build=s", \$CONFIG{ 'post-build' },
 
+               # title
+        "blog-title=s",    \$CONFIG{'blog_title'},
+        "blog-subtitle=s", \$CONFIG{'blog_subtitle'},
+
+
     );
 
     pod2usage(1) if $HELP;
