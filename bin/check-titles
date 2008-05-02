@@ -58,6 +58,11 @@ foreach my $file ( sort( glob( $dir . "/*" ) ) )
     close(IN);
 
     #
+    #  Ignore entries with no title.
+    #
+    next if ( !$title );
+
+    #
     #  Get current entries we might have found with
     # this title; and add on the new one.
     #
