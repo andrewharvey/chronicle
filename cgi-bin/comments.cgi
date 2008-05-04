@@ -139,7 +139,7 @@ my $timestr = strftime "%e-%B-%Y-%H:%M:%S", gmtime;
 #  Open the file.
 #
 my $file = $COMMENT . "/" . $id . "." . $timestr;
-$file =~ s/[^a-z0-9]/_/gi;
+$file =~ s/[^a-z0-9\/]/_/gi;
 
 open( FILE, ">", $file );
 print FILE "Name: $name\n";
