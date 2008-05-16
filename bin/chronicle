@@ -612,7 +612,9 @@ sub createDataStructure
         #  Read the entry and store all the data away as a
         # hash element keyed upon the (unique) filename.
         #
-        $results{ $file } = readBlogEntry($file);
+        my $result        = readBlogEntry($file);
+        $results{ $file } = $result if ( $result );
+
     }
 
     #
@@ -1531,6 +1533,20 @@ sub readBlogEntry
         }
     }
     close(ENTRY);
+
+    #
+    # MJR - embargo the entry until the publish if it
+    # is in the future.
+    #
+    # Steve prefers using chronicle-spooler, but I want
+    # uploaded files to stay where I put them, else I get
+    # my local copy confused.
+    #
+    if (($publish ne "") && (str2time($publish) > time()))
+    {
+        return 0;
+    }
+
 
     #
     #  Determine the input format to use.
