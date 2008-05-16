@@ -1544,6 +1544,7 @@ sub readBlogEntry
     #
     if (($publish ne "") && (str2time($publish) > time()))
     {
+        $CONFIG{'verbose'} && print "Skipping future entry $filename - due to be published on $publish\n";
         return 0;
     }
 
