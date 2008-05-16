@@ -612,8 +612,8 @@ sub createDataStructure
         #  Read the entry and store all the data away as a
         # hash element keyed upon the (unique) filename.
         #
-        my $result        = readBlogEntry($file);
-        $results{ $file } = $result if ( $result );
+        my $result = readBlogEntry($file);
+        $results{ $file } = $result if ($result);
 
     }
 
@@ -1542,9 +1542,11 @@ sub readBlogEntry
     # uploaded files to stay where I put them, else I get
     # my local copy confused.
     #
-    if (($publish ne "") && (str2time($publish) > time()))
+    if ( ( $publish ne "" ) && ( str2time($publish) > time() ) )
     {
-        $CONFIG{'verbose'} && print "Skipping future entry $filename - due to be published on $publish\n";
+        $CONFIG{ 'verbose' }
+          && print
+          "Skipping future entry $filename - due to be published on $publish\n";
         return 0;
     }
 
