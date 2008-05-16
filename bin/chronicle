@@ -834,9 +834,9 @@ sub bywhen
     #  Parse and return the date
     #
     my ( $ss1, $mm1, $hh1, $day1, $month1, $year1, $zone1 ) =
-      strptime( $a->{ 'date' } );
+      strptime( $a->{ 'pubdate' } );
     my ( $ss2, $mm2, $hh2, $day2, $month2, $year2, $zone2 ) =
-      strptime( $b->{ 'date' } );
+      strptime( $b->{ 'pubdate' } );
 
     #
     # Abort if we didn't work.
