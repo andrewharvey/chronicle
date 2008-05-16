@@ -50,6 +50,14 @@ my $COMMENT = $ENV{ 'DOCUMENT_ROOT' } . "../comments/";
 my $TO   = 'weblog@steve.org.uk';
 my $FROM = 'weblog@steve.org.uk';
 
+#
+#  Find sendmail
+#
+my $SENDMAIL = undef;
+foreach my $file ( qw ! /usr/lib/sendmail /usr/sbin/sendmail ! )
+{
+    $SENDMAIL = $file if ( -x $file );
+}
 
 
 #
@@ -154,9 +162,9 @@ close(FILE);
 #
 #  Send a mail.
 #
-if ( length($TO) && length($FROM) )
+if ( length($TO) && length($FROM) && defined( $SENDMAIL ) )
 {
-    open( SENDMAIL, "|/usr/lib/sendmail -t -f $FROM" );
+    open( SENDMAIL, "|$SENDMAIL -t -f $FROM" );
     print SENDMAIL "To: $TO\n";
     print SENDMAIL "From: $FROM\n";
     print SENDMAIL "Subject: New Comment [$id]\n";
