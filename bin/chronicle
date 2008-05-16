@@ -845,8 +845,8 @@ sub bywhen
     #
     #  Convert to compare
     #
-    my $c = timelocal( 0, 0, 0, $day1, $month1, $year1 + 1900 );
-    my $d = timelocal( 0, 0, 0, $day2, $month2, $year2 + 1900 );
+    my $c = timelocal( $ss1, $mm1, $hh1, $day1, $month1, $year1 + 1900 );
+    my $d = timelocal( $ss2, $mm2, $hh2, $day2, $month2, $year2 + 1900 );
 
     return $d <=> $c;
 }
