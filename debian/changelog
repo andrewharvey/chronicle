@@ -1,3 +1,9 @@
+chronicle (2.9-1) unstable; urgency=high
+
+  * Bugfix:  Don't use invalid dates when sorting.
+
+ -- Steve Kemp <skx@debian.org>  Fri, 16 May 2008 17:47:27 +0000
+
 chronicle (2.8-1) unstable; urgency=low
 
   * New upstream release:
