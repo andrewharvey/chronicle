@@ -2229,7 +2229,7 @@ EOF
     #
     #  Convert.
     #
-    $text = Text::Markdown::Markdown($text);
+    $text = Text::Markdown::markdown($text);
     return ($text);
 }
 
