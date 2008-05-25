@@ -1483,11 +1483,15 @@ sub readBlogEntry
 
 
     my $title   = "";    # entry title.
+    my $format  = "";    # entry format
     my $tags    = "";    # entry tags.
     my $body    = "";    # entry body.
     my $date    = "";    # entry date
     my $publish = "";    # entry publish date - *ignored*
 
+    #
+    #  Read the actual entry
+    #
     open( ENTRY, "<", $filename ) or die "Failed to read $filename $!";
     while ( my $line = <ENTRY> )
     {
@@ -1502,6 +1506,18 @@ sub readBlogEntry
         elsif ( ( $line =~ /^publish:(.*)/i ) && !length($publish) )
         {
             $publish = $1;
+            $publish =~ s/^\s+// if ( length $publish );
+            $publish =~ s/\s+$// if ( length $publish );
+        }
+        elsif ( ( $line =~ /^format:(.*)/i ) && !length($format) )
+        {
+            $format = $1;
+            if ( length $format )
+            {
+                $format =~ s/^\s+//;
+                $format =~ s/\s+$//;
+                $format = lc($format);
+            }
         }
         elsif ( ( $line =~ /^(Subject|Title):(.*)/i ) && !length($title) )
         {
@@ -1551,11 +1567,28 @@ sub readBlogEntry
     }
 
 
+
+    #
+    #  If we didn't have a per-entry format then revert to the
+    # global one, if any.
+    #
+    if ( !length($format) )
+    {
+        if ( $CONFIG{ 'format' } )
+        {
+            $format = lc( $CONFIG{ 'format' } );
+        }
+        else
+        {
+            $format = 'html';
+        }
+    }
+
+
+
     #
     #  Determine the input format to use.
     #
-    my $format = lc( $CONFIG{ 'format' } );
-
     #
     #  Now process accordingly.
     #
