@@ -514,50 +514,55 @@ sub parseCommandLineArguments
     #
     #  Parse options.
     #
-    GetOptions(
+    if (
+        !GetOptions(
 
-        # Help options
-        "help",        \$HELP,
-        "manual",      \$MANUAL,
-        "verbose",     \$CONFIG{ 'verbose' },
-        "version",     \$VERSION,
-        "list-themes", \$CONFIG{ 'list-themes' },
+            # Help options
+            "help",        \$HELP,
+            "manual",      \$MANUAL,
+            "verbose",     \$CONFIG{ 'verbose' },
+            "version",     \$VERSION,
+            "list-themes", \$CONFIG{ 'list-themes' },
 
-        # paths
-        "comments=s",  \$CONFIG{ 'comments' },
-        "config=s",    \$CONFIG{ 'config' },
-        "input=s",     \$CONFIG{ 'input' },
-        "output=s",    \$CONFIG{ 'output' },
-        "theme-dir=s", \$CONFIG{ 'theme-dir' },
-        "theme=s",     \$CONFIG{ 'theme' },
-        "pattern=s",   \$CONFIG{ 'pattern' },
+            # paths
+            "comments=s",  \$CONFIG{ 'comments' },
+            "config=s",    \$CONFIG{ 'config' },
+            "input=s",     \$CONFIG{ 'input' },
+            "output=s",    \$CONFIG{ 'output' },
+            "theme-dir=s", \$CONFIG{ 'theme-dir' },
+            "theme=s",     \$CONFIG{ 'theme' },
+            "pattern=s",   \$CONFIG{ 'pattern' },
 
-        # optional
-        "force",          \$CONFIG{ 'force' },
-        "no-tags",        \$CONFIG{ 'no-tags' },
-        "no-cache",       \$CONFIG{ 'no-cache' },
-        "no-calendar",    \$CONFIG{ 'no-calendar' },
-        "no-comments",    \$CONFIG{ 'no-comments' },
-        "no-archive",     \$CONFIG{ 'no-archive' },
-        "lower-case",     \$CONFIG{ 'lower-case' },
-        "comment-days=s", \$CONFIG{ 'comment-days' },
+            # optional
+            "force",          \$CONFIG{ 'force' },
+            "no-tags",        \$CONFIG{ 'no-tags' },
+            "no-cache",       \$CONFIG{ 'no-cache' },
+            "no-calendar",    \$CONFIG{ 'no-calendar' },
+            "no-comments",    \$CONFIG{ 'no-comments' },
+            "no-archive",     \$CONFIG{ 'no-archive' },
+            "lower-case",     \$CONFIG{ 'lower-case' },
+            "comment-days=s", \$CONFIG{ 'comment-days' },
 
-        # input format.
-        "format=s", \$CONFIG{ 'format' },
+            # input format.
+            "format=s", \$CONFIG{ 'format' },
 
-        # prefix
-        "url-prefix=s", \$CONFIG{ 'url_prefix' },
+            # prefix
+            "url-prefix=s", \$CONFIG{ 'url_prefix' },
 
-        # commands
-        "pre-build=s",  \$CONFIG{ 'pre-build' },
-        "post-build=s", \$CONFIG{ 'post-build' },
+            # commands
+            "pre-build=s",  \$CONFIG{ 'pre-build' },
+            "post-build=s", \$CONFIG{ 'post-build' },
 
-        # title
-        "blog-title=s",    \$CONFIG{ 'blog_title' },
-        "blog-subtitle=s", \$CONFIG{ 'blog_subtitle' },
+            # title
+            "blog-title=s",    \$CONFIG{ 'blog_title' },
+            "blog-subtitle=s", \$CONFIG{ 'blog_subtitle' },
 
 
-    );
+        )
+      )
+    {
+        exit;
+    }
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;

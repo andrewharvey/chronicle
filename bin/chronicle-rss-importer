@@ -62,13 +62,17 @@ processEntries(%rssHash);
 
 sub parseCommandLineArguments
 {
-    GetOptions(
+    if (
+        !GetOptions(
 
-        # Help options
-        "feed=s",     \$CONFIG{ 'feed' },
-        "output=s",   \$CONFIG{ 'output' },
-        "sequential", \$CONFIG{ 'sequential' },
-    );
+                     "feed=s",     \$CONFIG{ 'feed' },
+                     "output=s",   \$CONFIG{ 'output' },
+                     "sequential", \$CONFIG{ 'sequential' },
+        )
+      )
+    {
+        exit;
+    }
 }
 
 

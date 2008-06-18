@@ -204,25 +204,30 @@ sub parseCommandLineArguments
     #
     #  Parse options.
     #
-    GetOptions(
+    if (
+        !GetOptions(
 
-        # input / output
-        "spool-dir=s", \$CONFIG{ 'spool-dir' },
-        "live-dir=s",  \$CONFIG{ 'live-dir' },
+            # input / output
+            "spool-dir=s", \$CONFIG{ 'spool-dir' },
+            "live-dir=s",  \$CONFIG{ 'live-dir' },
 
-        # testing?
-        "test", \$CONFIG{ 'test' },
+            # testing?
+            "test", \$CONFIG{ 'test' },
 
-        # command?
-        "post-move=s", \$CONFIG{ 'post-move' },
+            # command?
+            "post-move=s", \$CONFIG{ 'post-move' },
 
-        # Help options
-        "help",    \$HELP,
-        "manual",  \$MANUAL,
-        "verbose", \$CONFIG{ 'verbose' },
-        "version", \$VERSION,
+            # Help options
+            "help",    \$HELP,
+            "manual",  \$MANUAL,
+            "verbose", \$CONFIG{ 'verbose' },
+            "version", \$VERSION,
 
-    );
+        )
+      )
+    {
+        exit;
+    }
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
