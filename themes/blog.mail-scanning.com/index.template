@@ -5,26 +5,14 @@
   <title><!-- tmpl_var name='blog_title' --></title>
   <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='top' -->index.rss" type="application/rss+xml">
 
-  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->layout.css">
   <link rel="icon" href="/favicon.ico" />
 
  </head>
  <body>
- <div id="header">
-  <h1>@ <a href="http://mail-scanning.com/">Mail-Scanning.com</a><span> Our behind-the-scenes blog</span></h1>
- </div>
-  <div id="menu">
-   <div id="underlinemenu">
-    <ul>
-    <li><a href="http://www.mail-scanning.com/">Home</a></li>
-    <li><a href="http://www.mail-scanning.com/faq/">FAQ</a></li>
-    <li><a href="http://www.mail-scanning.com/pricing/">Pricing</a></li>
-    <li><a href="http://www.mail-scanning.com/quickstart/">Quick Start</a></li>
-    <li><a href="http://www.mail-scanning.com/support/">Support</a></li>
 
-   </ul>
-  </div>
- </div>
+<!-- tmpl_include name='menu.inc' -->
+
  <div id="content">
  <div id="right">
  <h1><a href="/">Mail-Scanning Blog</a></h1>

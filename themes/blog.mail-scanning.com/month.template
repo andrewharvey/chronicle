@@ -3,27 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
  <head>
   <title><!-- tmpl_var name='blog_title' -->: entries from <!-- tmpl_var name='month_name' --> <!-- tmpl_var name='year' --></title>
-  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->layout.css">
   <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='month' escape='html' -->.rss" type="application/rss+xml">
 
  </head>
  <body>
- <div id="header">
-  <h1>@ <a href="http://mail-scanning.com/">Mail-Scanning.com</a><span> Our behind-the-scenes blog</span></h1>
 
-  </div>
-  <div id="menu">
-   <div id="underlinemenu">
-    <ul>
-    <li><a href="http://www.mail-scanning.com/">Home</a></li>
-    <li><a href="http://www.mail-scanning.com/faq/">FAQ</a></li>
-    <li><a href="http://www.mail-scanning.com/pricing/">Pricing</a></li>
-    <li><a href="http://www.mail-scanning.com/quickstart/">Quick Start</a></li>
-    <li><a href="http://www.mail-scanning.com/support/">Support</a></li>
+<!-- tmpl_include name='menu.inc' -->
 
-   </ul>
-  </div>
- </div>
  <div id="content">
  <div id="right">
 
