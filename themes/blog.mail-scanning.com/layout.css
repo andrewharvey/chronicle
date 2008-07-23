@@ -86,7 +86,7 @@ div#footer{
 
 /* navigation */
 .navigation {
-	background: #D9E1E5 url(/images/nav.gif);
+	background: #D9E1E5 url(/nav.gif);
 	border: 1px solid #DFEEF7;
 	border-color: #DFEEF7 #CFDEE7;
 	height: 41px;
@@ -96,7 +96,7 @@ div#footer{
 
 }
 .navigation a {
-	background: #D9E1E5 url(/images/nav.gif);
+	background: #D9E1E5 url(/nav.gif);
 	border-right: 1px solid #AFBEC7;
 	color: #456;
 	display: block;
