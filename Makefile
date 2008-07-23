@@ -41,12 +41,12 @@ clean:
 	@find . -name '.*~' -exec rm \{\} \;
 	@find . -name '.#*' -exec rm \{\} \;
 	@find . -name '*~' -exec rm \{\} \;
+	@find . -name '*.1' -exec rm \{\} \;
 	@find . -name '*.bak' -exec rm \{\} \;
 	@find . -name '*.tmp' -exec rm \{\} \;
 	@if [ -d comments ]; then rm -rf comments; fi
 	@if [ -d output   ]; then rm -rf output; fi
 	@if [ -e build-stamp ]; then rm -f build-stamp; fi
-	@if [ -e chronicle.1 ]; then rm -f chronicle.1 ; fi
 	@if [ -e debian/chronicle.debhelper.log ]; then rm debian/chronicle.debhelper.log; fi
 
 #
