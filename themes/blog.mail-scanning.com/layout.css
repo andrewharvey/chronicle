@@ -109,8 +109,20 @@ div#footer{
 .navigation a:hover {background-position: left bottom; color: #234;}
 
 
+
+
+tt {
+    font-size : 120%;
+    background-color: #F0F8FF;
+}
+tt:hover{
+    background-color: #FAEBD7 !important;
+}
+
 pre {
-    border: 1px solid black;
-    background:	rgb(230,230,230);
-    overflow: auto;
+    font-size : 120%;
+    background-color: #F0F8FF;
+}
+pre:hover{
+    background-color: #FAEBD7 !important;
 }
