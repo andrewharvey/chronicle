@@ -38,6 +38,13 @@
   No tags
  <!-- /tmpl_if -->
  </div>
+
+   <!-- tmpl_if name='comment_count' -->
+   <span class="comments">
+   <a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='link' escape='html' -->#comments"><!-- tmpl_var name='comment_count' --> comment<!-- tmpl_if name='comment_plural' -->s<!-- /tmpl_if --></a>
+   </span>
+   <!-- /tmpl_if -->
+
 </div>
  <p>&nbsp;</p>
 <!-- /tmpl_loop -->
