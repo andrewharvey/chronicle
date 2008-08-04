@@ -5,6 +5,7 @@
 
   <title><!-- tmpl_var name='blog_title' -->: <!-- tmpl_var name='title' --></title>
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->layout.css">
+  <link rel="stylesheet" href="<!-- tmpl_var name='top' -->bubbles.css" type="text/css" media="screen" charset="utf-8" />
 <!-- tmpl_if name='comments_enabled' -->
   <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->ajax.js"></script>
 <!-- /tmpl_if -->
