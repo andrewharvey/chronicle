@@ -126,3 +126,19 @@ pre {
 pre:hover{
     background-color: #FAEBD7 !important;
 }
+
+div.entry h2 {
+    size: 120%;
+}
+div.entry div.date {
+    float:right;
+    padding: 4px;
+}
+div.entry div.body {
+    border-top: 1px solid black;
+}
+div.entry div.tags {
+}
+div.entry div.tags span.comments {
+        padding: 5px;
+}
