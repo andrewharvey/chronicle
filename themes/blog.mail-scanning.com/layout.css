@@ -133,6 +133,7 @@ div.entry h2 {
 div.entry div.date {
     float:right;
     padding: 4px;
+    border: 1px solid black;
 }
 div.entry div.body {
     border-top: 1px solid black;
