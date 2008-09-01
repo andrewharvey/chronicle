@@ -558,8 +558,7 @@ sub parseCommandLineArguments
             "blog-subtitle=s", \$CONFIG{ 'blog_subtitle' },
 
 
-        )
-      )
+        ) )
     {
         exit;
     }
@@ -698,14 +697,11 @@ sub createTagCloud
         my $size = 10 + ( $count * 5 );
         $size = 40 if ( $size >= 40 );
 
-        push(
-              @$results,
-              {
-                 tag   => $key,
+        push( @$results,
+              {  tag   => $key,
                  count => $count,
                  size  => $size
-              }
-        );
+              } );
     }
     return $results;
 
@@ -741,11 +737,10 @@ sub findAllMonths
             #
             # Test the file for creation time.
             #
-            my (
-                 $dev,   $ino,     $mode, $nlink, $uid,
+            my ( $dev,   $ino,     $mode, $nlink, $uid,
                  $gid,   $rdev,    $size, $atime, $mtime,
                  $ctime, $blksize, $blocks
-            ) = stat($f);
+               ) = stat($f);
 
             $date = localtime($ctime);
         }
@@ -785,35 +780,25 @@ sub createDateCloud
 
         if ( $year and $1 ne $year )
         {
-            push(
-                  @$results,
-                  {
-                     year   => $year,
+            push( @$results,
+                  {  year   => $year,
                      months => $months
-                  }
-            );
+                  } );
             undef $months;
         }
         $year = $1;
 
-        push(
-              @$months,
-              {
-                 month      => $2,
+        push( @$months,
+              {  month      => $2,
                  month_name => $names[$2 - 1],
-                 count      => $entry_dates{ $date }
-              }
-        );
+                 count      => $entry_dates{ $date } } );
 
     }
 
-    push(
-          @$results,
-          {
-             year   => $year,
+    push( @$results,
+          {  year   => $year,
              months => $months
-          }
-    );
+          } );
 
     #
     #  Make sure this is sorted by reverse chronological order.
@@ -1135,11 +1120,10 @@ sub outputArchivePage
             #
             # Test the file for creation time.
             #
-            my (
-                 $dev,   $ino,     $mode, $nlink, $uid,
+            my ( $dev,   $ino,     $mode, $nlink, $uid,
                  $gid,   $rdev,    $size, $atime, $mtime,
                  $ctime, $blksize, $blocks
-            ) = stat($f);
+               ) = stat($f);
 
             $date = localtime($ctime);
         }
@@ -1341,11 +1325,10 @@ sub outputStaticPage
 
     if ( !defined($date) )
     {
-        my (
-             $dev,   $ino,     $mode, $nlink, $uid,
+        my ( $dev,   $ino,     $mode, $nlink, $uid,
              $gid,   $rdev,    $size, $atime, $mtime,
              $ctime, $blksize, $blocks
-        ) = stat($filename);
+           ) = stat($filename);
 
         $date = localtime($ctime);
     }
@@ -1371,14 +1354,13 @@ sub outputStaticPage
             my $plural = 1;
             $plural = 0 if ( $count == 1 );
 
-            $template->param(
-                              comments       => $comments,
+            $template->param( comments       => $comments,
                               comment_count  => $count,
                               comment_plural => $plural
-            );
+                            );
 
-            $CONFIG{ 'verbose' }
-              && print "$file [$filename] has $count comments\n";
+            $CONFIG{ 'verbose' } &&
+              print "$file [$filename] has $count comments\n";
         }
 
         #
@@ -1405,14 +1387,14 @@ sub outputStaticPage
 
             if ( ( $time + $days ) > $today )
             {
-                $CONFIG{ 'verbose' }
-                  && print "Comments allowed on post dated $date.\n";
+                $CONFIG{ 'verbose' } &&
+                  print "Comments allowed on post dated $date.\n";
                 $template->param( comments_enabled => 1 );
             }
             else
             {
-                $CONFIG{ 'verbose' }
-                  && print "Comments disabled on post dated $date.\n";
+                $CONFIG{ 'verbose' } &&
+                  print "Comments disabled on post dated $date.\n";
             }
         }
     }
@@ -1565,8 +1547,8 @@ sub readBlogEntry
     #
     if ( ( $publish ne "" ) && ( str2time($publish) > time() ) )
     {
-        $CONFIG{ 'verbose' }
-          && print
+        $CONFIG{ 'verbose' } &&
+          print
           "Skipping future entry $filename - due to be published on $publish\n";
         return 0;
     }
@@ -1675,11 +1657,10 @@ sub readBlogEntry
         #
         #  Find all the details from the file.
         #
-        my (
-             $dev,   $ino,     $mode, $nlink, $uid,
+        my ( $dev,   $ino,     $mode, $nlink, $uid,
              $gid,   $rdev,    $size, $atime, $mtime,
              $ctime, $blksize, $blocks
-        ) = stat($filename);
+           ) = stat($filename);
 
 
         $hms = time2str( "%H:%M:%S", $mtime );
@@ -1722,8 +1703,8 @@ sub readBlogEntry
     #
     #  No title?
     #
-    if (    !defined( $entry{ 'title' } )
-         || !length( $entry{ 'title' } ) )
+    if ( !defined( $entry{ 'title' } ) ||
+         !length( $entry{ 'title' } ) )
     {
         my $basename = $filename;
         if ( $basename =~ /(.*)\/(.*)/ )
@@ -1749,8 +1730,8 @@ sub readBlogEntry
     #
     $entry{ 'comment_count' } =
       countComments( $CONFIG{ 'comments' }, $entry{ 'link' } );
-    if ( defined $entry{ 'comment_count' }
-         && $entry{ 'comment_count' } != 1 )
+    if ( defined $entry{ 'comment_count' } &&
+         $entry{ 'comment_count' } != 1 )
     {
         $entry{ 'comment_plural' } = 1;
     }
@@ -1820,12 +1801,30 @@ sub getComments
         $title = $1;
     }
 
+    #
+    #  Find each comment file.
+    #
+    my @entries;
     foreach my $file ( sort( glob( $dir . "/" . $title . "*" ) ) )
     {
-        my $date = "";
-        my $name = "";
-        my $body = "";
-        my $mail = "";
+        push( @entries, $file );
+    }
+
+    #
+    # Sort them into order.
+    #
+    @entries = sort {( stat($a) )[9] <=> ( stat($b) )[9]} @entries;
+
+    #
+    #  Now process them.
+    #
+    foreach my $file (@entries)
+    {
+        my $date    = "";
+        my $name    = "";
+        my $body    = "";
+        my $mail    = "";
+        my $pubdate = "";
 
         if ( $file =~ /^(.*)\.([^.]+)$/ )
         {
@@ -1837,12 +1836,13 @@ sub getComments
                 my $t = $2;
 
                 $d =~ s/-/ /g;
+
                 $date = "Submitted at $t on $d";
             }
         }
 
-        open( COMMENT, "<", $file )
-          or next;
+        open( COMMENT, "<", $file ) or
+          next;
 
         foreach my $line (<COMMENT>)
         {
@@ -1868,22 +1868,20 @@ sub getComments
         }
         close(COMMENT);
 
-        if (    length($name)
-             && length($mail)
-             && length($body) )
+        if ( length($name) &&
+             length($mail) &&
+             length($body) )
         {
-            push(
-                  @$results,
-                  {
-                     name => $name,
+            push( @$results,
+                  {  name => $name,
                      mail => $mail,
                      body => $body,
-                     date => $date
-                  }
-            );
+                     date => $date,
+                  } );
 
         }
     }
+
     return ($results);
 }
 
@@ -1967,13 +1965,12 @@ EOF
         exit;
     }
 
-    my $t = HTML::Template->new(
-                                 filename          => $file,
+    my $t = HTML::Template->new( filename          => $file,
                                  path              => $dir,
                                  loop_context_vars => 1,
                                  global_vars       => 1,
                                  %params
-    );
+                               );
 
     return ($t);
 }
@@ -2172,12 +2169,11 @@ EOF
     if ( !-d $CONFIG{ 'theme-dir' } . "/" . $CONFIG{ 'theme' } )
     {
         print
-"The theme directory you specified doesn't exist in the theme directory:\n";
+          "The theme directory you specified doesn't exist in the theme directory:\n";
         print "\tTheme    :" . $CONFIG{ 'theme' } . "\n";
         print "\tTheme dir:" . $CONFIG{ 'theme-dir' } . "\n";
-        print "\tExpected :"
-          . $CONFIG{ 'theme-dir' } . "/"
-          . $CONFIG{ 'theme' } . "\n";
+        print "\tExpected :" . $CONFIG{ 'theme-dir' } . "/" .
+          $CONFIG{ 'theme' } . "\n";
         exit;
     }
 
@@ -2395,11 +2391,10 @@ sub createCalendar
 
         if ( !$entrydate )
         {
-            my (
-                 $dev,   $ino,     $mode, $nlink, $uid,
+            my ( $dev,   $ino,     $mode, $nlink, $uid,
                  $gid,   $rdev,    $size, $atime, $mtime,
                  $ctime, $blksize, $blocks
-            ) = stat($f);
+               ) = stat($f);
 
             $entrydate = localtime($ctime);
         }
