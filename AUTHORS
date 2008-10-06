@@ -11,6 +11,9 @@ Contributions
 
   Listed alphabetically by surname.
 
+  Byron Clark [byron [at] name.theclarkfamily.name]
+   - Support non-GMT timezones
+
   Josh Grams [josh [@] com.qualdan]
    - Added better base URL detection.
    - Added chronological sorting for months & shorter month-URLs.

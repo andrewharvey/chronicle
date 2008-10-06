@@ -1644,7 +1644,8 @@ sub readBlogEntry
     #  Get the Hours::Mins::Seconds from the Date: pseudo-header
     #
     my $time = str2time($date);
-    my $hms = time2str( "%H:%M:%S", $time );
+    my $hms  = time2str( "%H:%M:%S", $time );
+    my $tz   = time2str( "%z", $time );
 
 
     #
@@ -1664,6 +1665,7 @@ sub readBlogEntry
 
 
         $hms = time2str( "%H:%M:%S", $mtime );
+        $tz = "GMT";
     }
 
 
@@ -1676,14 +1678,16 @@ sub readBlogEntry
         #
         #  RSS 2
         #
-        $entry{ 'pubdate' } = time2str( "%a, %e %b %Y $hms GMT", $time );
+        $entry{ 'pubdate' } = time2str( "%a, %e %b %Y $hms $tz", $time );
         $entry{ 'pubdate' } =~ s/  +/ /g;
 
         #
         # Store the W3C date form
         # http://www.w3.org/TR/NOTE-datetime
         #
-        $entry{ 'w3cdate' } = time2str( "%Y-%m-%dT${hms}+00:00", $time );
+        my $w3ctz = $tz;
+        $w3ctz =~ s/([-+]\d\d)(\d\d)/$1:$2/;
+        $entry{ 'w3cdate' } = time2str( "%Y-%m-%dT${hms}$w3ctz", $time );
 
     }
     else
