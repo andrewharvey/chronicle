@@ -1,9 +1,16 @@
+chronicle (3.2-1) unstable; urgency=high
+
+  * New upstream release.
+    - Applied patch from Byron Clark to support non-GMT timezones.
+
+ -- Steve Kemp <skx@debian.org>  Thu, 9 Oct 2008 19:55:19 +0000
+
 chronicle (3.1-1) unstable; urgency=high
 
   * New upstream release.
     - Correctly sort submitted comments by their submission time &date.
 
- -- Steve Kemp <skx@debian.org>  Mon, 1 Sep 2008 20:40:60 +0000
+ -- Steve Kemp <skx@debian.org>  Mon, 1 Sep 2008 20:40:59 +0000
 
 chronicle (3.0-1) unstable; urgency=high
 
