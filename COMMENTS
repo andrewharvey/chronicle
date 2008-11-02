@@ -1,8 +1,9 @@
 
 
-  Chronicle, since version 2.0, supports the submission of comments
- upon published posts.  This document describes how you would go
- about enabling this support.
+  Chronicle supports the submission of comments upon published posts,
+ via an optional CGI script.
+
+  This document describes how you would go about enabling this support.
 
 
 
@@ -15,11 +16,13 @@ Introduction
   There are two ways this software is typically used:
 
    Single Machine
+   --------------
      The blog input is stored upon your web-server and you generate
     the output directly to a http-accessible directory upon that
     machine.
 
    Multiple Machines
+   -----------------
      The blog input lives upon one machine, and once you've generated
     the output you copy it over to a remote web-server where it may
     be viewed.
@@ -32,7 +35,7 @@ Introduction
 Common Setup
 ------------
 
-  Install the included file cgi-bin/comments.cgi upon the web-server
+  Install the included file comments.cgi upon the web-server
  which hosts the blog, and adjust the settings at the start of that
  file to specify:
 
