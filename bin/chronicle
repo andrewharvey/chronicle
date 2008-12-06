@@ -487,6 +487,11 @@ sub setupDefaultOptions
     $CONFIG{ 'force' } = 0;
 
     #
+    #  UTF-8 for textile
+    #
+    $CONFIG{ 'charset' } = 'utf-8';
+
+    #
     #  Comments enabled globally.
     #
     $CONFIG{ 'comment-days' } = 0;
@@ -544,7 +549,8 @@ sub parseCommandLineArguments
             "comment-days=s", \$CONFIG{ 'comment-days' },
 
             # input format.
-            "format=s", \$CONFIG{ 'format' },
+            "format=s",  \$CONFIG{ 'format' },
+            "charset=s", \$CONFIG{ 'charset' },
 
             # prefix
             "url-prefix=s", \$CONFIG{ 'url_prefix' },
@@ -2308,10 +2314,23 @@ EOF
     }
 
     #
-    #  Convert.
+    #  Convert, via the textile helper.
     #
-    $text = Text::Textile::textile($text);
-    return ($text);
+    my $textile = new Text::Textile;
+
+    if ( defined( $CONFIG{ 'charset' } ) )
+    {
+        $CONFIG{ 'verbose' } &&
+          print "Formatting via textile with charset $CONFIG{'charset'}\n";
+
+        $textile->charset( $CONFIG{ 'charset' } );
+    }
+
+    #
+    #  Now return HTML
+    #
+    my $html = $textile->process($text);
+    return ($html);
 }
 
 
