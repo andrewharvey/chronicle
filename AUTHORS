@@ -31,3 +31,6 @@ Contributions
 
   Bob Walker [bob [@] uk.org.randomness]
    - Added titles to RSS feeds
+
+  Nicolau Werneck [nwerneck [@] com.gmail]
+   - Added UTF-8 support for textile formatted input files.

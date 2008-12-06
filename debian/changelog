@@ -1,3 +1,11 @@
+chronicle (3.3-1) unstable; urgency=medium
+
+  * Default to UTF-8 when processing input in textile formats.  Allow
+    --charset=foo to override this.
+    Thanks to  Nicolau Werneck for the patch.
+
+ -- Steve Kemp <skx@debian.org>  Sun, 6 Dec 2008 22:16:22 +0000
+
 chronicle (3.2-2) unstable; urgency=medium
 
   * Install the file cgi-bin/comments.cgi alongside the other example
