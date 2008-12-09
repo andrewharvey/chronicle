@@ -75,14 +75,14 @@ my $ajax = $cgi->param("ajax") || 0;
 #
 #  If any are missing just redirect back to the blog homepage.
 #
-if (    !defined($name)
-     || !length($name)
-     || !defined($mail)
-     || !length($mail)
-     || !defined($body)
-     || !length($body)
-     || !defined($id)
-     || !length($id) )
+if ( !defined($name) ||
+     !length($name) ||
+     !defined($mail) ||
+     !length($mail) ||
+     !defined($body) ||
+     !length($body) ||
+     !defined($id) ||
+     !length($id) )
 {
     if ($ajax)
     {
