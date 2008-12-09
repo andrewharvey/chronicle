@@ -643,6 +643,36 @@ EOF
         exit;
     }
 
+    #
+    #  Make sure we have no duplicate titles.
+    #
+    my %titles;
+    foreach my $key ( keys( %results  ) )
+    {
+        #
+        #  Get the title for this file.
+        #
+        my $title = $results{$key}->{'title'};
+        next if ( !defined($title ) );
+
+        #
+        #  If we've seen this already then abort
+        #
+        if ( $titles{$title} )
+        {
+            print "Non-unique title: $title\n";
+            print "Shared by (at least):\n";
+            print "\t" . $key . "\n";
+            print "\t" . $titles{$title} . "\n";
+            print "\nAborting\n";
+            exit;
+        }
+        else
+        {
+            $titles{$title} = $key;
+        }
+    }
+
     return %results;
 }
 

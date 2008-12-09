@@ -1,3 +1,10 @@
+chronicle (3.4-1) unstable; urgency=medium
+
+  * Abort if non-unique titles are encountered.
+    (Closes: #508268)
+
+ -- XXX
+
 chronicle (3.3-1) unstable; urgency=medium
 
   * Default to UTF-8 when processing input in textile formats.  Allow
