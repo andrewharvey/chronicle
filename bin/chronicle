@@ -30,6 +30,11 @@ chronicle - A blog compiler.
    --pre-build   Specify a command to execute prior to building the blog.
    --post-build  Specify a command to execute once the blog has been built.
 
+  Sorting Options:
+
+   --recent-dates-first  Show recent entries first in the archive view.
+   --recent-tags-first   Show recent entries first in the tag view.
+
   Optional Features:
 
    --force        Force the copying of static files from the blog theme.
@@ -548,6 +553,10 @@ sub parseCommandLineArguments
             "lower-case",     \$CONFIG{ 'lower-case' },
             "comment-days=s", \$CONFIG{ 'comment-days' },
 
+            # sorting
+            "recent-tags-first", \$CONFIG{'recent-tags-first'},
+            "recent-dates-first", \$CONFIG{'recent-dates-first'},
+
             # input format.
             "format=s",  \$CONFIG{ 'format' },
             "charset=s", \$CONFIG{ 'charset' },
@@ -1049,7 +1058,16 @@ sub outputTagPage
     #
     #  Sort the entries by date
     #
-    my @sortedEntries = reverse sort bywhen @$entries;
+    my @sortedEntries;
+
+    if ( $CONFIG{'recent-tags-first'} )
+    {
+        @sortedEntries = sort bywhen @$entries;
+    }
+    else
+    {
+        @sortedEntries = reverse sort bywhen @$entries;
+    }
 
     #
     #  Now write the output as a HTML page.
@@ -1198,7 +1216,16 @@ sub outputArchivePage
     #
     #  Sort the entries by date
     #
-    my @sortedEntries = reverse sort bywhen @$entries;
+    my @sortedEntries;
+    if ( $CONFIG{'recent-dates-first'} )
+    {
+        @sortedEntries = sort bywhen @$entries;
+    }
+    else
+    {
+        @sortedEntries = reverse sort bywhen @$entries;
+    }
+
 
     #
     #  Now write the output as a HTML page.
