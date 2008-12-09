@@ -554,8 +554,8 @@ sub parseCommandLineArguments
             "comment-days=s", \$CONFIG{ 'comment-days' },
 
             # sorting
-            "recent-tags-first", \$CONFIG{'recent-tags-first'},
-            "recent-dates-first", \$CONFIG{'recent-dates-first'},
+            "recent-tags-first",  \$CONFIG{ 'recent-tags-first' },
+            "recent-dates-first", \$CONFIG{ 'recent-dates-first' },
 
             # input format.
             "format=s",  \$CONFIG{ 'format' },
@@ -656,29 +656,30 @@ EOF
     #  Make sure we have no duplicate titles.
     #
     my %titles;
-    foreach my $key ( keys( %results  ) )
+    foreach my $key ( keys(%results) )
     {
+
         #
         #  Get the title for this file.
         #
-        my $title = $results{$key}->{'title'};
-        next if ( !defined($title ) );
+        my $title = $results{ $key }->{ 'title' };
+        next if ( !defined($title) );
 
         #
         #  If we've seen this already then abort
         #
-        if ( $titles{$title} )
+        if ( $titles{ $title } )
         {
             print "Non-unique title: $title\n";
             print "Shared by (at least):\n";
             print "\t" . $key . "\n";
-            print "\t" . $titles{$title} . "\n";
+            print "\t" . $titles{ $title } . "\n";
             print "\nAborting\n";
             exit;
         }
         else
         {
-            $titles{$title} = $key;
+            $titles{ $title } = $key;
         }
     }
 
@@ -1060,7 +1061,7 @@ sub outputTagPage
     #
     my @sortedEntries;
 
-    if ( $CONFIG{'recent-tags-first'} )
+    if ( $CONFIG{ 'recent-tags-first' } )
     {
         @sortedEntries = sort bywhen @$entries;
     }
@@ -1217,7 +1218,7 @@ sub outputArchivePage
     #  Sort the entries by date
     #
     my @sortedEntries;
-    if ( $CONFIG{'recent-dates-first'} )
+    if ( $CONFIG{ 'recent-dates-first' } )
     {
         @sortedEntries = sort bywhen @$entries;
     }
