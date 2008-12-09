@@ -100,9 +100,8 @@ release: tidy clean
 #  Tidy the code
 #
 tidy:
-	if [ -x /usr/bin/perltidy ]; then \
-	perltidy -b -nt -bt=2 -sbt=1 -bl  -mbl=3 -sbl -bbs -bbb -anl  -lp bin/chronicle ;\
-	perltidy -b -nt -bt=2 -sbt=1 -bl  -mbl=3 -sbl -bbs -bbb -anl  -lp cgi-bin/comments.cgi \
+	if [ -x ~bin/perltidy ]; then \
+           ~/bin/perltidy ~/bin/chronicle cgi-bin/comments.cgi \
 	; fi
 
 
