@@ -100,7 +100,7 @@ release: tidy clean
 #  Tidy the code
 #
 tidy:
-	if [ -x ~bin/perltidy ]; then \
+	if [ -x ~/bin/perltidy ]; then \
            ~/bin/perltidy ~/bin/chronicle cgi-bin/comments.cgi \
 	; fi
 
