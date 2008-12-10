@@ -10,3 +10,4 @@ syntax: glob
 ./debian/files
 ./debian/chronicle/*
 ./debian/chronicle.debhelper.log
+./.version

@@ -5,7 +5,7 @@
 #   http://release.repository.steve.org.uk/
 #
 # Steve
-# -- 
+# --
 #
 
 
@@ -28,6 +28,11 @@ pattern=chronicle-[0-9].[0-9].tar.gz*
 #
 signature=chronicle-[0-9].[0-9].tar.gz.asc
 
+
+#
+#  Version number
+#
+version=.version
 
 #
 #  Upload location.

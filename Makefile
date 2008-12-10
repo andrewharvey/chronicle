@@ -13,7 +13,7 @@
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = ${TMP}
-VERSION     = 3.3
+VERSION     = 3.4
 BASE        = chronicle
 
 
@@ -44,6 +44,7 @@ clean:
 	@find . -name '*.1' -exec rm \{\} \;
 	@find . -name '*.bak' -exec rm \{\} \;
 	@find . -name '*.tmp' -exec rm \{\} \;
+	@if [ -e .version ]; then rm -f .version; fi
 	@if [ -d comments ]; then rm -rf comments; fi
 	@if [ -d output   ]; then rm -rf output; fi
 	@if [ -e build-stamp ]; then rm -f build-stamp; fi
@@ -94,6 +95,8 @@ release: tidy clean
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	gpg --armour --detach-sign $(BASE)-$(VERSION).tar.gz
+	echo $(VERSION) > .version
+
 
 
 #

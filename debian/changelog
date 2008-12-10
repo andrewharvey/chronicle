@@ -2,8 +2,10 @@ chronicle (3.4-1) unstable; urgency=medium
 
   * Abort if non-unique titles are encountered.
     (Closes: #508268)
+  * Allow date + tag views to be sorted "most recent first",
+    via new command line arguments / configuration file options.
 
- -- XXX
+ -- Steve Kemp <skx@debian.org>  Wed, 10 Dec 2008 20:22:02 +0000
 
 chronicle (3.3-1) unstable; urgency=medium
 
