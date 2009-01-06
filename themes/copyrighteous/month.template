@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
  <title>copyrighteous: Items from <!-- tmpl_var name='month_name' --> <!-- tmpl_var name='year' --></title>
-  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
-  <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='month' escape='html' -->.rss" type="application/rss+xml">
+  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
+  <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='month' escape='html' -->.rss" type="application/rss+xml" />
 </head>
 
 <body>
@@ -28,10 +30,9 @@
 <div class="blosxomFirstDayDiv">
 <span class="blosxomDate"><!-- tmpl_var name='date' --></span>
 <div class="storybox">
-<p>
 <span class="blosxomTitle"><!-- tmpl_var name='title' --></span>
 
-<div id="story">
+<div class="story">
 <!-- tmpl_var name='body' -->
 </div>
    <!-- tmpl_if name='comment_count' -->
