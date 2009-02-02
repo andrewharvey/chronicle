@@ -35,6 +35,11 @@ chronicle - A blog compiler.
    --recent-dates-first  Show recent entries first in the archive view.
    --recent-tags-first   Show recent entries first in the tag view.
 
+  Counting Options:
+
+   --entry-count=N       Number of posts to show on the index.
+   --rss-count=N         Number of posts to include on the RSS index feed.
+
   Optional Features:
 
    --force        Force the copying of static files from the blog theme.
@@ -487,6 +492,11 @@ sub setupDefaultOptions
     $CONFIG{ 'entry-count' } = 10;
 
     #
+    #  Entries for the RSS index count.
+    #
+    $CONFIG{ 'rss-count' } = 10;
+
+    #
     #  Don't overwrite files by default
     #
     $CONFIG{ 'force' } = 0;
@@ -542,6 +552,10 @@ sub parseCommandLineArguments
             "theme-dir=s", \$CONFIG{ 'theme-dir' },
             "theme=s",     \$CONFIG{ 'theme' },
             "pattern=s",   \$CONFIG{ 'pattern' },
+
+            # limits
+            "entry-count=s", \$CONFIG{ 'entry-count' },
+            "rss-count=s",   \$CONFIG{ 'rss-count' },
 
             # optional
             "force",          \$CONFIG{ 'force' },
@@ -991,6 +1005,17 @@ sub outputIndexPage
     #
     #  Output the RSS feed
     #
+    #  We repeat this loop because --rss-count and --entry-count
+    # might be different.
+    #
+    $entries = undef;
+    $max     = $CONFIG{ 'rss-count' };
+    foreach my $f (@tmp2)
+    {
+        push( @$entries, $f ) if ( $max > 0 );
+        $max -= 1;
+    }
+
     $template = loadTemplate( "index.xml.template", die_on_bad_params => 0 );
     $template->param( blog_title => $CONFIG{ 'blog_title' } )
       if ( $CONFIG{ 'blog_title' } );
