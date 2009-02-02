@@ -22,7 +22,7 @@
 
 #
 #  Input directory
-# 
+#
 input = ./blog
 
 
@@ -54,6 +54,12 @@ theme = default
 #  The number of entries to include on the index.
 #
 # entry-count = 10
+#
+
+#
+#  The number of entries to include in our main index RSS feed.
+#
+# rss-count = 10
 #
 
 
