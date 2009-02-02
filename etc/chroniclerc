@@ -85,7 +85,7 @@ theme = default
 
 
 #
-#  We can parts of the output if we wish
+#  We can omit parts of the output if we wish
 #
 #  no-tags     = 1
 #  no-archive  = 1
