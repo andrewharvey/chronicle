@@ -1,5 +1,8 @@
 ##
-#  Configuration file for the chronicle blog compiler.
+#  Sample configuration file for the chronicle blog compiler.
+#
+#       http://www.steve.org.uk/Software/chronicle/
+#
 ##
 
 
@@ -14,6 +17,9 @@
 #    ~/.chroniclerc
 #
 #  Both files will be read if present, the latter may override the former.
+#
+#  Alternatively, or additionally, you may pass a configuration file as
+# an argument via "chronicle --config=/path/to/file"
 #
 ####
 
@@ -34,7 +40,7 @@ input = ./blog
 
 
 #
-#  Output directory to write the blog to
+#  The directory to write the formatted blog output to.
 #
 output = ./output
 
