@@ -1095,10 +1095,8 @@ sub outputTagPage
                 $blog->{ 'link' } =
                   "archive/" . time2str( "%Y/%m", str2time($date) ) .
                   "/$blog->{ 'link' }";
-                $CONFIG{ 'verbose' } && print "FIXME:  Made it here\n";
             }
 
-            print "FIXME: in outputTagPage, link is $blog->{ 'link' }\n";
             if ( $blog->{ 'body' } =~ /<cut/i )
             {
                 $blog->{ 'body' } =
