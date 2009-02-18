@@ -50,7 +50,7 @@ chronicle - A blog compiler.
    --comment-days Specify the number maximum age of posts to accept comments.
    --no-tags      Don't produce any tag pages.
    --lower-case   Lower-case all filenames which are output.
-
+   --date-archive-path  Include the date in the archive.
 
   Help Options:
 
@@ -252,6 +252,7 @@ use warnings;
 
 use Date::Parse;
 use Date::Format;
+use File::Basename;
 use File::Copy;
 use File::Path;
 use Getopt::Long;
@@ -511,6 +512,10 @@ sub setupDefaultOptions
     #
     $CONFIG{ 'comment-days' } = 0;
 
+    #
+    #  No output prefix -- static pages in top level dir
+    #
+    $CONFIG{ 'date-archive-path' } = 0;
 
     return (%CONFIG);
 }
@@ -556,6 +561,9 @@ sub parseCommandLineArguments
             # limits
             "entry-count=s", \$CONFIG{ 'entry-count' },
             "rss-count=s",   \$CONFIG{ 'rss-count' },
+
+            # output
+            "date-archive-path", \$CONFIG{ 'date-archive-path'},
 
             # optional
             "force",          \$CONFIG{ 'force' },
@@ -929,13 +937,24 @@ sub outputIndexPage
     {
         my $blog = readBlogEntry($file);
 
-        if ( $blog->{ 'body' } =~ /<cut/i )
+        if ( keys(%$blog) )
         {
-            $blog->{ 'body' } =
-              processCut( $blog->{ 'body' }, $blog->{ 'link' } );
+            if ( $CONFIG{ 'date-archive-path' } )
+            {
+                my $date = $blog->{ 'date' };
+                $blog->{ 'link' } =
+                  "archive/" . time2str( "%Y/%m", str2time($date) ) .
+                  "/$blog->{ 'link' }";
+            }
+            if ( $blog->{ 'body' } =~ /<cut/i )
+            {
+                $blog->{ 'body' } =
+                  processCut( $blog->{ 'body' }, $blog->{ 'link' } );
+            }
+            push( @$tmp, $blog
+                );
         }
 
-        push( @$tmp, $blog ) if ( keys(%$blog) );
     }
     my @tmp2 = sort bywhen @$tmp;
 
@@ -1070,6 +1089,16 @@ sub outputTagPage
         my $blog = readBlogEntry($f);
         if ( keys(%$blog) )
         {
+            if ( $CONFIG{ 'date-archive-path' } )
+            {
+                my $date = $blog->{ 'date' };
+                $blog->{ 'link' } =
+                  "archive/" . time2str( "%Y/%m", str2time($date) ) .
+                  "/$blog->{ 'link' }";
+                $CONFIG{ 'verbose' } && print "FIXME:  Made it here\n";
+            }
+
+            print "FIXME: in outputTagPage, link is $blog->{ 'link' }\n";
             if ( $blog->{ 'body' } =~ /<cut/i )
             {
                 $blog->{ 'body' } =
@@ -1222,6 +1251,14 @@ sub outputArchivePage
         my $blog = readBlogEntry($f);
         if ( keys(%$blog) )
         {
+            if ( $CONFIG{ 'date-archive-path' } )
+            {
+
+                # FIXME:  This is ugly
+                $date =~ s#-#/#;
+                $blog->{ 'link' } =
+                  "archive/" . ${ date } . "/$blog->{ 'link' }";
+            }
 
             #
             #  Test for the cut in a quick fashion.
@@ -1496,7 +1533,16 @@ sub outputStaticPage
     $template->param( tags  => $tags ) if ($tags);
     $template->param( date  => $date ) if ($date);
     $template->param( body  => $body );
-    $template->param( link  => $static->{ 'link' } );
+
+    if ( $CONFIG{ 'date-archive-path' } )
+    {
+        my $date = time2str( "%Y/x%m", str2time($date) );
+        $template->param( link => "$date/" . ${ static }->{ 'link' } );
+    }
+    else
+    {
+        $template->param( link => $static->{ 'link' } );
+    }
 
     #
     #  Our clouds
@@ -1513,7 +1559,15 @@ sub outputStaticPage
     $template->param( blog_subtitle => $CONFIG{ 'blog_subtitle' } )
       if ( $CONFIG{ 'blog_subtitle' } );
 
-    outputTemplate( $template, $file );
+    if ( $CONFIG{ 'date-archive-path' } )
+    {
+        my $dir = "archive/" . time2str( "%Y/%m", str2time($date) );
+        outputTemplate( $template, "${dir}/${file}" );
+    }
+    else
+    {
+        outputTemplate( $template, $file );
+    }
 }
 
 
@@ -1973,6 +2027,12 @@ sub getComments
                   } );
 
         }
+        else
+        {
+            $CONFIG{ 'verbose' } &&
+              print
+              "I didn't like length of \$name ($name), \$mail ($mail) or \$body ($body)\n";
+        }
     }
 
     return ($results);
@@ -2100,6 +2160,12 @@ sub outputTemplate
         $top = $reltop;
     }
     $template->param( top => $top );
+
+    if ( $CONFIG{ 'date-archive-path' } )
+    {
+        ( -d dirname("$CONFIG{'output'}/${path}") ) ||
+          mkdir( dirname("$CONFIG{'output'}/${path}") );
+    }
 
     open( OUTPUT, ">", "$CONFIG{'output'}/$path" );
     print OUTPUT $template->output();
