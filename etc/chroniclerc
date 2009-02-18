@@ -4,16 +4,12 @@
 #       http://www.steve.org.uk/Software/chronicle/
 #
 ##
-
-
+#####
 ##
 #
-#  When the compiler starts it will look for both:
+#  When the compiler starts it will look for :
 #
 #    /etc/chroniclerc
-#
-#  and
-#
 #    ~/.chroniclerc
 #
 #  Both files will be read if present, the latter may override the former.
@@ -27,13 +23,13 @@
 
 
 #
-#  Input directory
+#  Input directory where the blog entries are read from.
 #
 input = ./blog
 
 
 #
-#  The pattern of files to include
+#  The pattern of files to include.
 #
 # pattern = *.txt
 #
@@ -50,8 +46,9 @@ output = ./output
 #
 theme-dir = /usr/share/chronicle/themes
 
+
 #
-#  The theme to use.
+#  The name of the theme to use.
 #
 theme = default
 
@@ -105,6 +102,7 @@ no-comments = 1
 #
 # comment-days = 10
 
+
 #
 #  The filename to use for tag links
 #
@@ -125,13 +123,14 @@ no-comments = 1
 
 
 #
-#  The title for the Blog
+#  The title for the site.
 #
 # blog_title    = Steve Kemp's Blog
 # blog_subtitle = Free Software & Debian
 
+
 #
-#  A command to run pre-build
+#  A command to run pre-build.
 #
 # pre-build = cvs update -A -d
 
@@ -141,3 +140,8 @@ no-comments = 1
 #
 # post-build = scp -r output/* user@host:/some/path
 #
+
+#
+# Do we want static pages output in year/month directories?
+#
+# date-archive-path = 1
