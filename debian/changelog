@@ -1,3 +1,11 @@
+chronicle (3.5-1) unstable; urgency=medium
+
+  * Added a new theme "simple".
+  * Added the option "--date-archive-path" to create archives in
+    subdirectories.
+
+ -- Steve Kemp <skx@debian.org>  Sun, 22 Feb 2009 08:22:08 +0000
+
 chronicle (3.4-1) unstable; urgency=medium
 
   * Abort if non-unique titles are encountered.
