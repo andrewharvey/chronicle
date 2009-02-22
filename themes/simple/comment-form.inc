@@ -1,5 +1,6 @@
 <p>&nbsp;</p>
 <!-- tmpl_if name='comments_enabled' -->
+<div id="output">
 <h3>Add A Comment</h3>
 <blockquote>
 <form action="/cgi-bin/comments.cgi" method="post">
@@ -18,4 +19,5 @@
 </form>
 <p>Your submission will be ignored if any field is left blank.  But your email address will not be displayed.</p>
 </blockquote>
+</div>
 <!-- /tmpl_if -->
