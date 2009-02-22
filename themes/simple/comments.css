@@ -1,3 +1,11 @@
+div.comments {
+	border-left: 1px solid rgb(128, 128, 128);
+	border-right: 1px solid rgb(128, 128, 128);
+	border-top: 1px solid rgb(128, 128, 128);
+	border-bottom: 1px solid rgb(128, 128, 128);
+        margin: 15px 50px 0px;
+}
+
 div.comments .title {
 	background-color: #eee;
 	border-bottom: 1px solid rgb(128, 128, 128);
