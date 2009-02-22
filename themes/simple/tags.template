@@ -84,7 +84,7 @@
 
 					<span class="entry-comments">
    <!-- tmpl_if name='comment_count' -->
-     <!-- tmpl_var name='comment_count' --> comment<!-- tmpl_if name='comment_plural' -->s<!-- /tmpl_if -->.
+     <a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='link' escape='html' -->"><!-- tmpl_var name='comment_count' --> comment<!-- tmpl_if name='comment_plural' -->s<!-- /tmpl_if -->.</a>
    <!-- tmpl_else -->
      No comments
    <!-- /tmpl_if -->
