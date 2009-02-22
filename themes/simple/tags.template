@@ -8,6 +8,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
   <link rel="alternate" title="RSS Feed For Blog" href="<!-- tmpl_var name='top' -->index.rss" type="application/rss+xml" />
   <link rel="alternate" title="RSS Feed for tag <!-- tmpl_var name='tagname' escape='html' -->" href="<!-- tmpl_var name='tagname' escape='html' -->.rss" type="application/rss+xml">
+  <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->ajax.js"></script>
 
 </head>
 

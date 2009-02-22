@@ -6,9 +6,7 @@
   <title><!-- tmpl_var name='blog_title' -->: <!-- tmpl_var name='title' --></title>
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
   <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='top' -->index.rss" type="application/rss+xml" />
-<!-- tmpl_if name='comments_enabled' -->
   <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->ajax.js"></script>
-<!-- /tmpl_if -->
 </head>
 
 
