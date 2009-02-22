@@ -13,7 +13,7 @@
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = ${TMP}
-VERSION     = 3.4
+VERSION     = 3.5
 BASE        = chronicle
 
 
@@ -137,3 +137,4 @@ steve:
 	./bin/chronicle  --theme-dir=./themes --theme=copyrighteous --url-prefix=http://www.steve.org.uk/Software/chronicle/demo2/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo2/" --no-comments --no-cache --blog-title="Sample Blog" --blog-subtitle="Created by Chronicle"
 	./bin/chronicle --date-archive-path --theme-dir=./themes --theme=blocky --url-prefix=http://www.steve.org.uk/Software/chronicle/demo3/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo3/" --no-comments --no-cache --blog-title="Sample Blog" --blog-subtitle="Created by Chronicle"
 	./bin/chronicle --theme-dir=./themes --theme=leftbar --url-prefix=http://www.steve.org.uk/Software/chronicle/demo4/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo4/" --no-comments --no-cache --blog-title="Sample Blog" --blog-subtitle="Created by Chronicle"
+	./bin/chronicle --theme-dir=./themes --theme=simple --url-prefix=http://www.steve.org.uk/Software/chronicle/demo5/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -v -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo5/" --no-comments --no-cache --blog-title="Sample Blog" --blog-subtitle="Created by Chronicle"
