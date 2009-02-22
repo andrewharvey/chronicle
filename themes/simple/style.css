@@ -1,4 +1,3 @@
-/* @override http://recursive.ca/hutch/wp-content/themes/hutch/style.css */
-
 @import url("reset.css");
 @import url("screen-detail.css");
+@import url("comments.css");

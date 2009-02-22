@@ -1,0 +1,25 @@
+div.comments .title {
+	background-color: #eee;
+	border-bottom: 1px solid rgb(128, 128, 128);
+	font-weight: bold;
+	font-size: 120%;
+	padding: 0.26ex 10px;
+
+}
+div.comments div.date {
+        text-align: right;
+        font-weight: bold;
+	border-bottom: 1px solid black;
+}
+div.comments div.title a {
+	color: black !important;
+	text-decoration: none !important;
+}
+div.comments div.title a:hover {
+	color: black !important;
+	text-decoration: none !important;
+}
+div.comments div.tags span.comments {
+        padding-left: 5px;
+        float: left;
+}
