@@ -12,13 +12,13 @@
 function getXMLHTTPRequest()
 {
     req = false;
-    if(window.XMLHttpRequest) 
+    if(window.XMLHttpRequest)
     {
-        try 
+        try
         {
              req = new XMLHttpRequest();
-        } 
-        catch(e) 
+        }
+        catch(e)
         {
              req = false;
         }
@@ -29,19 +29,19 @@ function getXMLHTTPRequest()
         {
             req = new ActiveXObject("Msxml2.XMLHTTP");
         }
-        catch(e) 
+        catch(e)
         {
-            try 
+            try
             {
                 req = new ActiveXObject("Microsoft.XMLHTTP");
-            } 
-            catch(e) 
+            }
+            catch(e)
             {
                 req = false;
             }
         }
     }
- 
+
     return( req );
 }
 
@@ -49,12 +49,12 @@ function getXMLHTTPRequest()
 //
 //  Submit the comment.
 //
-function submitComment() 
+function submitComment()
 {
     showProgress();
 
     var xhr = getXMLHTTPRequest();
-    if(! xhr ) 
+    if(! xhr )
     {
         hideProgress();
         return;
@@ -103,7 +103,7 @@ function submitComment()
 function showProgress()
 {
     var i = document.getElementById( "progress" );
-    if ( i ) 
+    if ( i )
     {
         i.style.display = 'block';
     }
@@ -112,11 +112,44 @@ function showProgress()
 //
 //  Hide our progress marker.
 //
-function hideProgress() 
+function hideProgress()
 {
     var i = document.getElementById( "progress" );
-    if ( i ) 
+    if ( i )
     {
         i.style.display = 'none';
     }
+}
+
+function showCloud()
+{
+    var i = document.getElementById( "tags" );
+    if ( i )
+    {
+        i.style.display = 'block';
+    }
+    i = document.getElementById( "tags_toggle" );
+    if ( i )
+    {
+        i.style.display = 'none';
+    }
+}
+function hideCloud()
+{
+    var i = document.getElementById( "categories" );
+    if ( i )
+    {
+        i.style.display = 'none';
+    }
+}
+
+
+
+function toggle_visibility(id)
+{
+    var e = document.getElementById(id);
+    if(e.style.display == 'block')
+        e.style.display = 'none';
+    else
+        e.style.display = 'block';
 }
