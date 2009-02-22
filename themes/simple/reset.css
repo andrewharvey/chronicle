@@ -46,3 +46,13 @@ blockquote, q {
 	quotes: "" "";
 }
 
+
+pre {
+    background-color: #bbbbbb;
+    color: black !important;
+    font-weight: bold;
+    padding: 2px;
+    font-family: Lucidatypewriter,monospace;
+    border: 1px solid grey;
+    overflow: auto;
+}
