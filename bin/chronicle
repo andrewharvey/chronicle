@@ -563,7 +563,7 @@ sub parseCommandLineArguments
             "rss-count=s",   \$CONFIG{ 'rss-count' },
 
             # output
-            "date-archive-path", \$CONFIG{ 'date-archive-path'},
+            "date-archive-path", \$CONFIG{ 'date-archive-path' },
 
             # optional
             "force",          \$CONFIG{ 'force' },
@@ -951,8 +951,7 @@ sub outputIndexPage
                 $blog->{ 'body' } =
                   processCut( $blog->{ 'body' }, $blog->{ 'link' } );
             }
-            push( @$tmp, $blog
-                );
+            push( @$tmp, $blog );
         }
 
     }
