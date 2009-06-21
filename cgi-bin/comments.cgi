@@ -69,6 +69,7 @@ my $mail = $cgi->param('mail') || undef;
 my $body = $cgi->param('body') || undef;
 my $id   = $cgi->param('id') || undef;
 my $cap  = $cgi->param('captcha') || undef;
+my $link = $cgi->param('link') || undef;
 my $ajax = $cgi->param("ajax") || 0;
 
 
@@ -154,6 +155,7 @@ print FILE "Name: $name\n";
 print FILE "Mail: $mail\n";
 print FILE "User-Agent: $ENV{'HTTP_USER_AGENT'}\n";
 print FILE "IP-Address: $ENV{'REMOTE_ADDR'}\n";
+print FILE "Link: $link\n" if ( $link );
 print FILE "\n";
 print FILE $body;
 close(FILE);
