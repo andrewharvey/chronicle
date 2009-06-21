@@ -42,6 +42,7 @@ chronicle - A blog compiler.
 
   Optional Features:
 
+   --author       Specify the author's email address
    --force        Force the copying of static files from the blog theme.
    --no-archive   Don't create an archive page.
    --no-cache     Don't use the optional memcached features, even if available.
@@ -567,6 +568,7 @@ sub parseCommandLineArguments
             "date-archive-path", \$CONFIG{ 'date-archive-path' },
 
             # optional
+            "author=s",       \$CONFIG{ 'author' },
             "force",          \$CONFIG{ 'force' },
             "no-tags",        \$CONFIG{ 'no-tags' },
             "no-cache",       \$CONFIG{ 'no-cache' },
@@ -1967,6 +1969,7 @@ sub getComments
     {
         my $date    = "";
         my $name    = "";
+        my $link    = "";
         my $body    = "";
         my $mail    = "";
         my $pubdate = "";
@@ -2006,6 +2009,10 @@ sub getComments
             {
                 $mail = $1;
             }
+            elsif ( !length($link) && $line =~ /^Link: (.*)/i )
+            {
+                $link = $1;
+            }
             else
             {
                 $body .= $line . "\n";
@@ -2022,9 +2029,15 @@ sub getComments
             my $size = 32;
             my $gravitar = "http://www.gravatar.com/avatar.php?gravatar_id=".md5_hex(lc $mail). "&size=".$size;
 
+            my $author = 0;
+
+            $author = 1 if ( $CONFIG{'author'} &&  ( lc( $mail ) eq lc($CONFIG{'author'} ) ) );
+
             push( @$results,
                   {  name => $name,
+                     author => $author,
                      gravitar => $gravitar,
+                     link => $link,
                      mail => $mail,
                      body => $body,
                      date => $date,
