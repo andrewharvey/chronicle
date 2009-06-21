@@ -252,6 +252,7 @@ use warnings;
 
 use Date::Parse;
 use Date::Format;
+use Digest::MD5 qw(md5_hex);
 use File::Basename;
 use File::Copy;
 use File::Path;
@@ -2016,8 +2017,14 @@ sub getComments
              length($mail) &&
              length($body) )
         {
+
+            my $default = "";
+            my $size = 32;
+            my $gravitar = "http://www.gravatar.com/avatar.php?gravatar_id=".md5_hex(lc $mail). "&size=".$size;
+
             push( @$results,
                   {  name => $name,
+                     gravitar => $gravitar,
                      mail => $mail,
                      body => $body,
                      date => $date,
