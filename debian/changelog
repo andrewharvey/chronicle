@@ -1,3 +1,16 @@
+chronicle (3.6-1) unstable; urgency=medium
+
+  * Updated the simple theme.
+  * Added the option "--author" to allow the authors email address to
+    be specified.  This allows author-posted comments to be highlighted
+    via CSS.
+    (Demonstrated by the simple theme.)
+  * Added support for gravitar icons
+  * Added support for homepage/link collection & display in comments.
+
+
+ -- Steve Kemp <skx@debian.org>  Sun, 22 June 2009 11:11:11 +0000
+
 chronicle (3.5-1) unstable; urgency=medium
 
   * Added a new theme "simple".
