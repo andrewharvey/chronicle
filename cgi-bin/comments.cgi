@@ -38,7 +38,7 @@ use POSIX qw(strftime);
 #  The directory to store comments in.
 #
 # NOTE:  This should be writeable to the www-data user, and shouldn't
-#        be inside your web-root - or you open up a security hole.
+#        be inside your web-root - or you open up security hole.
 #
 # my $COMMENT = "/home/www/comments/";
 #
@@ -64,6 +64,7 @@ foreach my $file (qw ! /usr/lib/sendmail /usr/sbin/sendmail !)
 #  Get the parameters from the request.
 #
 my $cgi  = new CGI();
+
 my $name = $cgi->param('name') || undef;
 my $mail = $cgi->param('mail') || undef;
 my $body = $cgi->param('body') || undef;
@@ -155,7 +156,7 @@ print FILE "Name: $name\n";
 print FILE "Mail: $mail\n";
 print FILE "User-Agent: $ENV{'HTTP_USER_AGENT'}\n";
 print FILE "IP-Address: $ENV{'REMOTE_ADDR'}\n";
-print FILE "Link: $link\n" if ( $link );
+print FILE "Link: $link\n" if ($link);
 print FILE "\n";
 print FILE $body;
 close(FILE);
@@ -171,7 +172,7 @@ if ( length($TO) && length($FROM) && defined($SENDMAIL) )
     print SENDMAIL "From: $FROM\n";
     print SENDMAIL "Subject: New Comment [$id]\n";
     print SENDMAIL "\n\n";
-    print SENDMAIL `cat $file`;
+    print SENDMAIL $body;
     close(SENDMAIL);
 }
 

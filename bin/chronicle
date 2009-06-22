@@ -2025,22 +2025,25 @@ sub getComments
              length($body) )
         {
 
-            my $default = "";
-            my $size = 32;
-            my $gravitar = "http://www.gravatar.com/avatar.php?gravatar_id=".md5_hex(lc $mail). "&size=".$size;
+            my $default  = "";
+            my $size     = 32;
+            my $gravitar = "http://www.gravatar.com/avatar.php?gravatar_id=" .
+              md5_hex( lc $mail ) . "&size=" . $size;
 
             my $author = 0;
 
-            $author = 1 if ( $CONFIG{'author'} &&  ( lc( $mail ) eq lc($CONFIG{'author'} ) ) );
+            $author = 1
+              if ( $CONFIG{ 'author' } &&
+                   ( lc($mail) eq lc( $CONFIG{ 'author' } ) ) );
 
             push( @$results,
-                  {  name => $name,
-                     author => $author,
+                  {  name     => $name,
+                     author   => $author,
                      gravitar => $gravitar,
-                     link => $link,
-                     mail => $mail,
-                     body => $body,
-                     date => $date,
+                     link     => $link,
+                     mail     => $mail,
+                     body     => $body,
+                     date     => $date,
                   } );
 
         }
