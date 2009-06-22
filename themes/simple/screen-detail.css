@@ -9,9 +9,6 @@ html {
 body {
   width: 100%;
   font-family: Optima, Verdana, Helvetica, Arial, sans-serif;
-  font-size: 1em;
-  line-height: 140%;
-  padding: 1em;
   color: black;
   background-color: white;
 }
@@ -101,10 +98,7 @@ div.hentry{
 	padding-top: 1em;
 	padding-bottom: 2em;
 }
-.entry-content p {
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-}
+
 .entry-content strong,
 .entry-content b {
 	font-weight: bold;
@@ -126,22 +120,23 @@ div.hentry{
 	padding-bottom: 1em;
 }
 .entry-content blockquote.code {
-	padding-left:  1em;
-	overflow: auto;
-	border: none;
-	font: small monaco, "Courier New", Courier, mono;
+       padding-left:  1em;
+       overflow: auto;
+       overflow: auto;
+       border: none;
+       font: small monaco, "Courier New", Courier, mono;
 }
 .entry-content blockquote {
-	margin-top:  1em;
-	border-left: 3px solid #ffe944;
-	padding-left: 2em;
-	padding-right: 2em;
-	margin-bottom: 1em;
+       margin-top:  1em;
+       padding-left: 2em;
+       padding-right: 2em;
+       margin-bottom: 1em;
 }
 .entry-content blockquote pre{
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
+       padding-top: 0.5em;
+       padding-bottom: 0.5em;
 }
+
 .entry-content code {
 	font: small monaco, "Courier New", Courier, mono;
 }
@@ -154,40 +149,6 @@ div.hentry{
 	font-size: small;
 	border-top: 1px solid black;
 }
-
-.comments {
-  clear: both
-}
-.comments h3{
-	font-weight: bold;
-	padding-top: 1em;
-	padding-bottom: 1em;
-}
-.comments #comment-notes{
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-	font-style: italic;
-}
-.comment p{
-	padding-left: 2em;
-	border-left: 2px solid #ffe944;
-	padding-bottom: .5em;
-	padding-top: .5em;
-}
-.comment-meta{
-	padding: 0;
-	padding-top: 1em;
-	font-style: italic;
-	font-size: small;
-}
-.unapproved{
-	padding: 0;
-	padding-bottom: 2em;
-	font-style: italic;
-	font-weight: bold;
-	font-size: small;
-}
-
 .sidebar{
 	width: 24%;
 	float: right;
@@ -207,7 +168,7 @@ div.hentry{
 #categories ul {
 	padding: 0;
 	margin: 0;
-	
+
 	padding-left: 10px;
 	font-size: small;
 	line-height: 1.2em;
@@ -220,7 +181,7 @@ div.hentry{
 #archives ul {
 	padding: 0;
 	margin: 0;
-	
+
 	padding-left: 10px;
 	font-size: small;
 	line-height: 1.2em;
@@ -233,7 +194,7 @@ div.hentry{
 .linkcat ul {
 	padding: 0;
 	margin: 0;
-	
+
 	padding-left: 10px;
 	font-size: small;
 	line-height: 1.2em;
@@ -246,7 +207,7 @@ div.hentry{
 #rss-links ul {
 	padding: 0;
 	margin: 0;
-	
+
 	padding-left: 10px;
 	font-size: small;
 	line-height: 1.2em;
@@ -259,7 +220,7 @@ div.hentry{
 #meta ul {
 	padding: 0;
 	margin: 0;
-	
+
 	padding-left: 10px;
 	font-size: small;
 	line-height: 1.2em;

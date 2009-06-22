@@ -50,6 +50,13 @@ my $COMMENT = $ENV{ 'DOCUMENT_ROOT' } . "../comments/";
 my $TO   = 'weblog@steve.org.uk';
 my $FROM = 'weblog@steve.org.uk';
 
+
+#
+#  Use textile?
+#
+my $TEXTILE = 1;
+
+
 #
 #  Find sendmail
 #
@@ -63,15 +70,15 @@ foreach my $file (qw ! /usr/lib/sendmail /usr/sbin/sendmail !)
 #
 #  Get the parameters from the request.
 #
-my $cgi  = new CGI();
+my $cgi = new CGI();
 
-my $name = $cgi->param('name') || undef;
-my $mail = $cgi->param('mail') || undef;
-my $body = $cgi->param('body') || undef;
-my $id   = $cgi->param('id') || undef;
+my $name = $cgi->param('name')    || undef;
+my $mail = $cgi->param('mail')    || undef;
+my $body = $cgi->param('body')    || undef;
+my $id   = $cgi->param('id')      || undef;
 my $cap  = $cgi->param('captcha') || undef;
-my $link = $cgi->param('link') || undef;
-my $ajax = $cgi->param("ajax") || 0;
+my $link = $cgi->param('link')    || undef;
+my $ajax = $cgi->param("ajax")    || 0;
 
 
 #
@@ -117,9 +124,30 @@ if ( defined($cap) && length($cap) )
 
 
 #
-#  Convert the message to crude HTML.
+#  Convert the message to HTML if textile is in use
 #
-$body =~ s/\n$/<br>\n/mg;
+if ($TEXTILE)
+{
+
+    #
+    #  If we can load the module
+    #
+    my $test = "use Text::Textile;";
+    eval($test);
+
+    #
+    #  There were no errors
+    #
+    if ( !$@ )
+    {
+
+        #
+        #  Convert
+        #
+        my $textile = new Text::Textile;
+        $body = $textile->process($body);
+    }
+}
 
 #
 #  Otherwise save them away.

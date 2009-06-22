@@ -9,7 +9,6 @@
   <link rel="alternate" title="RSS Feed For Blog" href="<!-- tmpl_var name='top' -->index.rss" type="application/rss+xml" />
   <link rel="alternate" title="RSS Feed for tag <!-- tmpl_var name='tagname' escape='html' -->" href="<!-- tmpl_var name='tagname' escape='html' -->.rss" type="application/rss+xml">
   <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->ajax.js"></script>
-
 </head>
 
 
@@ -113,7 +112,7 @@
 
 	        <div id="footer">
 
-		<span id="generator-link">Created by <a href="http://steve.org.uk/Software/chronicle">Chronicle v<!-- tmpl_var name='release' --></a></span>
+		<span id="generator-link">Created by <a href="http://steve.org.uk/Software/chronicle">Chronicle</a>, comment spam filtered by <a href="http://blogspam.net/">blogspam.net</a> - commercial <a href="http://mail-scanning.com/">spam protection</a> also available!</span>
 
 
 	        </div>

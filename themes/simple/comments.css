@@ -1,33 +1,20 @@
-div.comments {
-	border-left: 1px solid rgb(128, 128, 128);
-	border-right: 1px solid rgb(128, 128, 128);
-	border-top: 1px solid rgb(128, 128, 128);
-	border-bottom: 1px solid rgb(128, 128, 128);
-        margin: 15px 50px 0px;
-}
 
-div.comments .title {
-	background-color: #eee;
-	border-bottom: 1px solid rgb(128, 128, 128);
-	font-weight: bold;
-	font-size: 120%;
-	padding: 0.26ex 10px;
+h3#comments img				{ margin-top:4px; }
+ol.commentlist				{ margin-bottom:40px; font-size:0.93em; }
+ol.commentlist li.commento		{ padding:10px; margin-bottom:10px; overflow:hidden; height:1%; }
+ol.commentlist img.avatar		{ float:left; margin-right:10px; }
+ol.commentlist cite			{ margin-top:20px; font-style:normal; font:1.5em/150% helvetica,"trebuchet ms",arial,tahoma,verdana,sans-serif; font-weight:normal; }
+ol.commentlist cite a			{ text-decoration:none; color:#369; }
+small.commentmetadata			{ display:block; font-size:0.93em; border-top:1px dotted #666; color:#999; margin-bottom:10px; margin-top:10px; }
+small.commentmetadata a		{ color:#999; }
+ol.commentlist p			{ margin-bottom:10px; }
+ol.commentlist li.alt 			{  }
+ol.commentlist li.author 		{ background-color: #E2E2E2; border: 1px solid red; }
+ol.commentlist li.commento li		{ margin-left:40px; }
+ol.commentlist li.commento ul li	{ list-style-type:square; }
+ol.commentlist li.commento ol li	{ list-style-type:decimal; }
 
-}
-div.comments div.date {
-        text-align: right;
-        font-weight: bold;
-	border-bottom: 1px solid black;
-}
-div.comments div.title a {
-	color: black !important;
-	text-decoration: none !important;
-}
-div.comments div.title a:hover {
-	color: black !important;
-	text-decoration: none !important;
-}
-div.comments div.tags span.comments {
-        padding-left: 5px;
-        float: left;
+.commentbody p {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
 }
