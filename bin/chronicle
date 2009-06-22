@@ -237,7 +237,7 @@ Any tags which should be associated with the entry, separated by commas.
 
 =head1 LICENSE
 
-Copyright (c) 2007-2008 by Steve Kemp.  All rights reserved.
+Copyright (c) 2007-2009 by Steve Kemp.  All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under
@@ -2025,17 +2025,27 @@ sub getComments
              length($body) )
         {
 
+            #
+            #  Add a gravitar link to the comment in case the
+            # theme wishes to use it.
+            #
             my $default  = "";
             my $size     = 32;
             my $gravitar = "http://www.gravatar.com/avatar.php?gravatar_id=" .
               md5_hex( lc $mail ) . "&size=" . $size;
 
+            #
+            # A comment which was submitted by the blog author might
+            # have special theming.
+            #
             my $author = 0;
-
             $author = 1
               if ( $CONFIG{ 'author' } &&
                    ( lc($mail) eq lc( $CONFIG{ 'author' } ) ) );
 
+            #
+            # Store the comment
+            #
             push( @$results,
                   {  name     => $name,
                      author   => $author,
