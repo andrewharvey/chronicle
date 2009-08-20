@@ -435,11 +435,11 @@ copyStaticFiles();
 #
 #  Output the static sitemap, unless we shouldn't.
 #
-if ( ! $CONFIG{'no-sitemap'} )
+if ( !$CONFIG{ 'no-sitemap' } )
 {
-    $CONFIG{'verbose'} && print "Outputing sitemap\n";
+    $CONFIG{ 'verbose' } && print "Outputing sitemap\n";
     outputSiteMap();
-    $CONFIG{'verbose'} && print "Done.\n";
+    $CONFIG{ 'verbose' } && print "Done.\n";
 }
 
 #
@@ -532,7 +532,7 @@ sub setupDefaultOptions
     #
     #  Default to making a sitemap
     #
-    $CONFIG{'no-sitemap'} = 0;
+    $CONFIG{ 'no-sitemap' } = 0;
 
     return (%CONFIG);
 }
@@ -1602,13 +1602,13 @@ sub outputSiteMap
 {
     my $dir  = $CONFIG{ 'output' };
     my $file = $dir . "/sitemap.xml";
-    my $site = $CONFIG{'url_prefix'};
+    my $site = $CONFIG{ 'url_prefix' };
 
     #
     #  Print the header
     #
-    open( FILE, ">", $file )
-      or die "Failed to write to $file $!";
+    open( FILE, ">", $file ) or
+      die "Failed to write to $file $!";
 
     print FILE <<EOF;
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1628,12 +1628,12 @@ EOF
     #
     #  Find the files
     #
-    my $suffix = $CONFIG{'suffix'} || ".html";
+    my $suffix = $CONFIG{ 'suffix' } || ".html";
 
     foreach my $page ( glob( $dir . "/*" . $suffix ) )
     {
         next if ( -d $page );
-        $page = basename( $page );
+        $page = basename($page);
 
         print FILE <<EOF;
  <url>
@@ -1654,7 +1654,7 @@ EOF
     #
     #  All done
     #
-    close( FILE );
+    close(FILE);
 }
 
 
