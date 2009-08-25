@@ -1,0 +1,192 @@
+#!/usr/bin/perl -w
+#
+#  This script is a simple example which will submit comments for testing
+# against the blogspam.net API.
+#
+#  The files are assumed to be those written by the comments.cgi script
+# included in the chronicle distribution - and it is expected you'll
+# test the comments via this script, or manual inspection prior to making
+# them live.
+#
+#  Sample output:
+#
+# $ chronicle-spam-test *
+# i_bet_you_re_a_real_tiger_in_disguise_.html.5-July-2009-18:27:09 - OK
+# i_bet_you_re_a_real_tiger_in_disguise_.html.6-July-2009-07:17:25 - OK
+# i_bet_you_re_a_real_tiger_in_disguise_.html.6-July-2009-16:54:26 - OK
+# i_bet_you_re_a_real_tiger_in_disguise_.html.6-July-2009-17:07:05 - OK
+# $
+#
+#
+# Steve
+# --
+#
+
+
+use strict;
+use warnings;
+use Getopt::Long;
+
+require RPC::XML;
+require RPC::XML::Client;
+
+
+#
+#  Config
+#
+my %CONFIG;
+
+#
+#  Default server
+#
+$CONFIG{ 'server' }  = "http://test.blogspam.net:8888/";
+$CONFIG{ 'options' } = "exclude=bayasian";
+
+#
+#  Parse our options
+#
+exit
+  if (
+       !GetOptions( "server=s",  \$CONFIG{ 'server' },
+                    "options=s", \$CONFIG{ 'options' } ) );
+
+
+
+
+#
+#  Make sure the server is valid
+#
+if ( $CONFIG{ 'server' } !~ /^http:\/\// )
+{
+    $CONFIG{ 'server' } = "http://" . $CONFIG{ 'server' };
+}
+if ( $CONFIG{ 'server' } !~ /:([0-9]+)/ )
+{
+    $CONFIG{ 'server' } .= ":8888/";
+}
+
+
+
+#
+#  If we're using a file then test that, otherwise
+# test all files in the current directory.
+#
+while ( defined( my $file = shift ) )
+{
+    testTheFile($file);
+}
+
+
+
+#
+#  All done
+#
+exit;
+
+
+
+
+=begin doc
+
+   Make a request against the RPC server with the given file providing
+ both input and the expected result - the latter coming from the filename.
+
+=end doc
+
+=cut
+
+sub testTheFile
+{
+    my ($file) = (@_);
+
+    if ( !-e $file )
+    {
+        print "File not found: $file\n";
+        return;
+    }
+
+
+    #
+    #  Params we send to the server.
+    #
+    #  Note we send "test" so that the spam isn't logged.
+    #
+    my %params = ( 'test'  => '1',
+                   options => $CONFIG{ 'options' } );
+
+
+    #
+    #  Read the file.
+    #
+    open( FILE, "<", $file ) or
+      die "Failed to open $file - $!";
+
+    while ( my $line = <FILE> )
+    {
+        if ( $line =~ /^IP.*: (.*)/i )
+        {
+            $params{ 'ip' } = $1;
+        }
+        elsif ( $line =~ /^User-Agent: (.*)/i )
+        {
+            $params{ 'agent' } = $1;
+        }
+        elsif ( $line =~ /^mail: (.*)/i )
+        {
+            $params{ 'email' } = $1;
+        }
+        elsif ( $line =~ /^Name: (.*)/i )
+        {
+            $params{ 'name' } = $1;
+        }
+        elsif ( $line =~ /^Subject: (.*)/i )
+        {
+            $params{ 'subject' } = $1;
+        }
+        else
+        {
+            $params{ 'comment' } .= $line;
+        }
+
+    }
+    close(FILE);
+
+    #
+    #  The result we obtained
+    #
+    my $result = undef;
+
+    #
+    #  Make the result
+    #
+    eval {
+        my $client = RPC::XML::Client->new( $CONFIG{ 'server' } );
+        my $req    = RPC::XML::request->new( 'testComment', \%params );
+        my $res    = $client->send_request($req);
+        $result = $res->value();
+    };
+    if ($@)
+    {
+        print "Connection failed to $CONFIG{'server'}\n";
+        print "Or there was some other error.\n";
+        print "Aborting.\n";
+        exit;
+    }
+
+
+    #
+    #  Did we get the result we wanted?
+    #
+    my $literal = $result;
+    $result = $1 if ( $result =~ /^([^:]+):(.*)/ );
+    $result = uc($result);
+
+    if ( $result =~ /ok/i )
+    {
+        print "$file - OK\n";
+    }
+    else
+    {
+        print "$file - SPAM [$literal]\n";
+    }
+}
