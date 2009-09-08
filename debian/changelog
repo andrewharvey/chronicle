@@ -1,6 +1,8 @@
 chronicle (xxx) unstable; urgency=low
 
   * Add the chronicle-spam-test script to the examples/ directory.
+  * Avoid generating a sitemap.xml file if no URL prefix has been
+    defined.  (Closes: #545198)
 
  -- Steve Kemp <skx@debian.org>  Tue, 25 Aug 2009 19:01:00 +0100
 

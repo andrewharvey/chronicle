@@ -433,9 +433,13 @@ copyStaticFiles();
 
 
 #
-#  Output the static sitemap, unless we shouldn't.
+#  Output the static sitemap unless:
 #
-if ( !$CONFIG{ 'no-sitemap' } )
+#   * We've been explicitly told not to.
+#
+#   * Or we're missing an URL prefix.
+#
+if ( ( $CONFIG{'url_prefix'} ) && ( ! $CONFIG{ 'no-sitemap' } ) )
 {
     $CONFIG{ 'verbose' } && print "Outputing sitemap\n";
     outputSiteMap();
@@ -1386,7 +1390,8 @@ sub processCut
 {
     my ( $body, $link ) = (@_);
 
-    $link = $CONFIG{ 'url_prefix' } . $link;
+    $link  = $CONFIG{ 'url_prefix' } || "";
+    $link .= $link;
 
     my $cut_text = "";
 
