@@ -19,7 +19,7 @@ chronicle - A simple blog compiler.
    --theme          Specify the theme to use.
    --pattern        Specify the pattern of files to work with.
    --url-prefix     Specify the prefix to the live blog.
-
+   --sitemap-prefix Specify the prefix for the site map.
 
   Blog Entry Options:
 
@@ -435,11 +435,7 @@ copyStaticFiles();
 #
 #  Output the static sitemap unless:
 #
-#   * We've been explicitly told not to.
-#
-#   * Or we're missing an URL prefix.
-#
-if ( ( $CONFIG{'url_prefix'} ) && ( ! $CONFIG{ 'no-sitemap' } ) )
+if ( ! $CONFIG{ 'no-sitemap' } )
 {
     $CONFIG{ 'verbose' } && print "Outputing sitemap\n";
     outputSiteMap();
@@ -607,7 +603,8 @@ sub parseCommandLineArguments
             "charset=s", \$CONFIG{ 'charset' },
 
             # prefix
-            "url-prefix=s", \$CONFIG{ 'url_prefix' },
+            "url-prefix=s",     \$CONFIG{ 'url_prefix' },
+            "sitemap-prefix=s", \$CONFIG{ 'sitemap_prefix' },
 
             # commands
             "pre-build=s",  \$CONFIG{ 'pre-build' },
@@ -1594,10 +1591,12 @@ sub outputStaticPage
 
 =begin doc
 
-  Output a static sitemap.
+  Output a static sitemap, unless there is no URL or sitemap prefix
+ setup.
 
-  We do this after all other things have been created, by reading
- the output files.
+  Note: We do this after all other things have been created, by
+ reading the files in our output directory.  This is either sleazy
+ or clever depending upon your point of view.
 
 =end doc
 
@@ -1607,7 +1606,22 @@ sub outputSiteMap
 {
     my $dir  = $CONFIG{ 'output' };
     my $file = $dir . "/sitemap.xml";
-    my $site = $CONFIG{ 'url_prefix' };
+    my $home = '';
+
+
+    if ( $CONFIG{'sitemap_prefix'} )
+    {
+        $home = $CONFIG{ 'sitemap_prefix' };
+    }
+    elsif ( $CONFIG{'url_prefix'} )
+    {
+        $home = $CONFIG{ 'url_prefix' };
+    }
+    else
+    {
+        $CONFIG{'verbose'} && print "No prefix defined - skipping sitemap\n";
+        return;
+    }
 
     #
     #  Print the header
@@ -1624,7 +1638,7 @@ sub outputSiteMap
                       http://www.google.com/schemas/sitemap/0.84/sitemap.xsd">
 
  <url>
-  <loc>$site</loc>
+  <loc>$home</loc>
   <priority>0.75</priority>
   <changefreq>daily</changefreq>
  </url>
@@ -1642,7 +1656,7 @@ EOF
 
         print FILE <<EOF;
  <url>
-  <loc>$site$page</loc>
+  <loc>$home$page</loc>
   <priority>0.50</priority>
   <changefreq>weekly</changefreq>
  </url>
