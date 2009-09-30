@@ -3,8 +3,8 @@
 <html>
  <head>
   <title><!-- tmpl_var name='blog_title' --></title>
-  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
-  <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='top' -->index.rss" type="application/rss+xml">
+  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
+  <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='top' -->index.rss" type="application/rss+xml" />
 
  </head>
  <body>

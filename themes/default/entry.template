@@ -3,7 +3,7 @@
 <html>
  <head>
   <title><!-- tmpl_var name='blog_title' -->: <!-- tmpl_var name='title' --></title>
-  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
  </head>
  <body>
 
