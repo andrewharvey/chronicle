@@ -1,10 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
  <head>
   <title><!-- tmpl_var name='blog_title' -->: Entries Tagged <!-- tmpl_var name='tagname' --></title> 
-  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
-  <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='tagname' escape='html' -->.rss" type="application/rss+xml">
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
+  <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='tagname' escape='html' -->.rss" type="application/rss+xml" />
  </head>
  <body>
 
@@ -50,7 +51,7 @@
 </div>
 <div class="padding"></div>
 <!-- /tmpl_loop -->
- <p style="text-align: right;"><a href="<!-- tmpl_var name='tagname' escape='html' -->.rss"><img src="<!-- tmpl_var name='top' -->xml.gif" alt="RSS Feed" width="36" height="14"></a></p>
+ <p style="text-align: right;"><a href="<!-- tmpl_var name='tagname' escape='html' -->.rss"><img src="<!-- tmpl_var name='top' -->xml.gif" alt="RSS Feed" width="36" height="14" /></a></p>
 
 
 
