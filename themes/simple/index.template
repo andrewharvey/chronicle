@@ -5,6 +5,8 @@
 <head>
 
   <title><!-- tmpl_var name='blog_title' --></title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
   <link rel="alternate" title="RSS Feed for blog" href="<!-- tmpl_var name='top' -->index.rss" type="application/rss+xml" />
   <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->ajax.js"></script>
