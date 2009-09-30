@@ -992,7 +992,7 @@ sub outputIndexPage
     my $max = $CONFIG{ 'entry-count' };
     foreach my $f (@tmp2)
     {
-        $f->{'date'} = dateI18n($f->{'date'});
+        $f->{ 'date' } = dateI18n( $f->{ 'date' } );
         push( @$entries, $f ) if ( $max > 0 );
         $max -= 1;
     }
@@ -1133,7 +1133,7 @@ sub outputTagPage
             }
 
             $CONFIG{ 'verbose' } && print "\tAdded: $f\n";
-            $blog->{'date'} = dateI18n($blog->{'date'});
+            $blog->{ 'date' } = dateI18n( $blog->{ 'date' } );
             push( @$entries, $blog );
         }
     }
@@ -1300,7 +1300,7 @@ sub outputArchivePage
                 $blog->{ 'body' } =
                   processCut( $blog->{ 'body' }, $blog->{ 'link' } );
             }
-            $blog->{'date'} = dateI18n($blog->{'date'});
+            $blog->{ 'date' } = dateI18n( $blog->{ 'date' } );
             push( @$entries, $blog );
         }
     }
@@ -1477,7 +1477,7 @@ sub outputStaticPage
     my $title = $static->{ 'title' } || $basename;
     my $tags  = $static->{ 'tags' };
     my $body  = $static->{ 'body' };
-    my $date  = dateI18n($static->{ 'date' });
+    my $date  = dateI18n( $static->{ 'date' } );
 
     if ( !defined($date) )
     {
@@ -2743,8 +2743,8 @@ sub createCalendar
 
 sub getDateLanguageModule
 {
-    my $modulename = ucfirst lc $CONFIG{'lang'};
-    my $fullmodulename = sprintf('Date::Language::%s', $modulename);
+    my $modulename = ucfirst lc $CONFIG{ 'lang' };
+    my $fullmodulename = sprintf( 'Date::Language::%s', $modulename );
 
     eval "require $fullmodulename" or die("Not supported language");
     return Date::Language->new($modulename);
@@ -2770,8 +2770,8 @@ sub dateI18n
     #
     # Format string is hard-coded, maybe non-suitable for some languages
     #
-    $date = $lang->time2str('%A %d %B %Y', $time);
-    
+    $date = $lang->time2str( '%A %d %B %Y', $time );
+
     #
     # Data::Language outputs iso-8859-1 string,
     # we force the conversion to UTF-8
@@ -2793,22 +2793,23 @@ sub dateI18n
 
 sub getMonthNames
 {
+
     #
     # Find the appropriate Data::Language module name
     #
-    my $lang = getDateLanguageModule;
+    my $lang           = getDateLanguageModule;
     my $langmodulename = ref($lang);
-    
+
     #
     # Get month names using the @MoY variable of the module
-    # 
-    my $names_var = sprintf('%s::MoY', $langmodulename);
+    #
+    my $names_var = sprintf( '%s::MoY', $langmodulename );
     no strict 'refs';
-    my @names = @{$names_var};
+    my @names = @{ $names_var };
     use strict 'refs';
-    
-    @names = map { &Encode::encode_utf8($_) } @names;
-    
+
+    @names = map {&Encode::encode_utf8($_)} @names;
+
     return @names;
 }
 
