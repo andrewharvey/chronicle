@@ -1,10 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
  <head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <title>Blog : Entries from <!-- tmpl_var name='month_name' --> <!-- tmpl_var name='year' --></title>
-  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
-  <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='month' escape='html' -->.rss" type="application/rss+xml">
+  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
+  <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='month' escape='html' -->.rss" type="application/rss+xml" />
  </head>
  <body>
 <!-- XML FEED -->
@@ -55,7 +56,7 @@
 </fieldset>
  <p></p>
 <!-- /tmpl_loop -->
- <p style="text-align: right;"><a href="<!-- tmpl_var name='month' escape='html' -->.rss"><img src="<!-- tmpl_var name='top' -->xml.gif" alt="RSS feed" width="36" height="14"></a></p>
+ <p style="text-align: right;"><a href="<!-- tmpl_var name='month' escape='html' -->.rss"><img src="<!-- tmpl_var name='top' -->xml.gif" alt="RSS feed" width="36" height="14" /></a></p>
 
 
 </td>
@@ -72,6 +73,7 @@
 <!-- /tmpl_loop -->
 </ul></li>
 <!-- /tmpl_loop -->
+</ul>
 </fieldset>
 <!-- /tmpl_if name='datecloud' -->
 
