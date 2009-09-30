@@ -24,6 +24,10 @@ Contributions
   Sascha Korzen [korzen [@] .de.fh-luh.cc]
    - Added the optional calendar.
 
+  Thomas Martin [thomas [@] .org.oopss]
+   - i18n support for date names.
+   - URL prefix support for /sitemap.xml generation.
+
   MJ Ray [mjr [@] coop.phonecoop]
    - Added RSSv1 date format.
    - Added reltop.
