@@ -9,7 +9,6 @@
  </head>
  <body>
 <!-- XML FEED -->
-
  <div class="title">
   <h1><!-- tmpl_if name='blog_title' -->
        <a href="<!-- tmpl_var name='top' -->"><!-- tmpl_var name='blog_title' --></a>
@@ -21,9 +20,7 @@
       <h2><!-- tmpl_var name='blog_subtitle' --></h2>
   <!-- /tmpl_if -->
  </div>
-
  <p>Entries from <!-- tmpl_var name='month_name' escape='html' --> <!-- tmpl_var name='year' escape='html' -->.</p>
-
 <!-- tmpl_loop name='entries' -->
 <div class="entry">
  <div class="title">
@@ -32,7 +29,6 @@
  <div class="date">
   <!-- tmpl_var name='date' -->
  </div>
-
  <div class="body">
   <!-- tmpl_var name='body' -->
  </div>
@@ -42,7 +38,6 @@
     <!-- tmpl_var name='comment_count' --> comments.  
    </span>
  <!-- /tmpl_if -->
-
  <!-- tmpl_if name='tags' -->
   Tags: <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' escape='html' -->"><!-- tmpl_var name='tag' escape='html' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop -->
  <!-- tmpl_else -->
@@ -53,9 +48,6 @@
  <div class="padding"></div>
 <!-- /tmpl_loop -->
  <p style="text-align: right;"><a href="<!-- tmpl_var name='month' escape='html' -->.rss"><img src="<!-- tmpl_var name='top' -->xml.gif" alt="RSS Feed" width="36" height="14" /></a></p>
-
-
-
 <div id="sidebar">
 <!-- tmpl_if name='datecloud' -->
 <h2>Archive</h2>
@@ -70,7 +62,6 @@
 <!-- /tmpl_loop -->
 </ul>
 <!-- /tmpl_if name='datecloud' -->
-
 <!-- tmpl_if name='tagcloud' -->
 <h2>Tags</h2>
 <ul>

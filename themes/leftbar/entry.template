@@ -7,7 +7,6 @@
   <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
  </head>
  <body>
-
  <div class="title">
   <h1><!-- tmpl_if name='blog_title' -->
        <a href="<!-- tmpl_var name='top' -->"><!-- tmpl_var name='blog_title' --></a>
@@ -19,8 +18,6 @@
       <h2><!-- tmpl_var name='blog_subtitle' --></h2>
   <!-- /tmpl_if -->
  </div>
-
-
  <div class="entry">
   <div class="title"><!-- tmpl_var name='title' --></div>
   <div class="date"><!-- tmpl_var name='date' --></div>
@@ -29,10 +26,8 @@
   <div class="tags">Tags: <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' escape='html' -->"><!-- tmpl_var name='tag' escape='html' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop --></div>
    <!-- /tmpl_if -->
   </div>
-
 <!-- tmpl_include name="comment-loop.inc" -->
 <!-- tmpl_include name="comment-form.inc" -->
-
 <div id="sidebar">
 <!-- tmpl_if name='datecloud' -->
 <h2>Archive</h2>
@@ -47,7 +42,6 @@
 <!-- /tmpl_loop -->
 </ul>
 <!-- /tmpl_if name='datecloud' -->
-
 <!-- tmpl_if name='tagcloud' -->
 <h2>Tags</h2>
 <ul>
