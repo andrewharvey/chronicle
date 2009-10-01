@@ -1,32 +1,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
- <head>
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-  <title><!-- tmpl_var name='blog_title' -->: <!-- tmpl_var name='title' --></title>
-  <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
- </head>
- <body>
-
-<!-- tmpl_include name='header.inc' -->
-
- <div class="entry">
-  <div class="title"><!-- tmpl_var name='title' --></div>
-  <div class="date"><!-- tmpl_var name='date' --></div>
-  <div class="body"><!-- tmpl_var name='body' --></div>
-  <!-- tmpl_if name='tags' -->
-  <div class="tags">Tags: <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' escape='html' -->"><!-- tmpl_var name='tag' escape='html' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop --></div>
-   <!-- /tmpl_if -->
-  </div>
-
-<!-- tmpl_include name="comment-loop.inc" -->
-<!-- tmpl_include name="comment-form.inc" -->
-
-<div id="sidebar">
-  <!-- tmpl_include name='sidebar.inc' -->
-</div>
-
-<!-- tmpl_include name='footer.inc' -->
-
- </body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title><!-- tmpl_var name='blog_title' -->: <!-- tmpl_var name='title' --></title>
+    <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
+  </head>
+  <body>
+    <!-- tmpl_include name='header.inc' -->
+    <div class="entry">
+      <div class="title"><!-- tmpl_var name='title' --></div>
+      <div class="date"><!-- tmpl_var name='date' --></div>
+      <div class="body"><!-- tmpl_var name='body' --></div>
+      <!-- tmpl_if name='tags' -->
+      <div class="tags">Tags: <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' escape='html' -->"><!-- tmpl_var name='tag' escape='html' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop --></div>
+      <!-- /tmpl_if -->
+    </div>
+    <!-- tmpl_include name="comment-loop.inc" -->
+    <!-- tmpl_include name="comment-form.inc" -->
+    <div id="sidebar">
+      <!-- tmpl_include name='sidebar.inc' -->
+    </div>
+    <!-- tmpl_include name='footer.inc' -->
+  </body>
 </html>
