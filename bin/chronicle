@@ -543,6 +543,11 @@ sub setupDefaultOptions
     #
     $CONFIG{ 'lang' } = 'english';
 
+    #
+    # English date format by default
+    #
+    $CONFIG{'date-format'} = '%o %B %Y';
+
     return (%CONFIG);
 }
 
@@ -2768,9 +2773,9 @@ sub dateI18n
     my $time = str2time($date);
 
     #
-    # Format string is hard-coded, maybe non-suitable for some languages
+    # Format timestamp to readable date, using the date-format config parameter
     #
-    $date = $lang->time2str( '%A %d %B %Y', $time );
+    $date = $lang->time2str( $CONFIG{'date-format'}, $time );
 
     #
     # Data::Language outputs iso-8859-1 string,
