@@ -10,7 +10,7 @@
   <body>
     <div id="wrapper">
       <div id="header">
-        <!-- tmpl_include name='header' -->
+        <!-- tmpl_include name='header.inc' -->
       </div>
       <div class="access">
 	<span class="content-access"><a href="#content" title="Skip to content">Skip to content</a></span>
@@ -49,7 +49,7 @@
         <!-- tmpl_include name='sidebar.inc' -->
       </div>
       <div id="footer">
-	<span id="generator-link">Created by <a href="http://steve.org.uk/Software/chronicle">Chronicle</a>, comment spam filtered by <a href="http://blogspam.net/">blogspam.net</a>.</span>
+        <!-- tmpl_include name='footer.inc' -->
       </div>
     </div>
   </body>

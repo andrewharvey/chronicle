@@ -8,53 +8,25 @@
     <link rel="alternate" title="RSS Feed for <!-- tmpl_var name='month' -->/<!-- tmpl_var name='year' -->" href="<!-- tmpl_var name='month' escape='html' -->.rss" type="application/rss+xml" />
     <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->ajax.js"></script>
   </head>
-  
-  
-  
   <body>
-    
-    
-    
     <div id="wrapper">
-      
-      
-      
       <div id="header">
         <!-- tmpl_include name='header.inc' -->
       </div>
-      
-      
       <div class="access">
-        
 	<span class="content-access"><a href="#content" title="Skip to content">Skip to content</a></span>
-        
       </div>
-      
-      
-      
-      
       <div id="container">
-        
 	<div id="content" class="hfeed">
-          
-          
           <p>Entries from <!-- tmpl_var name='month_name' escape='html' --> <!-- tmpl_var name='year' escape='html' -->.</p>
-          
-          
           <!-- tmpl_loop name='entries' -->
-          
 	  <div>
-            
 	    <h3 class="entry-title"><a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='link' escape='html' -->"><!-- tmpl_var name='title' --></a></h3>
-            
 	    <div class="entry-date"><!-- tmpl_var name='date' --></div>
-            
 	    <div class="entry-content">
               <!-- tmpl_var name='body' -->
 	    </div>
-            
 	    <div class="entry-meta">
-              
 	      <span class="entry-category">
                 <!-- tmpl_if name='tags' -->
                 Tags: <!-- tmpl_loop name='tags' --><a href="<!-- tmpl_var name='top' -->tags/<!-- tmpl_var name='tag' escape='html' -->"><!-- tmpl_var name='tag' escape='html' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop -->
@@ -62,9 +34,7 @@
                 No tags
                 <!-- /tmpl_if -->
               </span>
-              
 	      <span class="meta-sep">|</span>
-              
 	      <span class="entry-comments">
                 <!-- tmpl_if name='comment_count' -->
                 <a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='link' escape='html' -->"><!-- tmpl_var name='comment_count' --> comment<!-- tmpl_if name='comment_plural' -->s<!-- /tmpl_if -->.</a>
@@ -72,35 +42,17 @@
                 No comments
                 <!-- /tmpl_if -->
               </span>
-              
 	    </div>
-            
 	  </div>
           <!-- /tmpl_loop -->
-          
-          
-          
-          
-          
-          
 	</div>
       </div>
       <div id="primary" class="sidebar">
         <!-- tmpl_include name='sidebar.inc' -->
       </div>
       <div id="footer">
-	<span id="generator-link">Created by <a href="http://steve.org.uk/Software/chronicle">Chronicle</a>, comment spam filtered by <a href="http://blogspam.net/">blogspam.net</a>.</span>
-        
-        
+        <!-- tmpl_include name='footer.inc' -->
       </div>
-      
-      
-      
     </div>
-    
-    
-    
-    
-    
   </body>
 </html>

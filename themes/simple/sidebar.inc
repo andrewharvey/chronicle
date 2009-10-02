@@ -1,6 +1,4 @@
-
 			<ul>
-
                           <!-- tmpl_if name='datecloud' -->
 			  <li id="archives">
                             <h3>Archive</h3>
@@ -16,8 +14,6 @@
                             </ul>
 			  </li>
                           <!-- /tmpl_if name='datecloud' -->
-
-
                           <!-- tmpl_if name='tagcloud' -->
                           <li id="categories"><h3>Tag List</h3>
                           <p id="tags_toggle"><a href="#" onclick="showCloud(); return false">Show all</a></p>
@@ -28,14 +24,10 @@
                             </ul>
                           </li>
                           <!-- /tmpl_if -->
-
                           <li id="rss-links"><h3>RSS Feed</h3>
-
                             <ul>
                               <li><a href="index.rss"><img src="<!-- tmpl_var name='top' -->xml.gif" alt="RSS feed" width="36" height="14" /></a>
                               </li>
                             </ul>
-
                           </li>
                         </ul>
-

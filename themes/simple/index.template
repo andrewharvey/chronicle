@@ -49,7 +49,7 @@
         <!-- tmpl_include name='sidebar.inc' -->
       </div>
       <div id="footer">
-	<span id="generator-link">Created by <a href="http://steve.org.uk/Software/chronicle">Chronicle</a>, comment spam filtered by <a href="http://blogspam.net/">blogspam.net</a>.</span>
+        <!-- tmpl_include name='footer.inc' -->
       </div>
     </div>
   </body>
