@@ -2269,10 +2269,10 @@ EOF
         exit;
     }
 
-    my $t = HTML::Template->new( filename          => $file,
-                                 path              => $dir,
-                                 loop_context_vars => 1,
-                                 global_vars       => 1,
+    my $t = HTML::Template->new( filename               => $file,
+                                 path                   => $dir,
+                                 loop_context_vars      => 1,
+                                 global_vars            => 1,
                                  search_path_on_include => 1,
                                  %params
                                );
