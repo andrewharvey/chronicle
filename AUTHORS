@@ -36,6 +36,9 @@ Contributions
    - Produced a Debian package for the software.
    - Provided fixup for the default comment handling of the default theme.
 
+  George Schils [bean [at] com.georgeschils]
+   - Initial XHTML cleanup of templates, and suggestion of common .inc files.
+
   Bob Walker [bob [@] uk.org.randomness]
    - Added titles to RSS feeds
 
