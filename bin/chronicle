@@ -2575,16 +2575,6 @@ sub setupCache
 
     }
 
-    #
-    #  Attempt to memoize too, cannot hurt!
-    #
-    $test = "use Memoize";
-    eval($test);
-    if ( !$@ )
-    {
-        $CONFIG{ 'verbose' } && print "Memoization setup.\n";
-        memoize('bywhen');
-    }
 }
 
 
