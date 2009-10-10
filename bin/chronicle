@@ -1780,8 +1780,8 @@ sub readBlogEntry
         # This way if the file is modified the cache will be flushed
         # appropriately.
         #
-        $c_key = $filename . "_" .( stat($filename) )[9];
-        my $cached = $cache->get( $c_key );
+        $c_key = $filename . "_" . ( stat($filename) )[9];
+        my $cached = $cache->get($c_key);
 
         if ( defined($cached) )
         {
@@ -2566,11 +2566,24 @@ sub setupCache
     eval($test);
     if ( !$@ )
     {
+
         # create the cache object
         $CONFIG{ 'cache' } =
           new Cache::Memcached { 'servers' => ["localhost:11211"] };
 
-        $CONFIG{'verbose'} && print "Cache setup\n";
+        $CONFIG{ 'verbose' } && print "Cache setup.\n";
+
+    }
+
+    #
+    #  Attempt to memoize too, cannot hurt!
+    #
+    $test = "use Memoize";
+    eval($test);
+    if ( !$@ )
+    {
+        $CONFIG{ 'verbose' } && print "Memoization setup.\n";
+        memoize('bywhen');
     }
 }
 
