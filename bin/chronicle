@@ -253,9 +253,9 @@ use strict;
 use warnings;
 
 
-use Date::Parse;
 use Date::Format;
 use Date::Language;
+use Date::Parse;
 use Digest::MD5 qw(md5_hex);
 use Encode;
 use File::Basename;
@@ -310,7 +310,13 @@ sanityCheckArguments();
 
 
 #
-#  The names of the months. Posted early to allow i18n users.
+#  Setup the cache if we can.
+#
+setupCache() unless ( $CONFIG{ 'no-cache' } );
+
+
+#
+#  The names of the months we'll use.
 #
 my @names = getMonthNames();
 
@@ -324,6 +330,7 @@ if ( $CONFIG{ 'list-themes' } )
     exit;
 }
 
+#
 #  Should we run something before we start?
 #
 if ( $CONFIG{ 'pre-build' } )
@@ -756,10 +763,10 @@ sub findAllTags
 {
     my %allTags;
 
-    foreach my $f ( keys %data )
+    foreach my $file ( keys %data )
     {
-        my $h = $data{ $f };
-        my $tags = $h->{ 'tags' } || undef;
+        my $hash = $data{ $file };
+        my $tags = $hash->{ 'tags' } || undef;
         foreach my $t (@$tags)
         {
             if ( $t->{ 'tag' } )
@@ -822,12 +829,13 @@ sub createTagCloud
 sub findAllMonths
 {
     my %allDates;
-    foreach my $f ( keys %data )
-    {
-        my $h = $data{ $f };
-        next if ( !$h );
 
-        my $date = $h->{ 'date' };
+    foreach my $file ( keys %data )
+    {
+        my $hash = $data{ $file };
+        next if ( !$hash );
+
+        my $date = $hash->{ 'date' };
 
         #
         #  Not a date?  Use the ctime of the file.
@@ -841,7 +849,7 @@ sub findAllMonths
             my ( $dev,   $ino,     $mode, $nlink, $uid,
                  $gid,   $rdev,    $size, $atime, $mtime,
                  $ctime, $blksize, $blocks
-               ) = stat($f);
+               ) = stat($file);
 
             $date = localtime($ctime);
         }
@@ -860,8 +868,8 @@ sub findAllMonths
 
   Create a data structure which can be used for our archive layout.
 
-  This is a little messy too.  It mostly comes because we want to
- have a nested loop so that we can place our entries in a nice manner.
+  This is a little messy.  Mostly because we want to have a nested
+ loop so that we can place our entries in a nice manner.
 
 =end doc
 
@@ -968,7 +976,7 @@ sub outputIndexPage
     my $tmp;
     foreach my $file ( keys(%data) )
     {
-        my $blog = readBlogEntry($file);
+        my $blog = $data{ $file };
 
         if ( keys(%$blog) )
         {
@@ -1094,32 +1102,52 @@ sub outputTagPage
 
     my $dir = "tags/$tagName";
 
-    my %allTags;
-    my %tagEntries;
-    foreach my $f ( keys %data )
+    #
+    #  So we have %data being a hash of entries.
+    #
+    #  The key is a filename.
+    #
+    #  The value is a bunch of data as a hash reference.
+    #
+    #  We want to traverse this hash and reference each entry
+    # which has a tag which matches the given tag - we'll store
+    # that in the local array called '$matching'
+    #
+    my $matching;
+
+    #
+    #  Iterate over the data-structure.
+    #
+    foreach my $file ( keys %data )
     {
-        my $h = $data{ $f };
-        my $tags = $h->{ 'tags' } || undef;
+
+        # get the hash
+        my $hash = $data{ $file };
+
+        # get the tags from that hash
+        my $tags = $hash->{ 'tags' } || undef;
+
+        #
+        # for each tag, if it is a match then we save the data ref away.
+        #
         foreach my $t (@$tags)
         {
             my $name = $t->{ 'tag' };
-            $allTags{ $name } += 1;
-            my $a = $tagEntries{ $name };
-            push @$a, $f;
-            $tagEntries{ $name } = $a;
+
+            if ( $name eq $tagName )
+            {
+                push( @$matching, $hash );
+            }
         }
     }
-
-    my $matching = $tagEntries{ $tagName };
 
     my $entries;
 
     #
-    #  Now read the matching entries.
+    #  Now for each matching entries.
     #
-    foreach my $f ( sort @$matching )
+    foreach my $blog (@$matching)
     {
-        my $blog = readBlogEntry($f);
         if ( keys(%$blog) )
         {
             if ( $CONFIG{ 'date-archive-path' } )
@@ -1136,7 +1164,6 @@ sub outputTagPage
                   processCut( $blog->{ 'body' }, $blog->{ 'link' } );
             }
 
-            $CONFIG{ 'verbose' } && print "\tAdded: $f\n";
             $blog->{ 'date' } = dateI18n( $blog->{ 'date' } );
             push( @$entries, $blog );
         }
@@ -1229,7 +1256,11 @@ sub outputArchivePage
         return;
     }
 
-
+    #
+    #  The year & month for which we're going to output a page.
+    #
+    #  Entries dated on other month+year pairs will be ignored.
+    #
     my $year  = '';
     my $month = '';
     if ( $date =~ /^([0-9]{4})-([0-9]{2})/ )
@@ -1237,23 +1268,40 @@ sub outputArchivePage
         $year  = $1;
         $month = $2;
     }
+    else
+    {
+        die "Internal error - failed to parse month+year to output!\n";
+    }
 
     #
-    #  Make the directory
+    #  The path to which we're going to output our entries to.
     #
     my $dir = "archive/$year/$month";
 
-    my $entries;
+    #
+    #  So we have %data being a hash of entries.
+    #
+    #  The key is a filename.
+    #
+    #  The value is a bunch of data as a hash reference.
+    #
+    #  We want to traverse this hash and reference each entry
+    # which has a tag which matches the given tag - we'll store
+    # that in the local array called '$matching'
+    #
+    my $matching;
 
-
-    my %dateEntries;
-    foreach my $f ( keys %data )
+    foreach my $filename ( keys %data )
     {
-        my $h    = $data{ $f };
-        my $date = $h->{ 'date' };
 
         #
-        #  Not a date?  Use the file.
+        #  Get the date.
+        #
+        my $hash = $data{ $filename };
+        my $date = $hash->{ 'date' };
+
+        #
+        #  Not a date?  Use the file's modification date.
         #
         if ( !defined($date) || !length($date) )
         {
@@ -1264,23 +1312,33 @@ sub outputArchivePage
             my ( $dev,   $ino,     $mode, $nlink, $uid,
                  $gid,   $rdev,    $size, $atime, $mtime,
                  $ctime, $blksize, $blocks
-               ) = stat($f);
+               ) = stat($filename);
 
             $date = localtime($ctime);
         }
 
         $date = time2str( "%Y-%m", str2time($date) );
 
-        push @{ $dateEntries{ $date } }, $f;
+        #
+        #  If the date matches then we'll save it
+        #
+        if ( $date eq "$year-$month" )
+        {
+            push( @$matching, $hash );
+        }
     }
 
+    #
+    #  The entries.
+    #
+    my $entries;
 
-    my $matching = $dateEntries{ $date };
-    foreach my $f ( reverse @$matching )
+    #
+    #
+    #  Now process each matching entry
+    #
+    foreach my $blog (@$matching)
     {
-        $CONFIG{ 'verbose' } && print "\tAdded: $f\n";
-
-        my $blog = readBlogEntry($f);
         if ( keys(%$blog) )
         {
             if ( $CONFIG{ 'date-archive-path' } )
@@ -1473,7 +1531,7 @@ sub outputStaticPage
     #
     #  Read the entry
     #
-    my $static = readBlogEntry($filename);
+    my $static = $data{ $filename };
 
     #
     #  Get the pieces of information.
@@ -1708,27 +1766,27 @@ sub readBlogEntry
     my %entry;
 
     #
-    #  Do we have the memcached module available?
+    #  Do we have the memcached module available and setup?
     #
-    my $cache = undef;
-    my $test  = "use Cache::Memcached;";
-    eval($test);
-    if ( ( !$@ ) && ( !$CONFIG{ 'no-cache' } ) )
+    my $cache = $CONFIG{ 'cache' } || undef;
+    my $c_key = "";
+    if ($cache)
     {
 
-        # create the cache object
-        $cache = new Cache::Memcached { 'servers' => ["localhost:11211"] };
+        #
+        # Get the data from the cache - which will include the
+        # mtime of the file to allow natural expirey.
+        #
+        # This way if the file is modified the cache will be flushed
+        # appropriately.
+        #
+        $c_key = $filename . "_" .( stat($filename) )[9];
+        my $cached = $cache->get( $c_key );
 
-        # fetch from the cache if it is present.
-        my $cached = $cache->get("file_$filename");
         if ( defined($cached) )
         {
             $CONFIG{ 'verbose' } && print "memcache-get: $filename\n";
             return ( \%$cached );
-        }
-        else
-        {
-            $CONFIG{ 'verbose' } && print "memcache-fail: $filename\n";
         }
     }
 
@@ -2005,12 +2063,14 @@ sub readBlogEntry
     }
 
     #
-    #  Store the read file in the cache if we're using it.
+    #  Store the data in the cache if we have it enabled.
+    #
+    #  It won't help this time, but the next run will rock ..
     #
     if ( defined($cache) )
     {
         $CONFIG{ 'verbose' } && print "memcache-set: $filename\n";
-        $cache->set( "file_$filename", \%entry );
+        $cache->set( $c_key, \%entry );
     }
     return \%entry;
 }
@@ -2488,6 +2548,30 @@ EOF
         exit;
     }
 
+}
+
+
+=begin doc
+
+ If we have the memcached module(s) available then load them
+and connect to the cache on the local host.
+
+=end doc
+
+=cut
+
+sub setupCache
+{
+    my $test = "use Cache::Memcached;";
+    eval($test);
+    if ( !$@ )
+    {
+        # create the cache object
+        $CONFIG{ 'cache' } =
+          new Cache::Memcached { 'servers' => ["localhost:11211"] };
+
+        $CONFIG{'verbose'} && print "Cache setup\n";
+    }
 }
 
 
