@@ -27,10 +27,16 @@ nop:
 	@echo "Valid targets are (alphabetically) :"
 	@echo " "
 	@echo " clean         = Remove bogus files and any local output."
+	@echo " demos[*]      = Generate and upload demo blogs."
 	@echo " diff          = See the local changes."
+	@echo " install       = Install upon the local system."
+	@echo " release [*]   = Generate a release tarball."
 	@echo " test          = Run our simple test cases."
 	@echo " test-verbose  = Run our simple test cases, verbosely."
+	@echo " tidy [*]      = Tidy the code via perltidy."
 	@echo " update        = Update from the remote repository."
+	@echo " "
+	@echo "[*] - These targets are Steve-specific.  Probably."
 	@echo " "
 
 
@@ -60,16 +66,16 @@ diff:
 
 
 #
-#  Install to /usr/local/bin
+#  Install to /usr/bin
 #
 #  Install the themes without hardwiring a list of them.
 #
 install:
 	mkdir -p ${prefix}/etc
 	cp ./etc/chroniclerc ${prefix}/etc/chroniclerc
-	mkdir -p ${prefix}/usr/local/bin
-	cp ./bin/chronicle ${prefix}/usr/local/bin
-	cp ./bin/chronicle-spooler ${prefix}/usr/local/bin
+	mkdir -p ${prefix}/usr/bin
+	cp ./bin/chronicle ${prefix}/usr/bin
+	cp ./bin/chronicle-spooler ${prefix}/usr/bin
 	mkdir -p ${prefix}/usr/share/chronicle/themes/xml
 	cp -r ./themes/xml/*.* ${prefix}/usr/share/chronicle/themes/xml
 	for i in themes/*/; do \
@@ -134,7 +140,10 @@ update:
 	hg pull --update
 
 
-steve:
+#
+#  Generate the demo blogs.
+#
+demos:
 	./bin/chronicle --theme-dir=./themes --theme=default --url-prefix=http://www.steve.org.uk/Software/chronicle/demo/ --pre-build="/bin/rm -rf ./output" --post-build="rsync -q -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo/" --no-comments --no-cache --blog-title="Sample Blog" --blog-subtitle="Created by Chronicle"
 	./bin/chronicle  --theme-dir=./themes --theme=copyrighteous --url-prefix=http://www.steve.org.uk/Software/chronicle/demo2/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -q -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo2/" --no-comments --no-cache --blog-title="Sample Blog" --blog-subtitle="Created by Chronicle"
 	./bin/chronicle --date-archive-path --theme-dir=./themes --theme=blocky --url-prefix=http://www.steve.org.uk/Software/chronicle/demo3/ --pre-build="/bin/rm -rf ./output"  --post-build="rsync -q -r output/* steve@www.steve.org.uk:/home/www/www.steve.org.uk/htdocs/Software/chronicle/demo3/" --no-comments --no-cache --blog-title="Sample Blog" --blog-subtitle="Created by Chronicle"
