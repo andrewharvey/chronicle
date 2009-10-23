@@ -31,12 +31,6 @@ install: build
 	dh_installdirs
 
 	$(MAKE) prefix=$(CURDIR)/debian/chronicle install
-	mv $(CURDIR)/debian/chronicle/usr/local/bin/chronicle \
-		$(CURDIR)/debian/chronicle/usr/bin
-	mv $(CURDIR)/debian/chronicle/usr/local/bin/chronicle-spooler \
-		$(CURDIR)/debian/chronicle/usr/bin
-	rmdir $(CURDIR)/debian/chronicle/usr/local/bin/
-	rmdir $(CURDIR)/debian/chronicle/usr/local
 
 
 # Build architecture-independent files here.
