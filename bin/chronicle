@@ -2554,7 +2554,11 @@ and connect to the cache on the local host.
 sub setupCache
 {
     my $test = "use Cache::Memcached;";
+
+    ## no critic (Eval)
     eval($test);
+    ## use critic
+
     if ( !$@ )
     {
 
@@ -2636,7 +2640,10 @@ sub markdown2HTML
     #
     #  Test loading the module.
     #
+    ## no critic (Eval)
     eval($test);
+    ## use critic
+
     if ($@)
     {
         print <<EOF;
@@ -2679,7 +2686,11 @@ sub textile2HTML
     #
     #  Test loading the module.
     #
+    ## no critic (Eval)
     eval($test);
+    ## use critic
+
+
     if ($@)
     {
         print <<EOF;
@@ -2758,7 +2769,10 @@ sub createCalendar
     #  Attempt to load the module.
     #
     my $test = "use HTML::CalendarMonthSimple;";
+
+    ## no critic (Eval)
     eval($test);
+    ## use critic
 
     #
     #  If there was an error, or the calendar is disabled then
@@ -2829,7 +2843,10 @@ sub getDateLanguageModule
     my $modulename = ucfirst lc $CONFIG{ 'lang' };
     my $fullmodulename = sprintf( 'Date::Language::%s', $modulename );
 
+    ## no critic (Eval)
     eval "require $fullmodulename" or die("Not supported language");
+    ## use critic
+
     return Date::Language->new($modulename);
 }
 
@@ -2887,9 +2904,15 @@ sub getMonthNames
     # Get month names using the @MoY variable of the module
     #
     my $names_var = sprintf( '%s::MoY', $langmodulename );
-    no strict 'refs';
-    my @names = @{ $names_var };
-    use strict 'refs';
+    my @names;
+
+  {
+      ## no critic (ProhibitNoStrict)
+      no strict 'refs';
+      @names = @{ $names_var };
+      use strict 'refs';
+      ## use critic
+  }
 
     @names = map {&Encode::encode_utf8($_)} @names;
 

@@ -59,6 +59,13 @@ clean:
 
 
 #
+#  Run perlcritic on our scripts
+#
+critic:
+	perlcritic bin/*
+
+
+#
 #  Show what has been changed in the local copy vs. the remote repository.
 #
 diff:
@@ -88,7 +95,7 @@ install:
 #
 #  Make a new release tarball, and make a GPG signature.
 #
-release: tidy clean
+release: tidy clean critic
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
