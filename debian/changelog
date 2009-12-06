@@ -1,3 +1,12 @@
+chronicle (4.0-1) unstable; urgency=low
+
+  * New upstream release:
+    - Reads and writes all files as UTF8 rather than latin1.  (Closes: #502484)
+    - Moved the chronicle-rss-imported into the system install.
+    - Many minor fixes and cleanups.
+
+ -- Steve Kemp <skx@debian.org>  Sun, 6 Dec 2009 02:04:06 +0000
+
 chronicle (3.9-1) unstable; urgency=low
 
   * Updated all themes which are included by default:
