@@ -76,6 +76,7 @@ install:
 	mkdir -p ${prefix}/usr/bin
 	cp ./bin/chronicle ${prefix}/usr/bin
 	cp ./bin/chronicle-spooler ${prefix}/usr/bin
+	cp ./bin/chronicle-rss-importer ${prefix}/usr/bin
 	mkdir -p ${prefix}/usr/share/chronicle/themes/xml
 	cp -r ./themes/xml/*.* ${prefix}/usr/share/chronicle/themes/xml
 	for i in themes/*/; do \
