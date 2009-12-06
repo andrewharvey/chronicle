@@ -1755,7 +1755,7 @@ sub readBlogEntry
     #
     #  Read the actual entry
     #
-    open my $handle, "<", $filename or
+    open my $handle, "<:utf8", $filename or
       die "Failed to read $filename $!";
 
     while ( my $line = <$handle> )
@@ -2160,7 +2160,7 @@ sub getComments
             }
         }
 
-        open my $comment, "<", $file or
+        open my $comment, "<:utf8", $file or
           next;
 
         foreach my $line (<$comment>)
@@ -2369,7 +2369,7 @@ sub outputTemplate
           mkdir( dirname("$CONFIG{'output'}/${path}") );
     }
 
-    open my $handle, ">", "$CONFIG{'output'}/$path" or
+    open my $handle, ">:utf8", "$CONFIG{'output'}/$path" or
       die "Failed to write output template to $CONFIG{'output'}/$path - $!";
     print $handle $template->output();
     close($handle);
@@ -2906,13 +2906,13 @@ sub getMonthNames
     my $names_var = sprintf( '%s::MoY', $langmodulename );
     my @names;
 
-  {
-      ## no critic (ProhibitNoStrict)
-      no strict 'refs';
-      @names = @{ $names_var };
-      use strict 'refs';
-      ## use critic
-  }
+    {
+        ## no critic (ProhibitNoStrict)
+        no strict 'refs';
+        @names = @{ $names_var };
+        use strict 'refs';
+        ## use critic
+    }
 
     @names = map {&Encode::encode_utf8($_)} @names;
 
