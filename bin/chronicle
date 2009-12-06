@@ -383,15 +383,15 @@ $CLOUD{ 'archive' } = createDateCloud(%all_dates)
 #
 #  Create the output directories.
 #
-mkpath( $CONFIG{ 'output' }, 0, 0755 ) if ( !-d $CONFIG{ 'output' } );
+mkpath( $CONFIG{ 'output' }, 0, oct(755) ) if ( !-d $CONFIG{ 'output' } );
 foreach my $tag ( keys %all_tags )
 {
-    mkpath( "$CONFIG{'output'}/tags/$tag", 0, 0755 );
+    mkpath( "$CONFIG{'output'}/tags/$tag", 0, oct(755) );
 }
 foreach my $date ( keys %all_dates )
 {
     next unless ( $date =~ /^([0-9]{4})-([0-9]{2})/ );
-    mkpath( "$CONFIG{'output'}/archive/$1/$2", 0, 0755 );
+    mkpath( "$CONFIG{'output'}/archive/$1/$2", 0, oct(755) );
 }
 
 
@@ -1700,10 +1700,10 @@ sub outputSiteMap
     #
     #  Print the header
     #
-    open( FILE, ">", $file ) or
+    open my $handle, ">", $file or
       die "Failed to write to $file $!";
 
-    print FILE <<EOF;
+    print $handle <<EOF;
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset
   xmlns="http://www.google.com/schemas/sitemap/0.84"
@@ -1728,7 +1728,7 @@ EOF
         next if ( -d $page );
         $page = basename($page);
 
-        print FILE <<EOF;
+        print $handle <<EOF;
  <url>
   <loc>$home$page</loc>
   <priority>0.50</priority>
@@ -1740,14 +1740,14 @@ EOF
     #
     #  Print the footer
     #
-    print FILE <<EOF;
+    print $handle <<EOF;
 </urlset>
 EOF
 
     #
     #  All done
     #
-    close(FILE);
+    close($handle);
 }
 
 
@@ -1801,8 +1801,10 @@ sub readBlogEntry
     #
     #  Read the actual entry
     #
-    open( ENTRY, "<", $filename ) or die "Failed to read $filename $!";
-    while ( my $line = <ENTRY> )
+    open my $handle, "<", $filename or
+      die "Failed to read $filename $!";
+
+    while ( my $line = <$handle> )
     {
 
         #
@@ -1857,7 +1859,7 @@ sub readBlogEntry
             $body .= $line;
         }
     }
-    close(ENTRY);
+    close($handle);
 
     #
     # MJR - embargo the entry until the publish if it
@@ -2170,10 +2172,10 @@ sub getComments
             }
         }
 
-        open( COMMENT, "<", $file ) or
+        open my $comment, "<", $file or
           next;
 
-        foreach my $line (<COMMENT>)
+        foreach my $line (<$comment>)
         {
             next if ( !defined($line) );
 
@@ -2199,7 +2201,7 @@ sub getComments
                 $body .= $line . "\n";
             }
         }
-        close(COMMENT);
+        close($comment);
 
         if ( length($name) &&
              length($mail) &&
@@ -2379,9 +2381,10 @@ sub outputTemplate
           mkdir( dirname("$CONFIG{'output'}/${path}") );
     }
 
-    open( OUTPUT, ">", "$CONFIG{'output'}/$path" );
-    print OUTPUT $template->output();
-    close(OUTPUT);
+    open my $handle, ">", "$CONFIG{'output'}/$path" or
+      die "Failed to write output template to $CONFIG{'output'}/$path - $!";
+    print $handle $template->output();
+    close($handle);
 }
 
 
@@ -2406,8 +2409,8 @@ sub readConfigurationFile
 
     my $line = "";
 
-    open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
-    while ( defined( $line = <FILE> ) )
+    open my $handle, "<", $file or die "Cannot read file '$file' - $!";
+    while ( defined( $line = <$handle> ) )
     {
         chomp $line;
         if ( $line =~ s/\\$// )
@@ -2462,7 +2465,7 @@ sub readConfigurationFile
         }
     }
 
-    close(FILE);
+    close($handle);
 }
 
 
@@ -2775,7 +2778,7 @@ sub createCalendar
     #
     if ( ($@) || ( $CONFIG{ 'no-calendar' } ) )
     {
-        return undef;
+        return;
     }
 
     #
