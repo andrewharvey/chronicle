@@ -46,16 +46,16 @@ foreach my $file ( sort( glob( $dir . "/*" ) ) )
     #
     #  Read each file, and look for the title.
     #
-    open( IN, "<", $file )
+    open my $handle, "<", $file
       or die "Failed to read $file - $!";
-    foreach my $line (<IN>)
+    foreach my $line (<$handle>)
     {
         $title = $2
           if ( !defined($title)
                && ( $line =~ /^(Subject|Title):(.*)/i ) );
 
     }
-    close(IN);
+    close($handle);
 
     #
     #  Ignore entries with no title.
