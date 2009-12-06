@@ -1,11 +1,75 @@
 #!/usr/bin/perl -w
 
+# vim: expandtab tabstop=4
+
+=head1 NAME
+
+chronicle-rss-importer - Import entries from an RSS feed to chronicle
+
+=cut
+
+=head1 SYNOPSIS
+
+
+  General Options:
+
+   --output        Specify the directory to write entries to.
+   --feed          Specify the URL of the feed.
+   --sequential    Specify that entries should be numbered rather than named.
+
+  Help Options:
+
+   --help        Show the help information for this script.
+   --manual      Read the manual for this script.
+   --verbose     Show useful debugging information.
+
+=cut
+
+
+=head1 ABOUT
+
+  Chronicle is a simple tool to convert a collection of text files,
+ located within a single directory, into a blog consisting of static
+ HTML files.
+
+  This importer script will create a directory of input files from a
+ given RSS feed, by downloading it and writing out each entry to a single
+ text file.
+
+  The output files will be named after the entries titles, or if
+ B<--sequential> was used each entry will be numbered numerically.
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+=cut
+
+=head1 LICENSE
+
+Copyright (c) 2007-2009 by Steve Kemp.  All rights reserved.
+
+This module is free software;
+you can redistribute it and/or modify it under
+the same terms as Perl itself.
+The LICENSE file contains the full text of the license.
+
+=cut
+
+
+
 use strict;
 use warnings;
 
+use File::Path;
 use Getopt::Long;
 use HTML::Entities;
 use LWP;
+use Pod::Usage;
 use XML::RSSLite;
 
 
@@ -16,7 +80,7 @@ my %CONFIG;
 
 
 #
-#  Parse arguments.
+#  Parse command line arguments.
 #
 parseCommandLineArguments();
 
@@ -62,17 +126,29 @@ processEntries(%rssHash);
 
 sub parseCommandLineArguments
 {
+    my $HELP   = 0;
+    my $MANUAL = 0;
+
     if (
         !GetOptions(
 
-                     "feed=s",     \$CONFIG{ 'feed' },
-                     "output=s",   \$CONFIG{ 'output' },
-                     "sequential", \$CONFIG{ 'sequential' },
-        )
-      )
+            # Help options
+            "help",    \$HELP,
+            "manual",  \$MANUAL,
+            "verbose", \$CONFIG{ 'verbose' },
+
+            # General options
+            "feed=s",     \$CONFIG{ 'feed' },
+            "output=s",   \$CONFIG{ 'output' },
+            "sequential", \$CONFIG{ 'sequential' },
+        ) )
     {
         exit;
     }
+
+
+    pod2usage(1) if $HELP;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 }
 
 
@@ -100,9 +176,8 @@ sub validateCommandLineArguments
     }
     if ( !-d $CONFIG{ 'output' } )
     {
-        print
-"Specified output directory [$CONFIG{'output'}] is not a directory!\n";
-        exit;
+        $CONFIG{'verbose'} && print "Creating output directory: $CONFIG{'output'}\n";
+        mkpath( $CONFIG{'output'} , 0 , oct(755));
     }
 
     #
@@ -134,10 +209,12 @@ sub fetchRSSFeed
     $ua->timeout(10);
     $ua->agent('chronicle-importer');
 
+    $CONFIG{'verbose'} && print "Fetching: $uri\n";
     my $response = $ua->get($uri);
 
     if ( $response->is_success )
     {
+        $CONFIG{'verbose'} && print "\tFetched successfully\n";
         return ( $response->content() );
     }
     else
@@ -175,10 +252,9 @@ sub processEntries
         #
         my $title = $item->{ 'title' } || "no title";
         my $date = $item->{ 'pubDate' } || $item->{ 'dc:date' } || undef;
-        my $body =
-             $item->{ 'description' }
-          || $item->{ 'content:encoded' }
-          || undef;
+        my $body = $item->{ 'description' } ||
+          $item->{ 'content:encoded' } ||
+          undef;
         my $filename;
 
 
@@ -205,15 +281,15 @@ sub processEntries
             $body = decode_entities($body);
         }
         $filename = $CONFIG{ 'output' } . "/" . $filename;
-        open( OUTPUT, ">", $filename )
-          or die "Failed to write to $filename - $!";
-        print OUTPUT <<EOF;
+        open( my $handle, ">", $filename ) or
+          die "Failed to write to $filename - $!";
+        print $handle <<EOF;
 Title: $title
 Date: $date
 
 $body
 EOF
-        close(OUTPUT);
+        close($handle);
         $count += 1;
     }
 
