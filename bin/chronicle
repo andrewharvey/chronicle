@@ -1560,26 +1560,16 @@ sub outputStaticPage
 
 
     #
-    #  Get comments, if present.
+    #  Include the comments in the output if they weren't disabled
+    # and are present.
     #
     if ( !$CONFIG{ 'no-comments' } )
     {
-        my $comments = getComments( $CONFIG{ 'comments' }, $file );
+        $template->param( comments       => $static->{ 'comments' },
+                          comment_count  => $static->{ 'comment_count' },
+                          comment_plural => $static->{ 'comment_plural' }
+                        ) if ( $static->{ 'comment_count' } > 0 );
 
-        if ( defined($comments) )
-        {
-            my $count  = scalar(@$comments);
-            my $plural = 1;
-            $plural = 0 if ( $count == 1 );
-
-            $template->param( comments       => $comments,
-                              comment_count  => $count,
-                              comment_plural => $plural
-                            );
-
-            $CONFIG{ 'verbose' } &&
-              print "$file [$filename] has $count comments\n";
-        }
 
         #
         #  If we have no date restrictions then enable comments
@@ -1608,11 +1598,6 @@ sub outputStaticPage
                 $CONFIG{ 'verbose' } &&
                   print "Comments allowed on post dated $date.\n";
                 $template->param( comments_enabled => 1 );
-            }
-            else
-            {
-                $CONFIG{ 'verbose' } &&
-                  print "Comments disabled on post dated $date.\n";
             }
         }
     }
@@ -1791,12 +1776,13 @@ sub readBlogEntry
     }
 
 
-    my $title   = "";    # entry title.
-    my $format  = "";    # entry format
-    my $tags    = "";    # entry tags.
-    my $body    = "";    # entry body.
-    my $date    = "";    # entry date
-    my $publish = "";    # entry publish date - *ignored*
+    my $title    = "";       # entry title.
+    my $format   = "";       # entry format
+    my $tags     = "";       # entry tags.
+    my $body     = "";       # entry body.
+    my $date     = "";       # entry date
+    my $publish  = "";       # entry publish date - *ignored*
+    my $comments = undef;    # comments, if not disabled and present.
 
     #
     #  Read the actual entry
@@ -2019,6 +2005,30 @@ sub readBlogEntry
         print "Failed to parse date: '$date' to generate pubDate of entry.\n";
     }
 
+
+    #
+    #  Find the comments associated with this entry, if any.
+    #
+    unless ( $CONFIG{ 'no-comments' } )
+    {
+        my $name = fileToTitle($title);
+
+        my $comments = getComments( $CONFIG{ 'comments' }, $name );
+
+        if ( defined($comments) )
+        {
+            my $count  = scalar(@$comments);
+            my $plural = 1;
+            $plural = 0 if ( $count == 1 );
+
+            $entry{ 'comments' }       = $comments;
+            $entry{ 'comment_count' }  = $count;
+            $entry{ 'comment_plural' } = $plural;
+        }
+    }
+
+
+
     #
     #  Store the entry.
     #
@@ -2026,7 +2036,6 @@ sub readBlogEntry
     $entry{ 'body' }  = $body if ($body);
     $entry{ 'date' }  = $date;
     $entry{ 'tags' }  = $entryTags if ($entryTags);
-
 
     #
     #  No title?
