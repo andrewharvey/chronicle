@@ -135,8 +135,6 @@ test-verbose:
 #
 #  Update the local copy from the remote repository.
 #
-#  NOTE: Removes empty local directories.
-#
 update:
 	hg pull --update
 
