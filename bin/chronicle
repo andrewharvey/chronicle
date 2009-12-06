@@ -980,13 +980,6 @@ sub outputIndexPage
 
         if ( keys(%$blog) )
         {
-            if ( $CONFIG{ 'date-archive-path' } )
-            {
-                my $date = $blog->{ 'date' };
-                $blog->{ 'link' } =
-                  "archive/" . time2str( "%Y/%m", str2time($date) ) .
-                  "/$blog->{ 'link' }";
-            }
             if ( $blog->{ 'body' } =~ /<cut/i )
             {
                 $blog->{ 'body' } =
@@ -1150,14 +1143,6 @@ sub outputTagPage
     {
         if ( keys(%$blog) )
         {
-            if ( $CONFIG{ 'date-archive-path' } )
-            {
-                my $date = $blog->{ 'date' };
-                $blog->{ 'link' } =
-                  "archive/" . time2str( "%Y/%m", str2time($date) ) .
-                  "/$blog->{ 'link' }";
-            }
-
             if ( $blog->{ 'body' } =~ /<cut/i )
             {
                 $blog->{ 'body' } =
@@ -1341,15 +1326,6 @@ sub outputArchivePage
     {
         if ( keys(%$blog) )
         {
-            if ( $CONFIG{ 'date-archive-path' } )
-            {
-
-                # FIXME:  This is ugly
-                $date =~ s#-#/#;
-                $blog->{ 'link' } =
-                  "archive/" . ${ date } . "/$blog->{ 'link' }";
-            }
-
             #
             #  Test for the cut in a quick fashion.
             #
@@ -1610,16 +1586,7 @@ sub outputStaticPage
     $template->param( tags  => $tags ) if ($tags);
     $template->param( date  => $date ) if ($date);
     $template->param( body  => $body );
-
-    if ( $CONFIG{ 'date-archive-path' } )
-    {
-        my $date = time2str( "%Y/x%m", str2time($date) );
-        $template->param( link => "$date/" . ${ static }->{ 'link' } );
-    }
-    else
-    {
-        $template->param( link => $static->{ 'link' } );
-    }
+    $template->param( link => $static->{ 'link' } );
 
     #
     #  Our clouds
@@ -2061,6 +2028,17 @@ sub readBlogEntry
     #
     my $link = fileToTitle( $entry{ 'title' } );
     $entry{ 'link' } = $link;
+
+    #
+    #  Rewrite the link if we're using a date-archive.
+    #
+    if ( $CONFIG{ 'date-archive-path' } )
+    {
+        my $date = $entry{ 'date' };
+        $entry{ 'link' } =
+          "archive/" . time2str( "%Y/%m", str2time($date) ) .
+            "/$entry{ 'link' }";
+    }
 
     #
     #  Count comments.
