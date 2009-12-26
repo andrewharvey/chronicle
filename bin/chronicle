@@ -2244,36 +2244,6 @@ sub getComments
 
 =begin doc
 
-  Count the number of comments associated with a given post.
-
-=end doc
-
-=cut
-
-sub countComments
-{
-    my ( $dir, $title ) = (@_);
-
-    return (0) if ( $CONFIG{ 'no-comments' } );
-
-    if ( $title =~ /^(.*)\.([^.]+)$/ )
-    {
-        $title = $1;
-    }
-
-    my $count = 0;
-    foreach my $f ( sort glob( $dir . "/" . $title . "*" ) )
-    {
-        $count += 1;
-    }
-
-    return ($count);
-}
-
-
-
-=begin doc
-
   Load a template file.
 
 =end doc
