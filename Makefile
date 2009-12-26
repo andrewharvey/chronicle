@@ -121,7 +121,7 @@ release: tidy clean critic
 #
 tidy:
 	if [ -x ~/bin/perltidy ]; then \
-           ~/bin/perltidy ./bin/chronicle ./cgi-bin/comments.cgi \
+           ~/bin/perltidy ./bin/chronicle-entry-filter ./bin/chronicle-spam-test ./bin/chronicle-spooler ./bin/chronicle-rss-importer ./bin/chronicle ./cgi-bin/comments.cgi \
 	; fi
 
 
