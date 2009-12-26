@@ -27,7 +27,7 @@ my %CONFIG = parseCommandLineArguments();
 #
 #  Open the specified file.
 #
-open my $handle, "<", $CONFIG{ 'filename' } or
+open my $handle, "<:utf8", $CONFIG{ 'filename' } or
   die "Failed to open file\n";
 
 
