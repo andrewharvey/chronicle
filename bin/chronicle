@@ -1774,6 +1774,7 @@ sub readBlogEntry
     {
         if ($inHeader)
         {
+
             #
             #  If the line has the form of "key: value"
             #
@@ -1801,6 +1802,7 @@ sub readBlogEntry
         }
         else
         {
+
             #
             #  Empty line == end of header
             #
@@ -1974,7 +1976,7 @@ sub readBlogEntry
     #
     $cmd .= " --filename=$filename";
 
-    $CONFIG{'verbose'} && print "Running: $cmd\n";
+    $CONFIG{ 'verbose' } && print "Running: $cmd\n";
 
     #
     #  Run the filter command
