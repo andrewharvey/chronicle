@@ -1754,14 +1754,15 @@ sub readBlogEntry
     }
 
 
+
     #
-    #  Values from the entry - note we only are about the
-    # header.
+    #  Here we store the header values from the entry.
     #
-    #  The body will be read & returned via `chronicle-entry-filter`.
+    #  The body will be read & returned via `chronicle-entry-filter`, and
+    # we don't care about it here.
     #
     my %meta;
-    my $header = 1;
+    my $inHeader = 1;
 
     #
     #  Read the actual entry
@@ -1771,23 +1772,39 @@ sub readBlogEntry
 
     while ( my $line = <$handle> )
     {
-        if ($header)
+        if ($inHeader)
         {
+            #
+            #  If the line has the form of "key: value"
+            #
             if ( $line =~ /^([^:]+):(.*)/ )
             {
                 my $key = $1;
                 my $val = $2;
 
                 $key = lc($key);
+                $key =~ s/^\s+|\s+$//g;
                 $val =~ s/^\s+|\s+$//g;
 
+                #
+                #  "subject" is a synonym for "title".
+                #
+                $key = "title" if ( $key eq "subject" );
+
+                #
+                #  Update the value if there is one present,
+                # and we've not already saved that one away.
+                #
                 $meta{ $key } = $val
                   if ( defined($val) && length($val) && !$meta{ $key } );
             }
         }
         else
         {
-            $header = 0 if ( $line =~ /^$/ );
+            #
+            #  Empty line == end of header
+            #
+            $inHeader = 0 if ( $line =~ /^$/ );
         }
     }
     close($handle);
@@ -1812,15 +1829,18 @@ sub readBlogEntry
 
 
     #
-    #  Specify the global format if we didn't get one
+    #  Specify the global format if we didn't get one in this file
     #
     if ( !$meta{ 'format' } )
     {
-        $meta{ 'format' } = $CONFIG{ 'format' } || "html";
+        $meta{ 'format' } = ( $CONFIG{ 'format' } || "html" );
     }
 
     #
     #  Did we find tags?
+    #
+    #  If so replace them with the array of hashses that we'll use for
+    # the template expansion.
     #
     if ( $meta{ 'tags' } )
     {
@@ -1844,9 +1864,14 @@ sub readBlogEntry
         }
 
         #
-        #  Push the sorted tags into the entry
+        #  Remove the tag list, so that we can replace it with an
+        # array of hashes.
         #
         $meta{ 'tags' } = undef;
+
+        #
+        #  Push the sorted tags into the entry
+        #
         foreach my $t ( sort @tmpTags )
         {
             push( @{ $meta{ 'tags' } }, { tag => $t } );
@@ -1855,19 +1880,11 @@ sub readBlogEntry
 
 
     #
-    #  Store the values
+    #  Store the values from our headers in our entry
     #
     foreach my $key ( keys %meta )
     {
         $entry{ $key } = $meta{ $key };
-    }
-
-    #
-    #  If we don't have a title but do have a subject
-    #
-    if ( !$entry{ 'title' } && $entry{ 'subject' } )
-    {
-        $entry{ 'title' } = $entry{ 'subject' };
     }
 
 
@@ -1936,21 +1953,15 @@ sub readBlogEntry
           "Failed to parse date: '$meta{'date'}' to generate pubDate of entry.\n";
     }
 
+
     #
-    #  OK we have the body, and we have a global --format which might
-    # be specified.
+    #  We now want to read the body of the entry from our filter program.
     #
-    #  However the specific entry might be in a different format.
-    # (Perhaps this is something to rethink in the future?)
+    #  The filter program will read the specified file and return the
+    # HTML output to STDOUT.
     #
-    #  So we want to pass the body of the entry to our filter program
-    # this will produce, to STDOUT, the HTML to be used for the entry
-    # itself.
-    #
-    #  To allow arbitrary options to be setup we'll pass the filename
-    # of the entry to the script.
-    #
-    #
+    #  TODO: Work out how to pass extra args to the filter, perhaps
+    # via propogating "--filter".
     #
     my $cmd = "chronicle-entry-filter ";
     if ( $CONFIG{ 'format' } )
@@ -1958,7 +1969,16 @@ sub readBlogEntry
         $cmd .= "--format=$CONFIG{'format'}";
     }
 
+    #
+    #  Pass the filename
+    #
     $cmd .= " --filename=$filename";
+
+    $CONFIG{'verbose'} && print "Running: $cmd\n";
+
+    #
+    #  Run the filter command
+    #
     open( FILTER, "$cmd|" ) or
       die "Failed to run filter: $!";
 
@@ -2031,18 +2051,6 @@ sub readBlogEntry
             $entry{ 'comment_count' }  = $count;
             $entry{ 'comment_plural' } = $plural;
         }
-    }
-
-
-    #
-    #  Count comments.
-    #
-    $entry{ 'comment_count' } =
-      countComments( $CONFIG{ 'comments' }, $entry{ 'link' } );
-    if ( defined $entry{ 'comment_count' } &&
-         $entry{ 'comment_count' } != 1 )
-    {
-        $entry{ 'comment_plural' } = 1;
     }
 
     #
