@@ -17,15 +17,32 @@ chronicle-entry-filter - Convert blog files to HTML, if required.
 
 =head1 ABOUT
 
-  This script is designed to receive a filename and a global filter
- type upon the command line.
+This script is designed to receive a filename and a global filter
+type upon the command line.
 
-  It should, using whatever optional things are specified, return the
- output blog to STDOUT.
+It should, using whatever optional things are specified, return the
+output blog to STDOUT.
 
-  The global format is a hint to the type of input it will process, and
- will be one of "html", "markdown", or "textile".  However the file itself
- might specify a different format.
+The global format is a hint to the type of input it will process, and
+will be one of "html", "markdown", or "textile".  However the file itself
+might specify a different format.
+
+Code may be highlighted via the M<Text::VimColor> module, if it is present.
+
+To enable the code highlighting you should format your code sample as
+follows:
+
+=for example begin
+
+   <code lang="perl">
+   #!/usr/bin/perl -w
+   ...
+   ..
+   </code>
+
+=for example end
+
+Here the important part is the lang="perl" attribute inside the code tag.
 
 =cut
 
@@ -158,6 +175,13 @@ else
 #
 #  Here is where we do the code formatting, if there is any to be done.
 #
+if ( $html =~ /<code lang=['"]([^'"]+)['"]>/mi )
+{
+    my $lang = $1;
+    $html = highlightCode( $html, $lang );
+}
+
+
 
 print $html;
 
@@ -295,4 +319,59 @@ EOF
     #
     my $html = $textile->process($text);
     return ($html);
+}
+
+
+
+=begin doc
+
+Attempt to highlight the given text with the given language bindings.
+
+Note that this relies upon Text::VimColor...
+
+=end doc
+
+=cut
+
+sub highlightCode
+{
+    my ( $text, $lang ) = (@_);
+
+
+    #
+    #  Make sure we have the Text::VimColor  module installed.  Use eval to
+    # avoid making this mandatory.
+    #
+    my $test = "use Text::VimColor;";
+
+    #
+    #  Test loading the module.
+    #
+    ## no critic (Eval)
+    eval($test);
+    ## use critic
+
+
+    if ($@)
+    {
+        return $text;
+    }
+
+
+    if ( $text =~ /^(.*)<code([^>]+)>(.*)<\/code>(.*)$/mis )
+    {
+        my $pre  = $1;
+        my $lll  = $2;
+        my $code = $3;
+        my $post = $4;
+
+        my $syntax = Text::VimColor->new( string     => $code,
+                                          filetype   => $lang,
+                                          stylesheet => 1,
+                                        );
+
+        $text = $pre . "\n<code>\n" . $syntax->html . "\n</code>\n" . $post;
+    }
+
+    return ($text);
 }
