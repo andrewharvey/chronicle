@@ -18,40 +18,125 @@ use Getopt::Long;
 
 
 #
-#  Get the options
+#  Get the options from the command line.
 #
-my %CONFIG;
-parseCommandLineArguments();
+my %CONFIG = parseCommandLineArguments();
+
+
 
 #
-#  STUB:
+#  Open the specified file.
 #
 open my $handle, "<", $CONFIG{ 'filename' } or
   die "Failed to open file\n";
 
+
+
 #
-#  Print all lines of body, after the header
+#  Parse the header and body into these values
+#
+my %headers;
+my $body;
+
+
+#
+#  Read the file.
 #
 my $header = 1;
 foreach my $line (<$handle>)
 {
-    if ( !$header )
+    if ( $header )
     {
-        print $line;
+        #
+        #  If the header is "foo:bar" then record that
+        #
+        if ( $line =~ /^([^:]+):(.*)/ )
+        {
+            my $key = $1;
+            my $val = $2;
+
+            $key = lc($key);
+            $val =~ s/^\s+|\s+$//g;
+
+            $headers{$key} = $val if ( length($val ) && ! $headers{$key} );
+        }
+
+        #
+        #  End of the header?
+        #
+        $header = 0 if ( $line =~ /^$/ );
     }
-    $header = 0 if ( $line =~ /^$/ );
+    else
+    {
+        $body .= $line;
+    }
 
 }
 close($handle);
 
+
+#
+#  At this point we have a list of headers from the entry, and a possible
+# global format.
+#
+#  Do we have a per-file format?
+#
+#
+my $format = $CONFIG{'format'} || "html";
+if ( $headers{'format'} )
+{
+    $format = $headers{'format'} ;
+}
+
+#
+#  Now convert and print
+#
+if ( $format =~ /^html$/i )
+{
+    print $body;
+}
+elsif ( $format =~ /^textile$/i )
+{
+    print textile2HTML( $body );
+}
+elsif ( $format =~ /^markdown$/i )
+{
+    print markdown2HTML( $body );
+}
+else
+{
+    print "<p>Unkown format <tt>$format</tt></p>";
+    print $body;
+}
+
+
 exit 0;
+
+
+
+
+=begin doc
+
+Parse the two command line options we expect to receive.
+
+TODO: Add help/version/manual/etc
+
+=end doc
+
+=cut
 
 sub parseCommandLineArguments
 {
-    exit
-      if (
-           !GetOptions( "filename=s", \$CONFIG{ 'filename' },
-                        "format=s",   \$CONFIG{ 'format' } ) );
+    my %options;
+
+    if (
+        !GetOptions( "filename=s", \$options{ 'filename' },
+                     "format=s",   \$options{ 'format' } ) )
+    {
+        exit 1;
+    }
+
+    return( %options );
 }
 
 
