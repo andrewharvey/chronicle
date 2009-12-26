@@ -60,7 +60,11 @@ sub checkFile
         {
             $error_count -= 1;
         }
-        #print $error->as_string, "\n";
+        if ( $error->as_string =~ /Invalid character/ )
+        {
+            $error_count -= 1;
+        }
+#        print $error->as_string, "\n";
     }
 
     is( $error_count, 0 , "There are no errors in $file" );
