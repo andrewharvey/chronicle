@@ -107,10 +107,14 @@ chronicle - A simple blog compiler.
 
 =for example end
 
+  NOTE: The header MUST be separated from the body of the entry by at least a
+ single empty line.
+
   In this example we can see that the entry itself has been prefaced
  with a small header.  An entry header is contains three optional lines,
  if these are not present then there are sensible defaults as described
- below:
+ below.
+
 
 =over 8
 
@@ -133,13 +137,20 @@ Any tags which should be associated with the entry, separated by commas.
 
 =back
 
-  The text of the entry itself is assumed to be HTML, however if you
- have the optional modules installed you may write it in Markdown or
- Textile formats - if they are not present you will receive a message
- informing you of the names of the required Perl modules.
+  The format of the entry is assumed to be HTML, however there is support
+ for writing your entries in both textile and markdown formats.
 
-  You may specify the format of your entries either in the configuration
- file, or via the command line flag B<--format>.
+  The format of entries is specified via the B<--format> argument, or
+ via a "format: foo" setting in your chroniclerc file.
+
+  The format of entries is assumed to be global; that is all your entries
+ will be assumed to be in the same format.  However you can add a
+ "format: foo" pseudo header to specific entries if you wish to change
+ that behaviour.
+
+  To allow a little flexibility in the handling of entries each blog
+ entry will be passed through the filter script B<chronicle-entry-filter>
+ which allows you to modify this handling in a single location.
 
 =cut
 
