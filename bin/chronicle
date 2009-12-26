@@ -1850,32 +1850,6 @@ sub readBlogEntry
     }
 
 
-
-    #
-    #  Determine the input format to use.
-    #
-    #
-    #  Now process accordingly.
-    #
-    if ( $format eq 'html' )
-    {
-
-        # nop
-    }
-    elsif ( $format eq 'markdown' )
-    {
-        $body = markdown2HTML($body);
-    }
-    elsif ( $format eq 'textile' )
-    {
-        $body = textile2HTML($body);
-    }
-    else
-    {
-        print "Unknown blog entry format ($CONFIG{'format'}).\n";
-        print "Treating as HTML.\n";
-    }
-
     #
     #
     #  If we have tags then we should use them.
@@ -1996,6 +1970,38 @@ sub readBlogEntry
     }
 
 
+    #
+    #  OK we have the body, and we have a global --format which might
+    # be specified.
+    #
+    #  However the specific entry might be in a different format.
+    # (Perhaps this is something to rethink in the future?)
+    #
+    #  So we want to pass the body of the entry to our filter program
+    # this will produce, to STDOUT, the HTML to be used for the entry
+    # itself.
+    #
+    #  To allow arbitrary options to be setup we'll pass the filename
+    # of the entry to the script.
+    #
+    #
+    #
+    my $cmd = "./bin/chronicle-entry-filter ";
+    if ( $CONFIG{'format'} )
+    {
+        $cmd .= "--format=$CONFIG{'format'}";
+    }
+
+    $cmd .= " --filename=$filename";
+    open( FILTER, "$cmd|" )
+      or die "Failed to run filter: $!";
+
+    $body = "";
+    while( <FILTER> )
+    {
+        $body .= $_;
+    }
+    close( FILTER );
 
     #
     #  Store the entry.

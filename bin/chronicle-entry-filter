@@ -1,0 +1,55 @@
+#!/usr/bin/perl
+#
+#  This script is designed to receive a filename and a global filter
+# type upon the command line.
+#
+#  It should, using whatever optional things are specified, return the
+# output blog to STDOUT.
+#
+# Steve
+#
+
+use strict;
+use warnings;
+
+
+use Getopt::Long;
+
+
+
+#
+#  Get the options
+#
+my %CONFIG;
+parseCommandLineArguments();
+
+#
+#  STUB:
+#
+open my $handle, "<", $CONFIG{ 'filename' } or
+  die "Failed to open file\n";
+
+#
+#  Print all lines of body, after the header
+#
+my $header = 1;
+foreach my $line (<$handle>)
+{
+    if ( !$header )
+    {
+        print $line;
+    }
+    $header = 0 if ( $line =~ /^$/ );
+
+}
+close($handle);
+
+exit 0;
+
+sub parseCommandLineArguments
+{
+    exit
+      if (
+           !GetOptions( "filename=s", \$CONFIG{ 'filename' },
+                        "format=s",   \$CONFIG{ 'format' } ) );
+}
