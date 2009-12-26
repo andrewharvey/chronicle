@@ -6,7 +6,8 @@ chronicle (4.0-1) unstable; urgency=low
     - Makes a newline seperating the blog pseudo-header from the body
       mandatory.
     - Adds syntax filtering via <code lang="perl"> if Text::VimColor
-      is present.
+      is present.  New Suggests: entry added for that package.
+
 
 chronicle (4.0-1) unstable; urgency=low
 
