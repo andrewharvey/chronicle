@@ -176,8 +176,9 @@ sub validateCommandLineArguments
     }
     if ( !-d $CONFIG{ 'output' } )
     {
-        $CONFIG{'verbose'} && print "Creating output directory: $CONFIG{'output'}\n";
-        mkpath( $CONFIG{'output'} , 0 , oct(755));
+        $CONFIG{ 'verbose' } &&
+          print "Creating output directory: $CONFIG{'output'}\n";
+        mkpath( $CONFIG{ 'output' }, 0, oct(755) );
     }
 
     #
@@ -209,12 +210,12 @@ sub fetchRSSFeed
     $ua->timeout(10);
     $ua->agent('chronicle-importer');
 
-    $CONFIG{'verbose'} && print "Fetching: $uri\n";
+    $CONFIG{ 'verbose' } && print "Fetching: $uri\n";
     my $response = $ua->get($uri);
 
     if ( $response->is_success )
     {
-        $CONFIG{'verbose'} && print "\tFetched successfully\n";
+        $CONFIG{ 'verbose' } && print "\tFetched successfully\n";
         return ( $response->content() );
     }
     else

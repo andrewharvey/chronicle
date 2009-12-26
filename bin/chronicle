@@ -1987,21 +1987,21 @@ sub readBlogEntry
     #
     #
     my $cmd = "chronicle-entry-filter ";
-    if ( $CONFIG{'format'} )
+    if ( $CONFIG{ 'format' } )
     {
         $cmd .= "--format=$CONFIG{'format'}";
     }
 
     $cmd .= " --filename=$filename";
-    open( FILTER, "$cmd|" )
-      or die "Failed to run filter: $!";
+    open( FILTER, "$cmd|" ) or
+      die "Failed to run filter: $!";
 
     $body = "";
-    while( <FILTER> )
+    while (<FILTER>)
     {
         $body .= $_;
     }
-    close( FILTER );
+    close(FILTER);
 
     #
     #  Store the entry.
@@ -2622,7 +2622,6 @@ sub copyStaticFiles
         }
     }
 }
-
 
 
 
