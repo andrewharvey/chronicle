@@ -1754,13 +1754,14 @@ sub readBlogEntry
     }
 
 
-    my $title    = "";       # entry title.
-    my $format   = "";       # entry format
-    my $tags     = "";       # entry tags.
-    my $body     = "";       # entry body.
-    my $date     = "";       # entry date
-    my $publish  = "";       # entry publish date - *ignored*
-    my $comments = undef;    # comments, if not disabled and present.
+    #
+    #  Values from the entry - note we only are about the
+    # header.
+    #
+    #  The body will be read & returned via `chronicle-entry-filter`.
+    #
+    my %meta;
+    my $header = 1;
 
     #
     #  Read the actual entry
@@ -1770,60 +1771,26 @@ sub readBlogEntry
 
     while ( my $line = <$handle> )
     {
-
-        #
-        #  Get the tags.
-        #
-        if ( ( $line =~ /^tags:(.*)/i ) && !length($tags) )
+        if ( $header )
         {
-            $tags = $1;
-        }
-        elsif ( ( $line =~ /^publish:(.*)/i ) && !length($publish) )
-        {
-            $publish = $1;
-            $publish =~ s/^\s+// if ( length $publish );
-            $publish =~ s/\s+$// if ( length $publish );
-        }
-        elsif ( ( $line =~ /^format:(.*)/i ) && !length($format) )
-        {
-            $format = $1;
-            if ( length $format )
+            if ( $line =~ /^([^:]+):(.*)/ )
             {
-                $format =~ s/^\s+//;
-                $format =~ s/\s+$//;
-                $format = lc($format);
+                my $key = $1;
+                my $val = $2;
+
+                $key = lc($key);
+                $val =~ s/^\s+|\s+$//g;
+
+                $meta{$key} = $val if ( defined($val ) && length($val)&& !$meta{$key} );
             }
-        }
-        elsif ( ( $line =~ /^(Subject|Title):(.*)/i ) && !length($title) )
-        {
-
-            #
-            # Get the title, strip leading and trailing space.
-            #
-            $title = $2;
-            $title =~ s/^\s+// if ( length $title );
-            $title =~ s/\s+$// if ( length $title );
-        }
-        elsif ( ( $line =~ /^date:(.*)/i ) && !length($date) )
-        {
-
-            #
-            #  Get the date, strip leading and trailing space.
-            #
-            $date = $1;
-            $date =~ s/^\s+// if ( length $date );
-            $date =~ s/\s+$// if ( length $date );
         }
         else
         {
-
-            #
-            #  Just a piece of body text.
-            #
-            $body .= $line;
+            $header = 0 if ( $line =~ /^$/ ) ;
         }
     }
-    close($handle);
+    close( $handle );
+
 
     #
     # MJR - embargo the entry until the publish if it
@@ -1833,79 +1800,89 @@ sub readBlogEntry
     # uploaded files to stay where I put them, else I get
     # my local copy confused.
     #
-    if ( ( $publish ne "" ) && ( str2time($publish) > time() ) )
+    if ( ( $meta{'publish'} ) && ( str2time($meta{'publish'}) > time() ) )
     {
         $CONFIG{ 'verbose' } &&
           print
-          "Skipping future entry $filename - due to be published on $publish\n";
+          "Skipping future entry $filename - due to be published on $meta{'publish'}\n";
         return 0;
     }
 
 
 
     #
-    #  If we didn't have a per-entry format then revert to the
-    # global one, if any.
+    #  Specify the global format if we didn't get one
     #
-    if ( !length($format) )
+    if ( !$meta{'format'} )
     {
-        if ( $CONFIG{ 'format' } )
+        $meta{'format'} = $CONFIG{'format'} || "html";
+    }
+
+    #
+    #  Did we find tags?
+    #
+    if ( $meta{'tags'} )
+    {
+        my @tmpTags;
+
+        foreach my $tag ( split( /,/, $meta{'tags'} ) )
         {
-            $format = lc( $CONFIG{ 'format' } );
+
+            # strip leading and trailing space.
+            $tag =~ s/^\s+//;
+            $tag =~ s/\s+$//;
+
+            # skip empty tags.
+            next if ( !length($tag) );
+
+            # tags are lowercase.
+            $tag = lc($tag);
+
+            # store the tag away - so we can have a sorted list later.
+            push( @tmpTags, $tag );
         }
-        else
+
+        #
+        #  Push the sorted tags into the entry
+        #
+        $meta{'tags'} = undef;
+        foreach my $t ( sort @tmpTags )
         {
-            $format = 'html';
+            push( @{$meta{'tags'}}, { tag => $t } );
         }
     }
 
 
     #
+    #  Store the values
     #
-    #  If we have tags then we should use them.
-    #
-    my $entryTags;
-    my @tmpTags;
-
-    foreach my $tag ( split( /,/, $tags ) )
+    foreach my $key ( keys %meta )
     {
-
-        # strip leading and trailing space.
-        $tag =~ s/^\s+//;
-        $tag =~ s/\s+$//;
-
-        # skip empty tags.
-        next if ( !length($tag) );
-
-        # tags are lowercase.
-        $tag = lc($tag);
-
-        # store the tag away - so we can have a sorted list later.
-        push( @tmpTags, $tag );
+        $entry{$key} = $meta{$key};
     }
 
     #
-    #  Push the sorted tags into the entry
+    #  If we don't have a title but do have a subject
     #
-    foreach my $t ( sort @tmpTags )
+    if ( !$entry{'title'} && $entry{'subject'} )
     {
-        push( @$entryTags, { tag => $t } );
+        $entry{'title'} = $entry{'subject'};
     }
 
 
     #
     #  If the date isn't set then use todays.
     #
-    if ( !defined($date) || ( !length($date) ) )
+    if ( !defined($meta{'date'}) || ( !length($meta{'date'}) ) )
     {
         my @lt = localtime(time);
-        $date = strftime( "%d %B %Y", @lt );
+        $meta{'date'} = strftime( "%d %B %Y", @lt );
     }
 
     #
     #  Get the Hours::Mins::Seconds from the Date: pseudo-header
     #
-    my $time = str2time($date);
+    my $time = str2time($meta{'date'});
     my $hms  = time2str( "%H:%M:%S", $time );
     my $tz   = time2str( "%z", $time );
 
@@ -1936,7 +1913,6 @@ sub readBlogEntry
     #
     if ($time)
     {
-
         #
         #  RSS 2
         #
@@ -1954,31 +1930,8 @@ sub readBlogEntry
     }
     else
     {
-        print "Failed to parse date: '$date' to generate pubDate of entry.\n";
+        print "Failed to parse date: '$meta{'date'}' to generate pubDate of entry.\n";
     }
-
-
-    #
-    #  Find the comments associated with this entry, if any.
-    #
-    unless ( $CONFIG{ 'no-comments' } )
-    {
-        my $name = fileToTitle($title);
-
-        my $comments = getComments( $CONFIG{ 'comments' }, $name );
-
-        if ( defined($comments) )
-        {
-            my $count  = scalar(@$comments);
-            my $plural = 1;
-            $plural = 0 if ( $count == 1 );
-
-            $entry{ 'comments' }       = $comments;
-            $entry{ 'comment_count' }  = $count;
-            $entry{ 'comment_plural' } = $plural;
-        }
-    }
-
 
     #
     #  OK we have the body, and we have a global --format which might
@@ -2006,7 +1959,7 @@ sub readBlogEntry
     open( FILTER, "$cmd|" ) or
       die "Failed to run filter: $!";
 
-    $body = "";
+    my $body = "";
     while (<FILTER>)
     {
         $body .= $_;
@@ -2016,10 +1969,7 @@ sub readBlogEntry
     #
     #  Store the entry.
     #
-    $entry{ 'title' } = $title;
     $entry{ 'body' }  = $body if ($body);
-    $entry{ 'date' }  = $date;
-    $entry{ 'tags' }  = $entryTags if ($entryTags);
 
     #
     #  No title?
@@ -2056,6 +2006,30 @@ sub readBlogEntry
           "archive/" . time2str( "%Y/%m", str2time($date) ) .
           "/$entry{ 'link' }";
     }
+
+
+
+    #
+    #  Find the comments associated with this entry, if any.
+    #
+    unless ( $CONFIG{ 'no-comments' } )
+    {
+        my $name = fileToTitle($meta{'title'});
+
+        my $comments = getComments( $CONFIG{ 'comments' }, $name );
+
+        if ( defined($comments) )
+        {
+            my $count  = scalar(@$comments);
+            my $plural = 1;
+            $plural = 0 if ( $count == 1 );
+
+            $entry{ 'comments' }       = $comments;
+            $entry{ 'comment_count' }  = $count;
+            $entry{ 'comment_plural' } = $plural;
+        }
+    }
+
 
     #
     #  Count comments.
