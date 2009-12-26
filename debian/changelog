@@ -1,6 +1,16 @@
 chronicle (4.0-1) unstable; urgency=low
 
   * New upstream release:
+    - Moves the conversion of different blog formats to an external
+      helper process.  (chronicle-entry-filter)
+    - Makes a newline seperating the blog pseudo-header from the body
+      mandatory.
+    - Adds syntax filtering via <code lang="perl"> if Text::VimColor
+      is present.
+
+chronicle (4.0-1) unstable; urgency=low
+
+  * New upstream release:
     - Reads and writes all files as UTF8 rather than latin1.  (Closes: #502484)
     - Moved the chronicle-rss-imported into the system install.
     - Many minor fixes and cleanups.
