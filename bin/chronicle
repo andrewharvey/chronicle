@@ -1771,7 +1771,7 @@ sub readBlogEntry
 
     while ( my $line = <$handle> )
     {
-        if ( $header )
+        if ($header)
         {
             if ( $line =~ /^([^:]+):(.*)/ )
             {
@@ -1781,15 +1781,16 @@ sub readBlogEntry
                 $key = lc($key);
                 $val =~ s/^\s+|\s+$//g;
 
-                $meta{$key} = $val if ( defined($val ) && length($val)&& !$meta{$key} );
+                $meta{ $key } = $val
+                  if ( defined($val) && length($val) && !$meta{ $key } );
             }
         }
         else
         {
-            $header = 0 if ( $line =~ /^$/ ) ;
+            $header = 0 if ( $line =~ /^$/ );
         }
     }
-    close( $handle );
+    close($handle);
 
 
     #
@@ -1800,7 +1801,7 @@ sub readBlogEntry
     # uploaded files to stay where I put them, else I get
     # my local copy confused.
     #
-    if ( ( $meta{'publish'} ) && ( str2time($meta{'publish'}) > time() ) )
+    if ( ( $meta{ 'publish' } ) && ( str2time( $meta{ 'publish' } ) > time() ) )
     {
         $CONFIG{ 'verbose' } &&
           print
@@ -1813,19 +1814,19 @@ sub readBlogEntry
     #
     #  Specify the global format if we didn't get one
     #
-    if ( !$meta{'format'} )
+    if ( !$meta{ 'format' } )
     {
-        $meta{'format'} = $CONFIG{'format'} || "html";
+        $meta{ 'format' } = $CONFIG{ 'format' } || "html";
     }
 
     #
     #  Did we find tags?
     #
-    if ( $meta{'tags'} )
+    if ( $meta{ 'tags' } )
     {
         my @tmpTags;
 
-        foreach my $tag ( split( /,/, $meta{'tags'} ) )
+        foreach my $tag ( split( /,/, $meta{ 'tags' } ) )
         {
 
             # strip leading and trailing space.
@@ -1845,10 +1846,10 @@ sub readBlogEntry
         #
         #  Push the sorted tags into the entry
         #
-        $meta{'tags'} = undef;
+        $meta{ 'tags' } = undef;
         foreach my $t ( sort @tmpTags )
         {
-            push( @{$meta{'tags'}}, { tag => $t } );
+            push( @{ $meta{ 'tags' } }, { tag => $t } );
         }
     }
 
@@ -1858,31 +1859,31 @@ sub readBlogEntry
     #
     foreach my $key ( keys %meta )
     {
-        $entry{$key} = $meta{$key};
+        $entry{ $key } = $meta{ $key };
     }
 
     #
     #  If we don't have a title but do have a subject
     #
-    if ( !$entry{'title'} && $entry{'subject'} )
+    if ( !$entry{ 'title' } && $entry{ 'subject' } )
     {
-        $entry{'title'} = $entry{'subject'};
+        $entry{ 'title' } = $entry{ 'subject' };
     }
 
 
     #
     #  If the date isn't set then use todays.
     #
-    if ( !defined($meta{'date'}) || ( !length($meta{'date'}) ) )
+    if ( !defined( $meta{ 'date' } ) || ( !length( $meta{ 'date' } ) ) )
     {
         my @lt = localtime(time);
-        $meta{'date'} = strftime( "%d %B %Y", @lt );
+        $meta{ 'date' } = strftime( "%d %B %Y", @lt );
     }
 
     #
     #  Get the Hours::Mins::Seconds from the Date: pseudo-header
     #
-    my $time = str2time($meta{'date'});
+    my $time = str2time( $meta{ 'date' } );
     my $hms  = time2str( "%H:%M:%S", $time );
     my $tz   = time2str( "%z", $time );
 
@@ -1913,6 +1914,7 @@ sub readBlogEntry
     #
     if ($time)
     {
+
         #
         #  RSS 2
         #
@@ -1930,7 +1932,8 @@ sub readBlogEntry
     }
     else
     {
-        print "Failed to parse date: '$meta{'date'}' to generate pubDate of entry.\n";
+        print
+          "Failed to parse date: '$meta{'date'}' to generate pubDate of entry.\n";
     }
 
     #
@@ -1969,7 +1972,7 @@ sub readBlogEntry
     #
     #  Store the entry.
     #
-    $entry{ 'body' }  = $body if ($body);
+    $entry{ 'body' } = $body if ($body);
 
     #
     #  No title?
@@ -2014,7 +2017,7 @@ sub readBlogEntry
     #
     unless ( $CONFIG{ 'no-comments' } )
     {
-        my $name = fileToTitle($meta{'title'});
+        my $name = fileToTitle( $meta{ 'title' } );
 
         my $comments = getComments( $CONFIG{ 'comments' }, $name );
 
