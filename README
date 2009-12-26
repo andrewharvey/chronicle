@@ -41,10 +41,11 @@ Installation
 
   This will give you:
 
-    /usr/share/chronicle        <-  The theme directories.
-    /usr/bin/chronicle          <-  The main binary.
-    /usr/bin/chronicle-spooler  <-  A simple helper.
-    /etc/chroniclerc            <-  The global configuration file.
+    /usr/share/chronicle             <-  The theme directories.
+    /usr/bin/chronicle               <-  The main binary.
+    /usr/bin/chronicle-entry-filter  <-  The script to convert input entries.
+    /usr/bin/chronicle-spooler       <-  A simple helper.
+    /etc/chroniclerc                 <-  The global configuration file.
 
   If you wish to customise the templates it is recommended you
  make a copy of them with a new name, then edit that copy.  This
