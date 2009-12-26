@@ -45,8 +45,9 @@ my $body;
 my $header = 1;
 foreach my $line (<$handle>)
 {
-    if ( $header )
+    if ($header)
     {
+
         #
         #  If the header is "foo:bar" then record that
         #
@@ -58,7 +59,7 @@ foreach my $line (<$handle>)
             $key = lc($key);
             $val =~ s/^\s+|\s+$//g;
 
-            $headers{$key} = $val if ( length($val ) && ! $headers{$key} );
+            $headers{ $key } = $val if ( length($val) && !$headers{ $key } );
         }
 
         #
@@ -82,33 +83,43 @@ close($handle);
 #  Do we have a per-file format?
 #
 #
-my $format = $CONFIG{'format'} || "html";
-if ( $headers{'format'} )
+my $format = $CONFIG{ 'format' } || "html";
+if ( $headers{ 'format' } )
 {
-    $format = $headers{'format'} ;
+    $format = $headers{ 'format' };
 }
 
 #
 #  Now convert and print
 #
+my $html;
+
+
 if ( $format =~ /^html$/i )
 {
-    print $body;
+    $html = $body;
 }
 elsif ( $format =~ /^textile$/i )
 {
-    print textile2HTML( $body );
+    $html = textile2HTML($body);
 }
 elsif ( $format =~ /^markdown$/i )
 {
-    print markdown2HTML( $body );
+    $html = markdown2HTML($body);
 }
 else
 {
-    print "<p>Unkown format <tt>$format</tt></p>";
-    print $body;
+    $html = "<p>Unkown format <tt>$format</tt></p>";
+    $html .= $body;
 }
 
+
+
+#
+#  Here is where we do the code formatting, if there is any to be done.
+#
+
+print $html;
 
 exit 0;
 
@@ -130,16 +141,14 @@ sub parseCommandLineArguments
     my %options;
 
     if (
-        !GetOptions( "filename=s", \$options{ 'filename' },
-                     "format=s",   \$options{ 'format' } ) )
+         !GetOptions( "filename=s", \$options{ 'filename' },
+                      "format=s",   \$options{ 'format' } ) )
     {
         exit 1;
     }
 
-    return( %options );
+    return (%options);
 }
-
-
 
 
 
