@@ -72,10 +72,14 @@ Blog Format
   \--
 
 
+  The entry itself is prefixed by a small header, consisting of several
+ pseudo-header fieilds.  The header _MUST_ be separated from the body by
+ at least a single empty line.
 
-  The entries are aided by a pseudo-header.  This header contains
- entries which are used by Chronicle to build your blog.  The entries
- themselves are not included in your output HTML.
+  Header values which are unknown are ignored, and no part of the header is
+ included in the output which is generated.
+
+  The following header values are recognised:
 
 Title:
    This holds the name of the post.  ("Subject:" may be used as a synonym.)
