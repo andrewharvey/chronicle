@@ -39,7 +39,8 @@ sub checkFile
 
     # False positives
     return if ( ( $file =~ /modules.sh$/ ) ||
-                ( $file =~ /html-validator.t/ ) );
+                ( $file =~ /html-validator.t/ ) ||
+              ( $file =~ /blog/ ) );
 
     # See if it is a perl file.
     my $isPerl = 0;
