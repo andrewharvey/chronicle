@@ -27,7 +27,7 @@ The global format is a hint to the type of input it will process, and
 will be one of "html", "markdown", or "textile".  However the file itself
 might specify a different format.
 
-Code may be highlighted via the M<Text::VimColor> module, if it is present.
+Code may be highlighted via the B<Text::VimColor> module, if it is present.
 
 To enable the code highlighting you should format your code sample as
 follows:
