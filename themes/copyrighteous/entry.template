@@ -5,6 +5,7 @@
   <head>
     <title>copyrighteous: <!-- tmpl_var name='title' --></title>
     <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->vim.css" />
   </head>
   <body>
     <div id='content'>

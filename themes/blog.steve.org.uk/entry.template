@@ -4,6 +4,7 @@
   <head>
     <title><!-- tmpl_var name='blog_title' -->: <!-- tmpl_var name='title' --></title>
     <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->vim.css">
       <link rel="stylesheet" href="<!-- tmpl_var name='top' -->bubbles.css" type="text/css" media="screen" charset="utf-8" />
       <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->rounded_corners.inc.js"></script>
       <!-- tmpl_if name='comments_enabled' -->
