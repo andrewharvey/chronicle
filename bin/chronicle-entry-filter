@@ -53,3 +53,112 @@ sub parseCommandLineArguments
            !GetOptions( "filename=s", \$CONFIG{ 'filename' },
                         "format=s",   \$CONFIG{ 'format' } ) );
 }
+
+
+
+
+
+
+=begin doc
+
+  Convert from markdown to HTML.
+
+=end doc
+
+=cut
+
+sub markdown2HTML
+{
+    my ($text) = (@_);
+
+    #
+    #  Make sure we have the module installed.  Use eval to
+    # avoid making this mandatory.
+    #
+    my $test = "use Text::Markdown;";
+
+    #
+    #  Test loading the module.
+    #
+    ## no critic (Eval)
+    eval($test);
+    ## use critic
+
+    if ($@)
+    {
+        print <<EOF;
+
+  You have chosen to format your input text via Markdown, but the
+ Perl module Text::Markdown is not installed.
+
+  Aborting.
+EOF
+        exit;
+    }
+
+    #
+    #  Convert.
+    #
+    $text = Text::Markdown::markdown($text);
+    return ($text);
+}
+
+
+
+=begin doc
+
+  Convert from textile to HTML.
+
+=end doc
+
+=cut
+
+sub textile2HTML
+{
+    my ($text) = (@_);
+
+    #
+    #  Make sure we have the module installed.  Use eval to
+    # avoid making this mandatory.
+    #
+    my $test = "use Text::Textile;";
+
+    #
+    #  Test loading the module.
+    #
+    ## no critic (Eval)
+    eval($test);
+    ## use critic
+
+
+    if ($@)
+    {
+        print <<EOF;
+
+  You have chosen to format your input text via Textile, but the
+ Perl module Text::Textile is not installed.
+
+  Aborting.
+EOF
+        exit;
+    }
+
+    #
+    #  Convert, via the textile helper.
+    #
+    my $textile = new Text::Textile;
+
+    if ( defined( $CONFIG{ 'charset' } ) )
+    {
+        $CONFIG{ 'verbose' } &&
+          print "Formatting via textile with charset $CONFIG{'charset'}\n";
+
+        $textile->charset( $CONFIG{ 'charset' } );
+    }
+
+    #
+    #  Now return HTML
+    #
+    my $html = $textile->process($text);
+    return ($html);
+}
