@@ -15,6 +15,7 @@ build-stamp:
 	dh_testdir
 	pod2man bin/chronicle              > chronicle.1
 	pod2man bin/chronicle-spooler      > chronicle-spooler.1
+	pod2man bin/chronicle-entry-filter > chronicle-entry-filter.1
 	pod2man bin/chronicle-rss-importer > chronicle-rss-importer.1
 	touch $@
 
@@ -22,7 +23,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
-	rm -f chronicle.1 chronicle-spooler.1 chronicle-rss-importer.1
+	rm -f *.1
 	dh_clean
 
 install: build
@@ -41,7 +42,7 @@ binary-indep: build install
 	dh_installchangelogs
 	dh_installdocs
 	dh_installexamples bin/check-titles cgi-bin/comments.cgi bin/chronicle-spam-test
-	dh_installman chronicle.1 chronicle-spooler.1 chronicle-rss-importer.1
+	dh_installman *.1
 	dh_compress
 	dh_fixperms
 	dh_perl
