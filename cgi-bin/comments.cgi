@@ -185,7 +185,6 @@ print FILE "Mail: $mail\n";
 print FILE "User-Agent: $ENV{'HTTP_USER_AGENT'}\n";
 print FILE "IP-Address: $ENV{'REMOTE_ADDR'}\n";
 print FILE "Link: $link\n" if ($link);
-print FILE "Site: $ENV{'SERVER_NAME'}\n";
 print FILE "\n";
 print FILE $body;
 close(FILE);
