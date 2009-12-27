@@ -1977,13 +1977,15 @@ sub readBlogEntry
     #
     #  Propogate any global options to the command.
     #
-    foreach my $k ( qw! format pre-filter post-filter filename ! )
+    foreach my $k ( qw! format pre-filter post-filter ! )
     {
         if ( $CONFIG{$k} )
         {
             $cmd .=  "--$k='$CONFIG{$k}' ";
         }
     }
+
+    $cmd .= " --filename=$filename";
 
     #
     #  Show what we're running.
