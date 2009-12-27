@@ -1890,15 +1890,6 @@ sub readBlogEntry
 
 
     #
-    #  Store the values from our headers in our entry
-    #
-    foreach my $key ( keys %meta )
-    {
-        $entry{ $key } = $meta{ $key };
-    }
-
-
-    #
     #  If the date isn't set then use todays.
     #
     if ( !defined( $meta{ 'date' } ) || ( !length( $meta{ 'date' } ) ) )
@@ -1906,6 +1897,16 @@ sub readBlogEntry
         my @lt = localtime(time);
         $meta{ 'date' } = strftime( "%d %B %Y", @lt );
     }
+
+
+    #
+    #  Store the values from our headers in our entry
+    #
+    foreach my $key ( keys %meta )
+    {
+        $entry{ $key } = $meta{ $key };
+    }
+
 
     #
     #  Get the Hours::Mins::Seconds from the Date: pseudo-header
