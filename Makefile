@@ -101,6 +101,7 @@ release: tidy clean critic
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	perl -pi.bak -e "s/UNRELEASED/$(VERSION)/g" $(DIST_PREFIX)/$(BASE)-$(VERSION)/bin/chronicle
+	perl -pi.bak -e "s/UNRELEASED/$(VERSION)/g" $(DIST_PREFIX)/$(BASE)-$(VERSION)/bin/chronicle-entry-filter
 	perl -pi.bak -e "s/UNRELEASED/$(VERSION)/g" $(DIST_PREFIX)/$(BASE)-$(VERSION)/bin/chronicle-spooler
 	rm  $(DIST_PREFIX)/$(BASE)-$(VERSION)/bin/*.bak
 	find  $(DIST_PREFIX)/$(BASE)-$(VERSION) -name ".hg*" -print | xargs rm -rf
