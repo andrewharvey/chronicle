@@ -142,9 +142,9 @@ my ( $text, %headers ) = readInputFile( $CONFIG{ 'filename' } );
 #
 #  Pre-filter?
 #
-if ( $headers{'pre-filter'} )
+if ( $headers{ 'pre-filter' } )
 {
-    $text = runFilter( $headers{'pre-filter'}, $text );
+    $text = runFilter( $headers{ 'pre-filter' }, $text );
 }
 
 
@@ -181,9 +181,9 @@ if ( $html =~ /<code lang=['"]([^'"]+)['"]>/mi )
 #
 #  Post-filter?
 #
-if ( $headers{'post-filter'} )
+if ( $headers{ 'post-filter' } )
 {
-    $html = runFilter( $headers{'post-filter'}, $html );
+    $html = runFilter( $headers{ 'post-filter' }, $html );
 }
 
 
@@ -314,12 +314,12 @@ The command will receive the text on STDIN and should return the
 
 sub runFilter
 {
-    my( $cmd , $text ) = ( @_ );
+    my ( $cmd, $text ) = (@_);
 
     my $WTR = gensym();
     my $RDR = gensym();
 
-    my $pid = open2($RDR, $WTR, $cmd );
+    my $pid = open2( $RDR, $WTR, $cmd );
 
     print $WTR $text;
     close($WTR);
