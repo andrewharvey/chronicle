@@ -1977,11 +1977,11 @@ sub readBlogEntry
     #
     #  Propogate any global options to the command.
     #
-    foreach my $k ( qw! format pre-filter post-filter ! )
+    foreach my $k (qw! format pre-filter post-filter !)
     {
-        if ( $CONFIG{$k} )
+        if ( $CONFIG{ $k } )
         {
-            $cmd .=  "--$k='$CONFIG{$k}' ";
+            $cmd .= "--$k='$CONFIG{$k}' ";
         }
     }
 
