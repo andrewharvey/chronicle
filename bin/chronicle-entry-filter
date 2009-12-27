@@ -17,23 +17,32 @@ chronicle-entry-filter - Convert blog files to HTML, if required.
 
 =head1 ABOUT
 
-This script is designed to receive a filename and a global filter
-type upon the command line.
+This script is designed to receive a filename and a global formatting type
+upon the command line.  The formatting type specifies how the blog entry
+file will be processed:
 
-It should, using whatever optional things are specified, return the
-output blog to STDOUT.
+  1.  If the format is "textile" the file will be converted from textile
+     to HTML.
 
-The global format is a hint to the type of input it will process, and
-will be one of "html", "markdown", or "textile".  However the file itself
-might specify a different format.
+  2.  If the format is "markdown" the file will be converted from markdown
+     to HTML.
 
-Code may be highlighted via the B<Text::VimColor> module, if it is present.
+  3.  If the format is "html" no changes will be made.
+
+Once the conversion has been applied the code will also be scanned for
+<code> tags to expand via the B<Text::VimColour> module, which allows the
+pretty-printing of source code.
 
 To enable the code highlighting you should format your code sample as
 follows:
 
 =for example begin
 
+   Subject: Some highlighted code.
+   Date: 25th December 2009
+   Tags: chronicle, perl, blah
+
+   <p>Here is some code which will look pretty ..</p>
    <code lang="perl">
    #!/usr/bin/perl -w
    ...
@@ -42,7 +51,28 @@ follows:
 
 =for example end
 
-Here the important part is the lang="perl" attribute inside the code tag.
+Notice the use of lang="perl", which provides a hint as to the type of
+syntax highlighting to apply.
+
+Additionally you may make use of the pre-filter and post-filter pseudo-headers
+which allow you to transform the entry in further creative fashions.
+
+For example you might wish the blog to be upper-case only for some reason,
+and this could be achieved via:
+
+=for example begin
+
+  Subject: I DONT LIKE LOWER CASE
+  Tags: meta, random, silly
+  Date: 25th December 2009
+  Pre-Filter: perl -pi -e "s/__USER__/`whoami`/g"
+  Post-filter: tr [a-z] [a-Z]
+
+  <p>This post, written by __USER__ will have no lower-case values.</p>
+  <p>Notice how my username was inserted too?</p>
+
+=for example end
+
 
 =cut
 
@@ -71,7 +101,8 @@ use warnings;
 
 
 use Getopt::Long;
-
+use IPC::Open2;
+use Symbol;
 
 
 #
@@ -109,6 +140,16 @@ my ( $text, %headers ) = readInputFile( $CONFIG{ 'filename' } );
 
 
 #
+#  Pre-filter?
+#
+if ( $headers{'pre-filter'} )
+{
+    $text = runFilter( $headers{'pre-filter'}, $text );
+}
+
+
+
+#
 # At this point we need to work out how to format the entry.
 #
 # We might have (in order of precedence):
@@ -136,6 +177,14 @@ if ( $html =~ /<code lang=['"]([^'"]+)['"]>/mi )
     $html = highlightCode( $html, $lang );
 }
 
+
+#
+#  Post-filter?
+#
+if ( $headers{'post-filter'} )
+{
+    $html = runFilter( $headers{'post-filter'}, $html );
+}
 
 
 #
@@ -249,6 +298,41 @@ sub readInputFile
     return ( $body, %headers );
 }
 
+
+
+
+=begin doc
+
+Run the text we've got through the specified command.
+
+The command will receive the text on STDIN and should return the
+(potentially modified) text to STDOUT.
+
+=end doc
+
+=cut
+
+sub runFilter
+{
+    my( $cmd , $text ) = ( @_ );
+
+    my $WTR = gensym();
+    my $RDR = gensym();
+
+    my $pid = open2($RDR, $WTR, $cmd );
+
+    print $WTR $text;
+    close($WTR);
+
+    my $result = "";
+    while (<$RDR>)
+    {
+        $result .= $_;
+    }
+
+    waitpid $pid, 0;
+    return $result;
+}
 
 
 =begin doc
