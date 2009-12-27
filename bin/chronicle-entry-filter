@@ -8,10 +8,20 @@ chronicle-entry-filter - Convert blog files to HTML, if required.
 
 =head1 SYNOPSIS
 
+  Help Options
+
+    --help        Show a brief help overview.
+    --version     Show the version of this script.
+
   Options
 
-    --format     The global format of all entries.
-    --filename   The name of the single file to process.
+    --format      The global format of all entries.
+    --filename    The name of the single file to process.
+
+  Filters
+
+    --pre-filter  A filter to run before convertion to HTML.
+    --post-filter A filter to run after HTML conversion.
 
 =cut
 
@@ -66,7 +76,7 @@ and this could be achieved via:
   Tags: meta, random, silly
   Date: 25th December 2009
   Pre-Filter: perl -pi -e "s/__USER__/`whoami`/g"
-  Post-filter: tr [a-z] [a-Z]
+  Post-filter: tr [a-z] [A-Z]
 
   <p>This post, written by __USER__ will have no lower-case values.</p>
   <p>Notice how my username was inserted too?</p>
@@ -106,7 +116,17 @@ use Symbol;
 
 
 #
-#  Dispatch table of converters
+#  Release number
+#
+#  NOTE:  Set by 'make release'.
+#
+my $RELEASE = 'UNRELEASED';
+
+
+
+
+#
+#  Dispatch table of input type converters.
 #
 my %dispatch = ( "html"     => \&do_html,
                  "markdown" => \&do_markdown,
@@ -142,9 +162,10 @@ my ( $text, %headers ) = readInputFile( $CONFIG{ 'filename' } );
 #
 #  Pre-filter?
 #
-if ( $headers{ 'pre-filter' } )
+my $pre = $CONFIG{ 'pre-filter' } || $headers{ 'pre-filter' } || undef;
+if ( defined($pre) )
 {
-    $text = runFilter( $headers{ 'pre-filter' }, $text );
+    $text = runFilter( $pre, $text );
 }
 
 
@@ -181,10 +202,12 @@ if ( $html =~ /<code lang=['"]([^'"]+)['"]>/mi )
 #
 #  Post-filter?
 #
-if ( $headers{ 'post-filter' } )
+my $post = $CONFIG{ 'post-filter' } || $headers{ 'post-filter' } || undef;
+if ( defined($post) )
 {
-    $html = runFilter( $headers{ 'post-filter' }, $html );
+    $html = runFilter( $post, $html );
 }
+
 
 
 #
@@ -216,13 +239,43 @@ TODO: Add help/version/manual/etc
 
 sub parseCommandLineArguments
 {
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
+
     my %options;
 
     if (
-         !GetOptions( "filename=s", \$options{ 'filename' },
-                      "format=s",   \$options{ 'format' } ) )
+        !GetOptions(
+
+            # help options
+            "help",    \$HELP,
+            "manual",  \$MANUAL,
+            "verbose", \$options{ 'verbose' },
+            "version", \$VERSION,
+
+            # filename
+            "filename=s", \$options{ 'filename' },
+
+            # global format
+            "format=s", \$options{ 'format' },
+
+            # filters
+            "pre-filter=s",  \$options{ 'pre-filter' },
+            "post-filter=s", \$options{ 'post-filter' },
+        ) )
     {
         exit 1;
+    }
+
+
+    pod2usage(1) if $HELP;
+    pod2usage( -verbose => 2 ) if $MANUAL;
+
+    if ($VERSION)
+    {
+        print("chronicle-entry-filter release $RELEASE\n");
+        exit;
     }
 
     return (%options);
@@ -318,6 +371,8 @@ sub runFilter
 
     my $WTR = gensym();
     my $RDR = gensym();
+
+    $CONFIG{ 'verbose' } && print "Running filter: $cmd\n";
 
     my $pid = open2( $RDR, $WTR, $cmd );
 
