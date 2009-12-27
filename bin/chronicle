@@ -1900,7 +1900,7 @@ sub readBlogEntry
 
 
     #
-    #  Store the values from our headers in our entry
+    #  Store the values from our pseudo-headers in our entry
     #
     foreach my $key ( keys %meta )
     {
@@ -1938,7 +1938,8 @@ sub readBlogEntry
 
 
     #
-    #  If we found a time then we're OK, and can store it away.
+    #  If we found a time then we're OK, and can store away the various
+    # XML versions of the date.
     #
     if ($time)
     {
@@ -1976,7 +1977,7 @@ sub readBlogEntry
     #
     #  Propogate any global options to the command.
     #
-    foreach my $k ( qw! format pre-filter post-filter ! )
+    foreach my $k ( qw! format pre-filter post-filter filename ! )
     {
         if ( $CONFIG{$k} )
         {
@@ -1984,16 +1985,14 @@ sub readBlogEntry
         }
     }
 
-
     #
-    #  Pass the filename
+    #  Show what we're running.
     #
-    $cmd .= " --filename=$filename";
-
     $CONFIG{ 'verbose' } && print "Running: $cmd\n";
 
+
     #
-    #  Run the filter command
+    #  Run the command, reading stdout.
     #
     open( FILTER, "$cmd|" ) or
       die "Failed to run filter: $!";
@@ -2006,7 +2005,7 @@ sub readBlogEntry
     close(FILTER);
 
     #
-    #  Store the entry.
+    #  Store the returned body, if any.
     #
     $entry{ 'body' } = $body if ($body);
 
