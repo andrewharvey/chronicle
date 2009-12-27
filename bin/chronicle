@@ -28,8 +28,11 @@ chronicle - A simple blog compiler.
 
   Pre & Post-Build Commands:
 
-   --pre-build   Specify a command to execute prior to building the blog.
-   --post-build  Specify a command to execute once the blog has been built.
+   --pre-build    Specify a command to execute prior to building the blog.
+   --post-build   Specify a command to execute once the blog has been built.
+   --pre-filter   A command to filter each blog entry before HTML conversion.
+   --post-filter  A command to filter each blog entry after HTML conversion.
+
 
   Sorting Options:
 
@@ -144,12 +147,15 @@ Any tags which should be associated with the entry, separated by commas.
 
   The format of entries is assumed to be global; that is all your entries
  will be assumed to be in the same format.  However you can add a
- "format: foo" pseudo header to specific entries if you wish to change
- that behaviour.
+ "format: foo" pseudo header to specific entries if you wish to write
+ specific entries in a different format.
 
-  To allow a little flexibility in the handling of entries each blog
- entry will be passed through the filter script B<chronicle-entry-filter>
- which allows you to modify this handling in a single location.
+  To allow flexibility in the handling of entries each blog entry will
+ be passed through the filter script B<chronicle-entry-filter>
+ which allows you to modify this handling in a single location. This
+ script allows entries to be updated via filters both before and after
+ the conversion to HTML.  For further details please see the manpage for
+ that script.
 
 =cut
 
@@ -637,8 +643,10 @@ sub parseCommandLineArguments
             "sitemap-prefix=s", \$CONFIG{ 'sitemap_prefix' },
 
             # commands
-            "pre-build=s",  \$CONFIG{ 'pre-build' },
-            "post-build=s", \$CONFIG{ 'post-build' },
+            "pre-build=s",   \$CONFIG{ 'pre-build' },
+            "post-build=s",  \$CONFIG{ 'post-build' },
+            "pre-filter=s",  \$CONFIG{ 'pre-filter' },
+            "post-filter=s", \$CONFIG{ 'post-filter' },
 
             # title
             "blog-title=s",    \$CONFIG{ 'blog_title' },
@@ -1962,14 +1970,19 @@ sub readBlogEntry
     #  The filter program will read the specified file and return the
     # HTML output to STDOUT.
     #
-    #  TODO: Work out how to pass extra args to the filter, perhaps
-    # via propogating "--filter".
-    #
     my $cmd = "chronicle-entry-filter ";
-    if ( $CONFIG{ 'format' } )
+
+    #
+    #  Propogate any global options to the command.
+    #
+    foreach my $k ( qw! format pre-filter post-filter ! )
     {
-        $cmd .= "--format=$CONFIG{'format'}";
+        if ( $CONFIG{$k} )
+        {
+            $cmd .=  "--$k='$CONFIG{$k}' ";
+        }
     }
+
 
     #
     #  Pass the filename

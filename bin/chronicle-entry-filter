@@ -40,11 +40,11 @@ file will be processed:
   3.  If the format is "html" no changes will be made.
 
 Once the conversion has been applied the code will also be scanned for
-<code> tags to expand via the B<Text::VimColour> module, which allows the
-pretty-printing of source code.
+<code> tags to expand via the B<Text::VimColour> module, if it is installed,
+which allows the pretty-printing of source code.
 
-To enable the code highlighting you should format your code sample as
-follows:
+To enable the syntax highlighting of code fragments you should format your
+code samples as follows:
 
 =for example begin
 
@@ -83,6 +83,12 @@ and this could be achieved via:
 
 =for example end
 
+You may chain arbitrarily complex filters together via the filters.  Each
+filter should read the entry on STDIN and return the updated content to
+STDOUT.
+
+(If you wish to apply a global filter simply pass that as an argument to
+chronicle, or in your chroniclerc file.)
 
 =cut
 
