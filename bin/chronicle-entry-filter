@@ -303,7 +303,7 @@ sub do_markdown
 
   Aborting.
 EOF
-        exit;
+        exit 1;
     }
 
     #
@@ -350,7 +350,7 @@ sub do_textile
 
   Aborting.
 EOF
-        exit;
+        exit 1;
     }
 
     #
@@ -403,7 +403,9 @@ sub highlightCode
     eval($test);
     ## use critic
 
-
+    #
+    #  If there was an error then we'll ignore the highlighting.
+    #
     if ($@)
     {
         return $text;
