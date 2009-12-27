@@ -39,6 +39,11 @@ Contributions
   George Schils [bean [at] com.georgeschils]
    - Initial XHTML cleanup of templates, and suggestion of common .inc files.
 
+  Quentin Stievenart [quentin.stievenart [at] com.gmail.com]
+   - Provided initial implementation of the syntax-colouring code
+   - Provided useful feedback for the way things developed with the use of
+     filters.
+
   Bob Walker [bob [@] uk.org.randomness]
    - Added titles to RSS feeds
 
