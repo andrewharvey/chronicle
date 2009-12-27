@@ -75,101 +75,56 @@ use Getopt::Long;
 
 
 #
-#  Get the options from the command line.
+#  Dispatch table of converters
+#
+my %dispatch = ( "html"     => \&do_html,
+                 "markdown" => \&do_markdown,
+                 "textile"  => \&do_textile
+               );
+
+
+
+
+#
+#  Parse the command line options.
 #
 my %CONFIG = parseCommandLineArguments();
 
 
-
 #
-#  Open the specified file.
+#  If we don't have a filename then it is game over.
 #
-open my $handle, "<:utf8", $CONFIG{ 'filename' } or
-  die "Failed to open file\n";
-
-
-
-#
-#  Parse the header and body into these values
-#
-my %headers;
-my $body;
-
-
-#
-#  Read the file.
-#
-my $header = 1;
-foreach my $line (<$handle>)
+if ( !$CONFIG{ 'filename' } )
 {
-    if ($header)
-    {
-
-        #
-        #  If the header is "foo:bar" then record that
-        #
-        if ( $line =~ /^([^:]+):(.*)/ )
-        {
-            my $key = $1;
-            my $val = $2;
-
-            $key = lc($key);
-            $val =~ s/^\s+|\s+$//g;
-
-            $headers{ $key } = $val if ( length($val) && !$headers{ $key } );
-        }
-
-        #
-        #  End of the header?
-        #
-        $header = 0 if ( $line =~ /^$/ );
-    }
-    else
-    {
-        $body .= $line;
-    }
-
-}
-close($handle);
-
-
-#
-#  At this point we have a list of headers from the entry, and a possible
-# global format.
-#
-#  Do we have a per-file format?
-#
-#
-my $format = $CONFIG{ 'format' } || "html";
-if ( $headers{ 'format' } )
-{
-    $format = $headers{ 'format' };
+    print "Mandatory filename missing: Help?!\n";
+    exit 1;
 }
 
+
+
 #
-#  Now convert and print
+#  Read the input from the file
 #
-my $html;
+my ( $text, %headers ) = readInputFile( $CONFIG{ 'filename' } );
 
 
-if ( $format =~ /^html$/i )
-{
-    $html = $body;
-}
-elsif ( $format =~ /^textile$/i )
-{
-    $html = textile2HTML($body);
-}
-elsif ( $format =~ /^markdown$/i )
-{
-    $html = markdown2HTML($body);
-}
-else
-{
-    $html = "<p>Unkown format <tt>$format</tt></p>";
-    $html .= $body;
-}
+#
+# At this point we need to work out how to format the entry.
+#
+# We might have (in order of precedence):
+#
+#  a. A per-entry format
+#  b. A global format.
+#  c. The default format (html)
+#
+my $format = $headers{ 'format' } || $CONFIG{ 'format' } || "html";
 
+
+#
+#  Call the appropriate conversion routine.
+#
+my $routine = $dispatch{ $format };
+my $html    = $routine->($text);
 
 
 #
@@ -183,8 +138,18 @@ if ( $html =~ /<code lang=['"]([^'"]+)['"]>/mi )
 
 
 
+#
+#  Finally output the result such that chronicle can include it
+# in the blog.
+#
+#  Ensure we're UTF-8 clean.
+#
+binmode STDOUT, ":utf8";
 print $html;
 
+#
+#  All over :)
+#
 exit 0;
 
 
@@ -216,6 +181,93 @@ sub parseCommandLineArguments
 
 
 
+=begin doc
+
+Read the specified blog file, and return both the input format
+and the body of the file.
+
+Ignore all other header values.
+=end doc
+
+=cut
+
+sub readInputFile
+{
+    my ($filename) = (@_);
+
+    #
+    #  Open the specified file.
+    #
+    open my $handle, "<:utf8", $filename or
+      die "Failed to open file\n";
+
+
+    #
+    #  Parse the header and body into these values
+    #
+    my %headers;
+    my $body;
+
+
+    #
+    #  Read the file.
+    #
+    my $header = 1;
+    foreach my $line (<$handle>)
+    {
+        if ($header)
+        {
+
+            #
+            #  If the header is "foo:bar" then record that
+            #
+            if ( $line =~ /^([^:]+):(.*)/ )
+            {
+                my $key = $1;
+                my $val = $2;
+
+                $key = lc($key);
+                $val =~ s/^\s+|\s+$//g;
+
+                $headers{ $key } = $val
+                  if ( length($val) && !$headers{ $key } );
+            }
+
+            #
+            #  End of the header?
+            #
+            $header = 0 if ( $line =~ /^$/ );
+        }
+        else
+        {
+            $body .= $line;
+        }
+
+    }
+    close($handle);
+
+    return ( $body, %headers );
+}
+
+
+
+=begin doc
+
+ Convert from HTML to HTML.
+ (i.e. NOP)
+
+=end doc
+
+=cut
+
+sub do_html
+{
+    my ($text) = (@_);
+
+    return ($text);
+}
+
+
 
 =begin doc
 
@@ -225,7 +277,7 @@ sub parseCommandLineArguments
 
 =cut
 
-sub markdown2HTML
+sub do_markdown
 {
     my ($text) = (@_);
 
@@ -271,7 +323,7 @@ EOF
 
 =cut
 
-sub textile2HTML
+sub do_textile
 {
     my ($text) = (@_);
 
