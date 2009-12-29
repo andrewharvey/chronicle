@@ -1562,8 +1562,9 @@ sub outputStaticPage
     {
         $template->param( comments       => $static->{ 'comments' },
                           comment_count  => $static->{ 'comment_count' },
-                          comment_plural => $static->{ 'comment_plural' }
-                        ) if ( $static->{ 'comment_count' } > 0 );
+                          comment_plural => $static->{ 'comment_plural' } )
+          if ( ( defined $static->{ 'comment_count' } > 0 ) &&
+               ( $static->{ 'comment_count' } > 0 ) );
 
 
         #
