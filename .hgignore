@@ -11,3 +11,5 @@ syntax: glob
 ./debian/chronicle/*
 ./debian/chronicle.debhelper.log
 ./.version
+./*.1
+./build-stamp
