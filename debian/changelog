@@ -1,13 +1,15 @@
-chronicle (4.0-1) unstable; urgency=low
+chronicle (4.1-1) unstable; urgency=low
 
   * New upstream release:
     - Moves the conversion of different blog formats to an external
-      helper process.  (chronicle-entry-filter)
+      helper program.  (chronicle-entry-filter)
     - Makes a newline seperating the blog pseudo-header from the body
       mandatory.
     - Adds syntax filtering via <code lang="perl"> if Text::VimColor
-      is present.  New Suggests: entry added for that package.
+      is present.
+    - Suggest: The installation of the libtext-vimcolor-perl package.
 
+ -- Steve Kemp <skx@debian.org>  Sun, 6 Dec 2009 02:04:06 +0000
 
 chronicle (4.0-1) unstable; urgency=low
 

@@ -1,0 +1,7 @@
+chronicle (4.1-1) unstable; urgency=low
+
+  * In order to simplify the processing of blog entries it is now
+    mandatory that the entry body and header are seperated by at least
+    one blank line.
+
+ -- Steve Kemp <skx@debian.org>  Sun, 6 Dec 2009 02:04:06 +0000
