@@ -9,7 +9,7 @@ chronicle (4.1-1) unstable; urgency=low
       is present.
     - Suggest: The installation of the libtext-vimcolor-perl package.
 
- -- Steve Kemp <skx@debian.org>  Sun, 6 Dec 2009 02:04:06 +0000
+ -- Steve Kemp <skx@debian.org>  Sun, 3 Jan 2010 17:05:17 +0000
 
 chronicle (4.0-1) unstable; urgency=low
 
