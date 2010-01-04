@@ -1997,15 +1997,15 @@ sub readBlogEntry
     #
     #  Run the command, reading stdout.
     #
-    open( FILTER, "$cmd|" ) or
+    open my $filter, "-|", $cmd or
       die "Failed to run filter: $!";
 
     my $body = "";
-    while (<FILTER>)
+    while (<$filter>)
     {
         $body .= $_;
     }
-    close(FILTER);
+    close($filter);
 
     #
     #  Store the returned body, if any.
