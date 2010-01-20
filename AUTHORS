@@ -24,6 +24,9 @@ Contributions
   Sascha Korzen [korzen [@] .de.fh-luh.cc]
    - Added the optional calendar.
 
+  Matthias Lang [matthias [@] es.corelatus.se]
+   - Made code formatting apply to all code snippets in an entry.
+
   Thomas Martin [thomas [@] .org.oopss]
    - i18n support for date names.
    - URL prefix support for /sitemap.xml generation.
