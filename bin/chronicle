@@ -1997,8 +1997,8 @@ sub readBlogEntry
     #
     #  Run the command, reading stdout.
     #
-    open my $han, "-|", $cmd
-      or die "Failed to run filter: $!\n";
+    open my $han, "-|", $cmd or
+      die "Failed to run filter: $!\n";
 
     #
     #  UTF-8 must be preserved
