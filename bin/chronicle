@@ -1997,15 +1997,20 @@ sub readBlogEntry
     #
     #  Run the command, reading stdout.
     #
-    open my $filter, "-|:utf8", $cmd or
-      die "Failed to run filter: $!";
+    open my $han, "-|", $cmd
+      or die "Failed to run filter: $!\n";
+
+    #
+    #  UTF-8 must be preserved
+    #
+    binmode( $han, ":utf8" );
 
     my $body = "";
-    while (<$filter>)
+    while (<$han>)
     {
         $body .= $_;
     }
-    close($filter);
+    close($han);
 
     #
     #  Store the returned body, if any.
