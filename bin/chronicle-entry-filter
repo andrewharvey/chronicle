@@ -220,7 +220,7 @@ if ( !$obj )
 #
 if ( $obj->{ 'module' } )
 {
-    loadOptionalModule( $obj->{ 'module' }, $format );
+    loadOptionalModules( $obj->{ 'module' }, $format );
 }
 
 #
@@ -436,34 +436,50 @@ Load an optional module.
 
 =cut
 
-sub loadOptionalModule
+sub loadOptionalModules
 {
     my ( $module, $format ) = (@_);
 
-    #
-    #  Make sure we have the module installed.  Use eval to
-    # avoid making this mandatory.
-    #
-    my $test = "use $module;";
-
-    #
-    #  Test loading the module.
-    #
-    ## no critic (Eval)
-    eval($test);
-    ## use critic
-
-    if ($@)
+    foreach my $mod ( split( /,/, $module ) )
     {
-        print <<EOF;
 
- You have chosen to format your input text via the $format format, but the
-Perl module $module is not installed.
+        #
+        #  Strip space, and empty modules
+        #
+        $mod =~ s/^\s+|\s+$//g;
+        next if ( !length($mod) );
 
- Aborting.
+        #
+        #  Make sure we have the module installed.  Use eval to
+        # avoid making this mandatory.
+        #
+        my $test = "use $mod;";
 
+        #
+        #  Test loading the module.
+        #
+        ## no critic (Eval)
+        eval($test);
+        ## use critic
+
+        if ($@)
+        {
+            my $package = "lib" . lc($mod) . "-perl";
+            $package =~ s/::/-/g;
+
+            print <<EOF;
+
+You have chosen to format your input text via the $format format, but the
+Perl module $mod is not installed.
+
+Aborting.
+
+Upon a Debian GNU/Linux system you can probably correct this via:
+
+  apt-get install $package
 EOF
-        exit 1;
+            exit 1;
+        }
     }
 
 }
