@@ -137,7 +137,8 @@ my $RELEASE = 'UNRELEASED';
 #
 #  Each entry will have (up to) the following two keys:
 #
-#    module  => Any optional modules required.
+#    module  => Any optional modules required - multiple comma-separated
+#               values are permissable.
 #
 #    routine => The routine to convert the input to the HTML output.
 #
