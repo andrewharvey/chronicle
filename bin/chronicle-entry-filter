@@ -35,7 +35,7 @@ file will be processed:
      to HTML.
 
   2.  If the format is "markdown" the file will be converted from markdown
-     to HTML.
+     to HTML.  The related format "multimarkdown" is also recognised.
 
   3.  If the format is "html" no changes will be made.
 
@@ -135,10 +135,26 @@ my $RELEASE = 'UNRELEASED';
 #
 #  Dispatch table of input type converters.
 #
-my %dispatch = ( "html"     => \&do_html,
-                 "markdown" => \&do_markdown,
-                 "textile"  => \&do_textile
-               );
+#  Each entry will have (up to) the following two keys:
+#
+#    module  => Any optional modules required.
+#
+#    routine => The routine to convert the input to the HTML output.
+#
+my %dispatch = (
+    "html" => { routine => \&do_html, },
+
+    "markdown" => { module  => "Text::Markdown",
+                    routine => \&do_markdown,
+                  },
+
+    "multimarkdown" => { module  => "Text::MultiMarkdown",
+                         routine => \&do_multimarkdown,
+                       },
+
+    "textile" => { module  => "Text::Textile",
+                   routine => \&do_textile,
+                 } );
 
 
 
@@ -190,10 +206,27 @@ my $format = $headers{ 'format' } || $CONFIG{ 'format' } || "html";
 
 
 #
-#  Call the appropriate conversion routine.
+#  Lookup details to use in the dispatch table.
 #
-my $routine = $dispatch{ $format };
-my $html    = $routine->($text);
+my $obj = $dispatch{ lc $format };
+if ( !$obj )
+{
+    print "The input method $format is unknown.\n";
+    exit 1;
+}
+
+#
+#  Do we have to load an optional module?
+#
+if ( $obj->{ 'module' } )
+{
+    loadOptionalModule( $obj->{ 'module' }, $format );
+}
+
+#
+#  Now convert
+#
+my $html = $obj->{ 'routine' }->($text);
 
 
 #
@@ -394,6 +427,49 @@ sub runFilter
 }
 
 
+
+=begin doc
+
+Load an optional module.
+
+=end doc
+
+=cut
+
+sub loadOptionalModule
+{
+    my ( $module, $format ) = (@_);
+
+    #
+    #  Make sure we have the module installed.  Use eval to
+    # avoid making this mandatory.
+    #
+    my $test = "use $module;";
+
+    #
+    #  Test loading the module.
+    #
+    ## no critic (Eval)
+    eval($test);
+    ## use critic
+
+    if ($@)
+    {
+        print <<EOF;
+
+ You have chosen to format your input text via the $format format, but the
+Perl module $module is not installed.
+
+ Aborting.
+
+EOF
+        exit 1;
+    }
+
+}
+
+
+
 =begin doc
 
  Convert from HTML to HTML.
@@ -424,36 +500,23 @@ sub do_markdown
 {
     my ($text) = (@_);
 
-    #
-    #  Make sure we have the module installed.  Use eval to
-    # avoid making this mandatory.
-    #
-    my $test = "use Text::Markdown;";
+    return ( Text::Markdown::markdown($text) );
+}
 
-    #
-    #  Test loading the module.
-    #
-    ## no critic (Eval)
-    eval($test);
-    ## use critic
 
-    if ($@)
-    {
-        print <<EOF;
+=begin doc
 
-  You have chosen to format your input text via Markdown, but the
- Perl module Text::Markdown is not installed.
+  Convert from multimarkdown to HTML.
 
-  Aborting.
-EOF
-        exit 1;
-    }
+=end doc
 
-    #
-    #  Convert.
-    #
-    $text = Text::Markdown::markdown($text);
-    return ($text);
+=cut
+
+sub do_multimarkdown
+{
+    my ($text) = (@_);
+
+    return ( Text::MultiMarkdown::markdown($text) );
 }
 
 
@@ -469,32 +532,6 @@ EOF
 sub do_textile
 {
     my ($text) = (@_);
-
-    #
-    #  Make sure we have the module installed.  Use eval to
-    # avoid making this mandatory.
-    #
-    my $test = "use Text::Textile;";
-
-    #
-    #  Test loading the module.
-    #
-    ## no critic (Eval)
-    eval($test);
-    ## use critic
-
-
-    if ($@)
-    {
-        print <<EOF;
-
-  You have chosen to format your input text via Textile, but the
- Perl module Text::Textile is not installed.
-
-  Aborting.
-EOF
-        exit 1;
-    }
 
     #
     #  Convert, via the textile helper.
