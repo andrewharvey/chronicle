@@ -79,6 +79,10 @@ theme = default
 #   --------
 #    The blog entries are converted from markdown -> html then output.
 #
+#   multimarkdown
+#   --------
+#    The blog entries are converted from multimarkdown -> html then output.
+#
 #   textile
 #   -------
 #    The blog entries are converted from textile -> html then output.
