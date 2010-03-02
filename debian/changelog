@@ -1,3 +1,10 @@
+chronicle (4.2-3unreleased) unstable; urgency=low
+
+  * Correctly seperate the header/body of a blog post when running
+    Cygwin upon Microsoft Windows platforms.
+
+ -- Steve Kemp <skx@debian.org>  Tue, 02 Mar 2010 02:29:02 +0000
+
 chronicle (4.2-2) unstable; urgency=low
 
   * Switch to dpkg-source 3.0 (quilt) format

@@ -376,7 +376,10 @@ sub readInputFile
             #
             #  End of the header?
             #
-            $header = 0 if ( $line =~ /^$/ );
+            # NOTE: Slight hack for working under Cygwin on
+            #       Microsoft Windows where \r and \n roam wild.
+            #
+            $header = 0 if ( $line =~ /^([\r|\n]*)$/ )
         }
         else
         {
