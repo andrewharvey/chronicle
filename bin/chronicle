@@ -297,6 +297,14 @@ my %CONFIG = setupDefaultOptions();
 
 
 #
+#  Know when we are running, so that we can tell the difference between
+# cached data and data this process generated.
+#
+my $RUNNING_TIME = time();
+
+
+
+#
 #  Read the global and per-user configuration files, if they exist.
 #
 readConfigurationFile("/etc/chroniclerc");
@@ -1505,12 +1513,6 @@ sub outputStaticPage
     my ($filename) = (@_);
 
     #
-    #  Load the template
-    #
-    my $template = loadTemplate( "entry.template", die_on_bad_params => 0 );
-    $template->param( release => $RELEASE );
-
-    #
     #  Just the name of the file.
     #
     my $basename = $filename;
@@ -1527,6 +1529,22 @@ sub outputStaticPage
     #  Read the entry
     #
     my $static = $data{ $filename };
+
+    #
+    #  If the running time of this file is not the same as this process's,
+    # then it was cached, and we don't need to write it again.
+    #
+    if( $static->{ 'running_time' } != $RUNNING_TIME )
+    {
+        $CONFIG{ 'verbose' } && print "\tSkipping: $filename\n";
+	return;
+    }
+
+    #
+    #  Load the template
+    #
+    my $template = loadTemplate( "entry.template", die_on_bad_params => 0 );
+    $template->param( release => $RELEASE );
 
     #
     #  Get the pieces of information.
@@ -1772,6 +1790,12 @@ sub readBlogEntry
     #
     my %meta;
     my $inHeader = 1;
+
+    #
+    #  Set running time to current process
+    #
+    $meta{ 'running_time' } = $RUNNING_TIME;
+
 
     #
     #  Read the actual entry
