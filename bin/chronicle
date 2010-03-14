@@ -434,8 +434,6 @@ foreach my $file ( keys %data )
 #
 foreach my $tagName ( sort keys %all_tags )
 {
-    $CONFIG{ 'verbose' } && print "Creating tag page: $tagName\n";
-
     outputTagPage($tagName);
 }
 
@@ -446,8 +444,6 @@ foreach my $tagName ( sort keys %all_tags )
 #
 foreach my $date ( keys(%all_dates) )
 {
-    $CONFIG{ 'verbose' } && print "Creating archive page: $date\n";
-
     outputArchivePage($date);
 }
 
@@ -1143,16 +1139,23 @@ sub outputTagPage
     my @pointbacks;
     my @newpointbacks;
     my $pbfile = $CONFIG{'output'} . "/$dir/$tagName.pb";
+    my $pbmtime = ( stat($pbfile) )[9];
     if( open my $pbhandle, "<:utf8", $pbfile )
     {
         while (<$pbhandle>)
         {
-	    my $backname = $_;
-	    chomp($backname);
+            my $backname = $_;
+            chomp($backname);
             push( @pointbacks, $backname );
         }
 	close($pbhandle);
     }
+
+    #
+    #  If one of the files matching our tag was just generated
+    # (RUNNING_TIME == 'running_time') then this tag must be generated.
+    #
+    my $dirty_file_forced = 0;
 
     #
     #  Iterate over the data-structure.
@@ -1190,9 +1193,52 @@ sub outputTagPage
 	if( $matched )
 	{
 	    push( @newpointbacks, $file );
+
+	    if( $hash->{ 'running_time' } == $RUNNING_TIME )
+	    {
+	        $dirty_file_forced = 1;
+	    }
 	}
     }
 
+    #
+    #  If $dirty_file_forced is false, we are close to being able to skip
+    # this tag.  But if one of the files was edited in order to remove
+    # a tag, then we need to check for that too.  It will be listed in
+    # the pointback list.  If one of the files in the pointback list
+    # is newer than the pointback file itself, then we are still dirty.
+    #
+    if( $dirty_file_forced == 0 )
+    {
+        foreach my $pbname (@pointbacks)
+        {
+    	    my $hash = $data{ $pbname };
+
+            #  If the pb file doesn't exist (!$pbmtime)
+	    # or if the src file doesn't exist anymore (!defined($hash))
+	    # or if the src file is newer than the tag,
+	    # then we are dirty.
+    	    if( (!$pbmtime) || !defined($hash) || $hash->{ 'mtime' } > $pbmtime )
+	    {
+		    $dirty_file_forced = 1;
+	    }
+        }
+    }
+
+    #
+    #  Final check... if dirty_file_forced is false, no need to rebuild
+    #
+    if( $dirty_file_forced == 0 )
+    {
+        $CONFIG{ 'verbose' } && print "Skipping clean tag: $tagName\n";
+        return;
+    }
+
+    $CONFIG{ 'verbose' } && print "Creating tag page : $tagName\n";
+
+    #
+    #  We're dirty, so save a new pointback file
+    #
     open my $pbhandle, ">", $pbfile or
       die "Failed to write to $pbfile";
     foreach my $pbname (@newpointbacks)
@@ -1337,6 +1383,7 @@ sub outputArchivePage
     my @pointbacks;
     my @newpointbacks;
     my $pbfile = $CONFIG{'output'} . "/$dir/pb";
+    my $pbmtime = ( stat($pbfile) )[9];
     if( open my $pbhandle, "<:utf8", $pbfile )
     {
         while (<$pbhandle>)
@@ -1347,6 +1394,12 @@ sub outputArchivePage
         }
 	close($pbhandle);
     }
+
+    #
+    #  If one of the files matching our archive date was just generated
+    # (RUNNING_TIME == 'running_time') then this date must be generated.
+    #
+    my $dirty_file_forced = 0;
 
     #
     #  So we have %data being a hash of entries.
@@ -1402,9 +1455,50 @@ sub outputArchivePage
 	if( $matched )
 	{
 	    push( @newpointbacks, $filename );
+
+	    if( $hash->{ 'running_time' } == $RUNNING_TIME )
+	    {
+	        $dirty_file_forced = 1;
+	    }
+	}
+    }
+
+    #
+    #  If $dirty_file_forced is false, we are close to being able to skip
+    # this date.  But if one of the files was edited in order to change the
+    # date, then we need to check for that too.  It will be listed in
+    # the pointback list.  If one of the files in the pointback list
+    # is newer than the pointback file itself, then we are still dirty.
+    #
+    if( $dirty_file_forced == 0 )
+    {
+        foreach my $pbname (@pointbacks)
+        {
+    	    my $hash = $data{ $pbname };
+    
+            #  If the pb file doesn't exist (!$pbmtime)
+	    # or if the src file doesn't exist anymore (!defined($hash))
+	    # or if the src file is newer than the tag,
+	    # then we are dirty.
+    	    if( (!$pbmtime) || !defined($hash) || $hash->{ 'mtime' } > $pbmtime )
+	    {
+		    $dirty_file_forced = 1;
+	    }
         }
     }
 
+    #
+    #  Final check... if dirty_file_forced is false, no need to rebuild
+    #
+    if( $dirty_file_forced == 0 )
+    {
+        $CONFIG{ 'verbose' } && print "Skipping clean archive: $date\n";
+        return;
+    }
+
+    #
+    #  We're dirty, so save our new pointback list
+    #
     open my $pbhandle, ">", $pbfile or
       die "Failed to write to $pbfile";
     foreach my $pbname (@newpointbacks)
@@ -1457,6 +1551,8 @@ sub outputArchivePage
         @sortedEntries = reverse sort bywhen @$entries;
     }
 
+
+    $CONFIG{ 'verbose' } && print "Creating archive page : $date\n";
 
     #
     #  Now write the output as a HTML page.
