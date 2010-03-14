@@ -1138,9 +1138,9 @@ sub outputTagPage
     #
     my @pointbacks;
     my @newpointbacks;
-    my $pbfile = $CONFIG{'output'} . "/$dir/$tagName.pb";
+    my $pbfile  = $CONFIG{ 'output' } . "/$dir/$tagName.pb";
     my $pbmtime = ( stat($pbfile) )[9];
-    if( open my $pbhandle, "<:utf8", $pbfile )
+    if ( open my $pbhandle, "<:utf8", $pbfile )
     {
         while (<$pbhandle>)
         {
@@ -1148,7 +1148,7 @@ sub outputTagPage
             chomp($backname);
             push( @pointbacks, $backname );
         }
-	close($pbhandle);
+        close($pbhandle);
     }
 
     #
@@ -1169,7 +1169,7 @@ sub outputTagPage
         # get the tags from that hash
         my $tags = $hash->{ 'tags' } || undef;
 
-	my $matched = 0;
+        my $matched = 0;
 
         #
         # for each tag, if it is a match then we save the data ref away.
@@ -1182,23 +1182,23 @@ sub outputTagPage
             {
                 push( @$matching, $hash );
 
-		$matched = 1;
+                $matched = 1;
 
             }
         }
 
-	#
-	# and print to the pointback file
-	#
-	if( $matched )
-	{
-	    push( @newpointbacks, $file );
+        #
+        # and print to the pointback file
+        #
+        if ($matched)
+        {
+            push( @newpointbacks, $file );
 
-	    if( $hash->{ 'running_time' } == $RUNNING_TIME )
-	    {
-	        $dirty_file_forced = 1;
-	    }
-	}
+            if ( $hash->{ 'running_time' } == $RUNNING_TIME )
+            {
+                $dirty_file_forced = 1;
+            }
+        }
     }
 
     #
@@ -1208,27 +1208,29 @@ sub outputTagPage
     # the pointback list.  If one of the files in the pointback list
     # is newer than the pointback file itself, then we are still dirty.
     #
-    if( $dirty_file_forced == 0 )
+    if ( $dirty_file_forced == 0 )
     {
         foreach my $pbname (@pointbacks)
         {
-    	    my $hash = $data{ $pbname };
+            my $hash = $data{ $pbname };
 
             #  If the pb file doesn't exist (!$pbmtime)
-	    # or if the src file doesn't exist anymore (!defined($hash))
-	    # or if the src file is newer than the tag,
-	    # then we are dirty.
-    	    if( (!$pbmtime) || !defined($hash) || $hash->{ 'mtime' } > $pbmtime )
-	    {
-		    $dirty_file_forced = 1;
-	    }
+            # or if the src file doesn't exist anymore (!defined($hash))
+            # or if the src file is newer than the tag,
+            # then we are dirty.
+            if ( ( !$pbmtime ) ||
+                 !defined($hash) ||
+                 $hash->{ 'mtime' } > $pbmtime )
+            {
+                $dirty_file_forced = 1;
+            }
         }
     }
 
     #
     #  Final check... if dirty_file_forced is false, no need to rebuild
     #
-    if( $dirty_file_forced == 0 )
+    if ( $dirty_file_forced == 0 )
     {
         $CONFIG{ 'verbose' } && print "Skipping clean tag: $tagName\n";
         return;
@@ -1382,9 +1384,9 @@ sub outputArchivePage
     #
     my @pointbacks;
     my @newpointbacks;
-    my $pbfile = $CONFIG{'output'} . "/$dir/pb";
+    my $pbfile  = $CONFIG{ 'output' } . "/$dir/pb";
     my $pbmtime = ( stat($pbfile) )[9];
-    if( open my $pbhandle, "<:utf8", $pbfile )
+    if ( open my $pbhandle, "<:utf8", $pbfile )
     {
         while (<$pbhandle>)
         {
@@ -1392,7 +1394,7 @@ sub outputArchivePage
             chomp($backname);
             push( @pointbacks, $backname );
         }
-	close($pbhandle);
+        close($pbhandle);
     }
 
     #
@@ -1420,9 +1422,9 @@ sub outputArchivePage
         #
         #  Get the date.
         #
-        my $hash = $data{ $filename };
-        my $date = $hash->{ 'date' };
-	my $matched = 0;
+        my $hash    = $data{ $filename };
+        my $date    = $hash->{ 'date' };
+        my $matched = 0;
 
         #
         #  Not a date?  Use the file's modification date.
@@ -1449,18 +1451,18 @@ sub outputArchivePage
         if ( $date eq "$year-$month" )
         {
             push( @$matching, $hash );
-	    $matched = 1;
+            $matched = 1;
         }
 
-	if( $matched )
-	{
-	    push( @newpointbacks, $filename );
+        if ($matched)
+        {
+            push( @newpointbacks, $filename );
 
-	    if( $hash->{ 'running_time' } == $RUNNING_TIME )
-	    {
-	        $dirty_file_forced = 1;
-	    }
-	}
+            if ( $hash->{ 'running_time' } == $RUNNING_TIME )
+            {
+                $dirty_file_forced = 1;
+            }
+        }
     }
 
     #
@@ -1470,27 +1472,29 @@ sub outputArchivePage
     # the pointback list.  If one of the files in the pointback list
     # is newer than the pointback file itself, then we are still dirty.
     #
-    if( $dirty_file_forced == 0 )
+    if ( $dirty_file_forced == 0 )
     {
         foreach my $pbname (@pointbacks)
         {
-    	    my $hash = $data{ $pbname };
-    
+            my $hash = $data{ $pbname };
+
             #  If the pb file doesn't exist (!$pbmtime)
-	    # or if the src file doesn't exist anymore (!defined($hash))
-	    # or if the src file is newer than the tag,
-	    # then we are dirty.
-    	    if( (!$pbmtime) || !defined($hash) || $hash->{ 'mtime' } > $pbmtime )
-	    {
-		    $dirty_file_forced = 1;
-	    }
+            # or if the src file doesn't exist anymore (!defined($hash))
+            # or if the src file is newer than the tag,
+            # then we are dirty.
+            if ( ( !$pbmtime ) ||
+                 !defined($hash) ||
+                 $hash->{ 'mtime' } > $pbmtime )
+            {
+                $dirty_file_forced = 1;
+            }
         }
     }
 
     #
     #  Final check... if dirty_file_forced is false, no need to rebuild
     #
-    if( $dirty_file_forced == 0 )
+    if ( $dirty_file_forced == 0 )
     {
         $CONFIG{ 'verbose' } && print "Skipping clean archive: $date\n";
         return;
@@ -1505,7 +1509,7 @@ sub outputArchivePage
     {
         print $pbhandle "$pbname\n";
     }
-    close ($pbhandle);
+    close($pbhandle);
 
     #
     #  The entries.
@@ -1704,10 +1708,10 @@ sub outputStaticPage
     #  If the running time of this file is not the same as this process's,
     # then it was cached, and we don't need to write it again.
     #
-    if( $static->{ 'running_time' } != $RUNNING_TIME )
+    if ( $static->{ 'running_time' } != $RUNNING_TIME )
     {
         $CONFIG{ 'verbose' } && print "\tSkipping: $filename\n";
-	return;
+        return;
     }
 
     #
@@ -2096,9 +2100,8 @@ sub readBlogEntry
     #
     #  Find all the details from the file.
     #
-    my ( $dev,   $ino,     $mode, $nlink, $uid,
-         $gid,   $rdev,    $size, $atime, $mtime,
-         $ctime, $blksize, $blocks
+    my ( $dev,  $ino,   $mode,  $nlink, $uid,     $gid, $rdev,
+         $size, $atime, $mtime, $ctime, $blksize, $blocks
        ) = stat($filename);
 
     #
