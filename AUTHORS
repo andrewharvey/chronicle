@@ -20,6 +20,10 @@ Contributions
   Byron Clark [byron [at] name.theclarkfamily.name]
    - Support non-GMT timezones
 
+  Chris Frey [cdfrey [@] net.foursquare]
+   - Added "push-back" support, when running with memcached to significantly
+     cut down on rebuild-time.
+
   Josh Grams [josh [@] com.qualdan]
    - Added better base URL detection.
    - Added chronological sorting for months & shorter month-URLs.
