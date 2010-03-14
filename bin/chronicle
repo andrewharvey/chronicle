@@ -1923,6 +1923,19 @@ sub readBlogEntry
         $meta{ 'date' } = strftime( "%d %B %Y", @lt );
     }
 
+    #
+    #  Find all the details from the file.
+    #
+    my ( $dev,   $ino,     $mode, $nlink, $uid,
+         $gid,   $rdev,    $size, $atime, $mtime,
+         $ctime, $blksize, $blocks
+       ) = stat($filename);
+
+    #
+    #  Store mtime for later comparison
+    #
+    $meta{ 'mtime' } = $mtime;
+
 
     #
     #  Store the values from our pseudo-headers in our entry
@@ -1947,16 +1960,6 @@ sub readBlogEntry
     #
     if ( $hms eq '00:00:00' )
     {
-
-        #
-        #  Find all the details from the file.
-        #
-        my ( $dev,   $ino,     $mode, $nlink, $uid,
-             $gid,   $rdev,    $size, $atime, $mtime,
-             $ctime, $blksize, $blocks
-           ) = stat($filename);
-
-
         $hms = time2str( "%H:%M:%S", $mtime );
         $tz = "GMT";
     }
