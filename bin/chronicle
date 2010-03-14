@@ -1132,7 +1132,27 @@ sub outputTagPage
     # which has a tag which matches the given tag - we'll store
     # that in the local array called '$matching'
     #
+    #  We also write the filenames to a pointback file while we're
+    # at it.
+    #
     my $matching;
+
+    #
+    #  read pointback file first
+    #
+    my @pointbacks;
+    my @newpointbacks;
+    my $pbfile = $CONFIG{'output'} . "/$dir/$tagName.pb";
+    if( open my $pbhandle, "<:utf8", $pbfile )
+    {
+        while (<$pbhandle>)
+        {
+	    my $backname = $_;
+	    chomp($backname);
+            push( @pointbacks, $backname );
+        }
+	close($pbhandle);
+    }
 
     #
     #  Iterate over the data-structure.
@@ -1146,6 +1166,8 @@ sub outputTagPage
         # get the tags from that hash
         my $tags = $hash->{ 'tags' } || undef;
 
+	my $matched = 0;
+
         #
         # for each tag, if it is a match then we save the data ref away.
         #
@@ -1156,9 +1178,29 @@ sub outputTagPage
             if ( $name eq $tagName )
             {
                 push( @$matching, $hash );
+
+		$matched = 1;
+
             }
         }
+
+	#
+	# and print to the pointback file
+	#
+	if( $matched )
+	{
+	    push( @newpointbacks, $file );
+	}
     }
+
+    open my $pbhandle, ">", $pbfile or
+      die "Failed to write to $pbfile";
+    foreach my $pbname (@newpointbacks)
+    {
+        print $pbhandle "$pbname\n";
+    }
+    close($pbhandle);
+
 
     my $entries;
 
@@ -1290,6 +1332,23 @@ sub outputArchivePage
     my $dir = "archive/$year/$month";
 
     #
+    #  read pointback file first
+    #
+    my @pointbacks;
+    my @newpointbacks;
+    my $pbfile = $CONFIG{'output'} . "/$dir/pb";
+    if( open my $pbhandle, "<:utf8", $pbfile )
+    {
+        while (<$pbhandle>)
+        {
+            my $backname = $_;
+            chomp($backname);
+            push( @pointbacks, $backname );
+        }
+	close($pbhandle);
+    }
+
+    #
     #  So we have %data being a hash of entries.
     #
     #  The key is a filename.
@@ -1310,6 +1369,7 @@ sub outputArchivePage
         #
         my $hash = $data{ $filename };
         my $date = $hash->{ 'date' };
+	my $matched = 0;
 
         #
         #  Not a date?  Use the file's modification date.
@@ -1336,8 +1396,22 @@ sub outputArchivePage
         if ( $date eq "$year-$month" )
         {
             push( @$matching, $hash );
+	    $matched = 1;
+        }
+
+	if( $matched )
+	{
+	    push( @newpointbacks, $filename );
         }
     }
+
+    open my $pbhandle, ">", $pbfile or
+      die "Failed to write to $pbfile";
+    foreach my $pbname (@newpointbacks)
+    {
+        print $pbhandle "$pbname\n";
+    }
+    close ($pbhandle);
 
     #
     #  The entries.
