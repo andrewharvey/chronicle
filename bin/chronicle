@@ -2761,7 +2761,8 @@ sub setupCache
 
   This only works for a top-level target directory.
 
-  Unless --force is specified we skip copying files which already exist.
+  Unless --force is specified we skip copying files which already exist,
+ or that are older than the target.
 
 =end doc
 
@@ -2788,7 +2789,8 @@ sub copyStaticFiles
             {
                 $file = $2;
             }
-            if ( $CONFIG{ 'force' } || ( !-e "$output/$file" ) )
+            if ( $CONFIG{ 'force' } || ( !-e "$output/$file" ) ||
+	         (stat("$input/$file"))[9] > (stat("$output/$file"))[9] )
             {
                 $CONFIG{ 'verbose' } && print "Copying static file: $file\n";
                 copy( "$input/$file", "$output/$file" );
