@@ -95,6 +95,7 @@ theme = default
 #  We can omit parts of the output if we wish
 #
 #  no-tags     = 1
+#  no-xrefs    = 1
 #  no-archive  = 1
 #  no-calendar = 1
 no-comments = 1

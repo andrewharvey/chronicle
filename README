@@ -24,6 +24,7 @@ The chronicle blog compiler
   * Template based output.
   * Support for RSS feeds.
   * Support for tagged entries.
+  * Support for forward-looking cross references.
   * Optional support for comments.
 
 
@@ -100,6 +101,33 @@ Publish:
 Tags:
    If any tags are present they will be used to categorise the entry.
 
+
+Xrefs:
+   Optional comma seaparated list of filenames that this entry links to.
+ For example, consider these two entries, named one.txt and two.txt:
+
+  /-- one.txt
+   title: The great debate
+   date: 10 March 2010
+   tags: politics
+
+   Our local candidate recently....
+  \--
+
+  /-- two.txt
+   title: The debate continues
+   date: 15 March 2010
+   tags: politics
+   xrefs: one.txt
+
+   As mentioned in <a href="http://example.com/The_great_debate.html">
+   my last entry</a>, our local candidate...
+  \--
+
+   This will add a link to two.txt to the bottom of one.txt, creating
+   a convenient chain of links for readers to see a logical thread of
+   posts, and allowing the author to update old popular posts with
+   new thoughts without editing them.
 
 
 Entry Cutting
