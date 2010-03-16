@@ -379,8 +379,7 @@ sub readInputFile
             # NOTE: Slight hack for working under Cygwin on
             #       Microsoft Windows where \r and \n roam wild.
             #
-            $header = 0 if ( $line =~ /^([\r|\n]*)$/
-                           );
+            $header = 0 if ( $line =~ /^([\r|\n]*)$/ );
         }
         else
         {

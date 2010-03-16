@@ -807,38 +807,38 @@ sub buildXRefPairs
     if ( !$CONFIG{ 'no-xrefs' } )
     {
         my $xrefs;
-        foreach my $file (keys %data)
+        foreach my $file ( keys %data )
         {
-	    my $hash = $data{ $file };
+            my $hash = $data{ $file };
             my $refpair;
 
             if ( $all_xrefs{ $file } )
-	    {
+            {
                 $xrefs = undef;
 
                 #
-	        #  Add array of hashes of links and titles to each file
-	        # that has references pointing to it.
-	        #
-                foreach my $ref (@{$all_xrefs{ $file }})
+                #  Add array of hashes of links and titles to each file
+                # that has references pointing to it.
+                #
+                foreach my $ref ( @{ $all_xrefs{ $file } } )
                 {
-                    $refpair = undef;
+                    $refpair                  = undef;
                     $refpair->{ 'xreftitle' } = $data{ $ref }->{ 'title' };
-                    $refpair->{ 'xreflink' } = $data{ $ref }->{ 'link' };
+                    $refpair->{ 'xreflink' }  = $data{ $ref }->{ 'link' };
 
                     push( @$xrefs, $refpair );
 
-		    #
-		    #  If referencing page is dirty, so must all
-		    # the referenced pages be.
-		    #
-                    if( $data{ $ref }->{ 'running_time' } == $RUNNING_TIME )
-		    {
-		        $hash->{ 'running_time' } = $RUNNING_TIME;
-		    }
+                    #
+                    #  If referencing page is dirty, so must all
+                    # the referenced pages be.
+                    #
+                    if ( $data{ $ref }->{ 'running_time' } == $RUNNING_TIME )
+                    {
+                        $hash->{ 'running_time' } = $RUNNING_TIME;
+                    }
                 }
                 $hash->{ 'xrefpairs' } = $xrefs;
-	    }
+            }
         }
     }
 }
@@ -863,7 +863,7 @@ sub findAllXRefs
         my $xrefs = $hash->{ 'xrefs' } || undef;
         foreach my $x (@$xrefs)
         {
-	    push( @{$allRefs{ $x }}, $file );
+            push( @{ $allRefs{ $x } }, $file );
         }
     }
 
@@ -1240,7 +1240,7 @@ sub outputTagPage
     $newpointbacks{ 'mtime' } = $RUNNING_TIME;
 
     my $cache = $CONFIG{ 'cache' } || undef;
-    my $c_key = $CONFIG{'output'} . "/$dir/$tagName.pb";
+    my $c_key = $CONFIG{ 'output' } . "/$dir/$tagName.pb";
     if ($cache)
     {
         $pointbacks = $cache->get($c_key);
@@ -1282,12 +1282,12 @@ sub outputTagPage
             }
         }
 
-	#
-	# and add to the pointback list
-	#
-	if( $matched )
-	{
-	    push( @{ $newpointbacks{ 'files' } }, $file );
+        #
+        # and add to the pointback list
+        #
+        if ($matched)
+        {
+            push( @{ $newpointbacks{ 'files' } }, $file );
 
             if ( $hash->{ 'running_time' } == $RUNNING_TIME )
             {
@@ -1305,20 +1305,20 @@ sub outputTagPage
     #
     if ( $dirty_file_forced == 0 )
     {
-        foreach my $pbname (@{ $pointbacks->{ 'files' } })
+        foreach my $pbname ( @{ $pointbacks->{ 'files' } } )
         {
             my $hash = $data{ $pbname };
 
             #  If the pb file doesn't exist (!$pbmtime)
-	    # or if the src file doesn't exist anymore (!defined($hash))
-	    # or if the src file is newer than the tag,
-	    # then we are dirty.
-    	    if( (!$pointbacks->{ 'mtime' }) ||
-	        !defined($hash) ||
-		$hash->{ 'mtime' } > $pointbacks->{ 'mtime' } )
-	    {
-		    $dirty_file_forced = 1;
-	    }
+            # or if the src file doesn't exist anymore (!defined($hash))
+            # or if the src file is newer than the tag,
+            # then we are dirty.
+            if ( ( !$pointbacks->{ 'mtime' } ) ||
+                 !defined($hash) ||
+                 $hash->{ 'mtime' } > $pointbacks->{ 'mtime' } )
+            {
+                $dirty_file_forced = 1;
+            }
         }
     }
 
@@ -1479,7 +1479,7 @@ sub outputArchivePage
     $newpointbacks{ 'mtime' } = $RUNNING_TIME;
 
     my $cache = $CONFIG{ 'cache' } || undef;
-    my $c_key = $CONFIG{'output'} . "/$dir/pb";
+    my $c_key = $CONFIG{ 'output' } . "/$dir/pb";
     if ($cache)
     {
         $pointbacks = $cache->get($c_key);
@@ -1542,9 +1542,9 @@ sub outputArchivePage
             $matched = 1;
         }
 
-	if( $matched )
-	{
-	    push( @{ $newpointbacks{ 'files' } }, $filename );
+        if ($matched)
+        {
+            push( @{ $newpointbacks{ 'files' } }, $filename );
 
             if ( $hash->{ 'running_time' } == $RUNNING_TIME )
             {
@@ -1562,20 +1562,20 @@ sub outputArchivePage
     #
     if ( $dirty_file_forced == 0 )
     {
-        foreach my $pbname (@{ $pointbacks->{ 'files' } })
+        foreach my $pbname ( @{ $pointbacks->{ 'files' } } )
         {
             my $hash = $data{ $pbname };
 
             #  If the pb file doesn't exist (!$pbmtime)
-	    # or if the src file doesn't exist anymore (!defined($hash))
-	    # or if the src file is newer than the tag,
-	    # then we are dirty.
-    	    if( (!$pointbacks->{ 'mtime' }) ||
-	        !defined($hash) ||
-		$hash->{ 'mtime' } > $pointbacks->{ 'mtime' } )
-	    {
-		    $dirty_file_forced = 1;
-	    }
+            # or if the src file doesn't exist anymore (!defined($hash))
+            # or if the src file is newer than the tag,
+            # then we are dirty.
+            if ( ( !$pointbacks->{ 'mtime' } ) ||
+                 !defined($hash) ||
+                 $hash->{ 'mtime' } > $pointbacks->{ 'mtime' } )
+            {
+                $dirty_file_forced = 1;
+            }
         }
     }
 
@@ -1879,13 +1879,13 @@ sub outputStaticPage
     #
     #  The entry.
     #
-    $template->param( title => $title );
-    $template->param( tags  => $tags ) if ($tags);
-    $template->param( date  => $date ) if ($date);
-    $template->param( body  => $body );
-    $template->param( link  => $static->{ 'link' } );
+    $template->param( title     => $title );
+    $template->param( tags      => $tags ) if ($tags);
+    $template->param( date      => $date ) if ($date);
+    $template->param( body      => $body );
+    $template->param( link      => $static->{ 'link' } );
     $template->param( xrefpairs => $static->{ 'xrefpairs' } )
-        if ( $static->{ 'xrefpairs' } );
+      if ( $static->{ 'xrefpairs' } );
 
     #
     #  Our clouds
@@ -2184,8 +2184,9 @@ sub readBlogEntry
     {
         my @tmpRefs;
 
-	foreach my $ref ( split( /,/, $meta{ 'xrefs' } ) )
-	{
+        foreach my $ref ( split( /,/, $meta{ 'xrefs' } ) )
+        {
+
             # strip leading and trailing space.
             $ref =~ s/^\s+//;
             $ref =~ s/\s+$//;
@@ -2197,15 +2198,15 @@ sub readBlogEntry
             $ref = $CONFIG{ 'input' } . "/" . $ref;
 
             # store the ref away, only if the file exists
-	    if( -e "$ref" )
-	    {
+            if ( -e "$ref" )
+            {
                 push( @tmpRefs, $ref );
-	    }
-	    else
-	    {
+            }
+            else
+            {
                 print "Warning: cross reference not found: $ref\n";
-	    }
-	}
+            }
+        }
 
         #
         #  Remove the xrefs list, so that we can replace it with an
@@ -2937,8 +2938,9 @@ sub copyStaticFiles
             {
                 $file = $2;
             }
-            if ( $CONFIG{ 'force' } || ( !-e "$output/$file" ) ||
-	         (stat("$input/$file"))[9] > (stat("$output/$file"))[9] )
+            if ( $CONFIG{ 'force' } ||
+                 ( !-e "$output/$file" ) ||
+                 ( stat("$input/$file") )[9] > ( stat("$output/$file") )[9] )
             {
                 $CONFIG{ 'verbose' } && print "Copying static file: $file\n";
                 copy( "$input/$file", "$output/$file" );
