@@ -2412,14 +2412,57 @@ sub readBlogEntry
     }
 
     #
-    #  Store the data in the cache if we have it enabled.
+    #  Store the data in the cache if we have it enabled - unless
+    # there are comments associated with the entry which might have
+    # changed behind our back.
     #
     #  It won't help this time, but the next run will rock ..
     #
     if ( defined($cache) )
     {
-        $CONFIG{ 'verbose' } && print "memcache-set: $filename\n";
-        $cache->set( $c_key, \%entry );
+        my $update = 1;
+
+
+        if ( ( $entry{ 'comment_count' } ) &&
+             ( $entry{ 'comment_count' } ) > 0 )
+        {
+
+            #
+            #  The number of seconds past the epoch of today and the
+            # date the blog is supposed to be published is used.
+            #
+            my $time  = str2time( $entry{ 'date' } );
+            my $today = time;
+
+            #
+            #  The number of days that should be allowd.
+            #
+            my $days = $CONFIG{ 'comment-days' } * 60 * 60 * 24;
+
+            if ( ( $time + $days ) > $today )
+            {
+                $update = 0;
+            }
+        }
+
+        #
+        #  If we're updating, then store in the cache.
+        #
+        #  We don't store in the cache if:
+        #
+        #   * The entry has comments.
+        #   * The entry is "recent", as set by "--comment-days".
+        #
+        #
+        if ($update)
+        {
+            $CONFIG{ 'verbose' } && print "memcache-set: $filename\n";
+            $cache->set( $c_key, \%entry );
+        }
+        else
+        {
+            $CONFIG{ 'verbose' } && print "NOT Updating cache for $filename\n";
+        }
     }
     return \%entry;
 }
