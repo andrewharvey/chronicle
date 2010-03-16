@@ -34,6 +34,11 @@
         <!-- tmpl_else -->
         No tags
         <!-- /tmpl_if -->
+        <!-- tmpl_if name='xrefpairs' -->
+          <div class="xrefs">
+	    Referenced by: <!-- tmpl_loop name='xrefpairs' --><a href="<!-- tmpl_var name='top' --><!-- tmpl_var name='xreflink' escape='html' -->"><!-- tmpl_var name='xreftitle' --></a><!-- tmpl_if name="__last__" --><!-- tmpl_else -->, <!-- /tmpl_if --><!-- /tmpl_loop -->
+	  </div>
+        <!-- /tmpl_if -->
       </div>
     </div>
     <div class="padding"></div>
