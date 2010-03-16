@@ -1134,21 +1134,17 @@ sub outputTagPage
     my $matching;
 
     #
-    #  read pointback file first
+    #  read pointback cache first
     #
-    my @pointbacks;
-    my @newpointbacks;
-    my $pbfile  = $CONFIG{ 'output' } . "/$dir/$tagName.pb";
-    my $pbmtime = ( stat($pbfile) )[9];
-    if ( open my $pbhandle, "<:utf8", $pbfile )
+    my $pointbacks = undef;
+    my %newpointbacks;
+    $newpointbacks{ 'mtime' } = $RUNNING_TIME;
+
+    my $cache = $CONFIG{ 'cache' } || undef;
+    my $c_key = $CONFIG{'output'} . "/$dir/$tagName.pb";
+    if ($cache)
     {
-        while (<$pbhandle>)
-        {
-            my $backname = $_;
-            chomp($backname);
-            push( @pointbacks, $backname );
-        }
-        close($pbhandle);
+        $pointbacks = $cache->get($c_key);
     }
 
     #
@@ -1187,12 +1183,12 @@ sub outputTagPage
             }
         }
 
-        #
-        # and print to the pointback file
-        #
-        if ($matched)
-        {
-            push( @newpointbacks, $file );
+	#
+	# and add to the pointback list
+	#
+	if( $matched )
+	{
+	    push( @{ $newpointbacks{ 'files' } }, $file );
 
             if ( $hash->{ 'running_time' } == $RUNNING_TIME )
             {
@@ -1210,20 +1206,20 @@ sub outputTagPage
     #
     if ( $dirty_file_forced == 0 )
     {
-        foreach my $pbname (@pointbacks)
+        foreach my $pbname (@{ $pointbacks->{ 'files' } })
         {
             my $hash = $data{ $pbname };
 
             #  If the pb file doesn't exist (!$pbmtime)
-            # or if the src file doesn't exist anymore (!defined($hash))
-            # or if the src file is newer than the tag,
-            # then we are dirty.
-            if ( ( !$pbmtime ) ||
-                 !defined($hash) ||
-                 $hash->{ 'mtime' } > $pbmtime )
-            {
-                $dirty_file_forced = 1;
-            }
+	    # or if the src file doesn't exist anymore (!defined($hash))
+	    # or if the src file is newer than the tag,
+	    # then we are dirty.
+    	    if( (!$pointbacks->{ 'mtime' }) ||
+	        !defined($hash) ||
+		$hash->{ 'mtime' } > $pointbacks->{ 'mtime' } )
+	    {
+		    $dirty_file_forced = 1;
+	    }
         }
     }
 
@@ -1241,13 +1237,10 @@ sub outputTagPage
     #
     #  We're dirty, so save a new pointback file
     #
-    open my $pbhandle, ">", $pbfile or
-      die "Failed to write to $pbfile";
-    foreach my $pbname (@newpointbacks)
+    if ( defined($cache) )
     {
-        print $pbhandle "$pbname\n";
+        $cache->set( $c_key, \%newpointbacks );
     }
-    close($pbhandle);
 
 
     my $entries;
@@ -1380,21 +1373,17 @@ sub outputArchivePage
     my $dir = "archive/$year/$month";
 
     #
-    #  read pointback file first
+    #  read pointback cache first
     #
-    my @pointbacks;
-    my @newpointbacks;
-    my $pbfile  = $CONFIG{ 'output' } . "/$dir/pb";
-    my $pbmtime = ( stat($pbfile) )[9];
-    if ( open my $pbhandle, "<:utf8", $pbfile )
+    my $pointbacks = undef;
+    my %newpointbacks;
+    $newpointbacks{ 'mtime' } = $RUNNING_TIME;
+
+    my $cache = $CONFIG{ 'cache' } || undef;
+    my $c_key = $CONFIG{'output'} . "/$dir/pb";
+    if ($cache)
     {
-        while (<$pbhandle>)
-        {
-            my $backname = $_;
-            chomp($backname);
-            push( @pointbacks, $backname );
-        }
-        close($pbhandle);
+        $pointbacks = $cache->get($c_key);
     }
 
     #
@@ -1454,9 +1443,9 @@ sub outputArchivePage
             $matched = 1;
         }
 
-        if ($matched)
-        {
-            push( @newpointbacks, $filename );
+	if( $matched )
+	{
+	    push( @{ $newpointbacks{ 'files' } }, $filename );
 
             if ( $hash->{ 'running_time' } == $RUNNING_TIME )
             {
@@ -1474,20 +1463,20 @@ sub outputArchivePage
     #
     if ( $dirty_file_forced == 0 )
     {
-        foreach my $pbname (@pointbacks)
+        foreach my $pbname (@{ $pointbacks->{ 'files' } })
         {
             my $hash = $data{ $pbname };
 
             #  If the pb file doesn't exist (!$pbmtime)
-            # or if the src file doesn't exist anymore (!defined($hash))
-            # or if the src file is newer than the tag,
-            # then we are dirty.
-            if ( ( !$pbmtime ) ||
-                 !defined($hash) ||
-                 $hash->{ 'mtime' } > $pbmtime )
-            {
-                $dirty_file_forced = 1;
-            }
+	    # or if the src file doesn't exist anymore (!defined($hash))
+	    # or if the src file is newer than the tag,
+	    # then we are dirty.
+    	    if( (!$pointbacks->{ 'mtime' }) ||
+	        !defined($hash) ||
+		$hash->{ 'mtime' } > $pointbacks->{ 'mtime' } )
+	    {
+		    $dirty_file_forced = 1;
+	    }
         }
     }
 
@@ -1503,13 +1492,10 @@ sub outputArchivePage
     #
     #  We're dirty, so save our new pointback list
     #
-    open my $pbhandle, ">", $pbfile or
-      die "Failed to write to $pbfile";
-    foreach my $pbname (@newpointbacks)
+    if ( defined($cache) )
     {
-        print $pbhandle "$pbname\n";
+        $cache->set( $c_key, \%newpointbacks );
     }
-    close($pbhandle);
 
     #
     #  The entries.
