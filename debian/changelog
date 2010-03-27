@@ -1,9 +1,11 @@
-chronicle (4.2-3unreleased) unstable; urgency=low
+chronicle (4.3-1) unstable; urgency=low
 
   * Correctly seperate the header/body of a blog post when running
     Cygwin upon Microsoft Windows platforms.
+  * Significant speedup rebuilding blogs when using Danga's memcached.
+  * Added xref support to entries.
 
- -- Steve Kemp <skx@debian.org>  Tue, 02 Mar 2010 02:29:02 +0000
+ -- Steve Kemp <skx@debian.org>  Sat, 27 Mar 2010 09:33:09 +0000
 
 chronicle (4.2-2) unstable; urgency=low
 
