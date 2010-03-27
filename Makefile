@@ -96,7 +96,7 @@ install:
 #
 #  Make a new release tarball, and make a GPG signature.
 #
-release: tidy clean critic
+release: tidy clean
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
