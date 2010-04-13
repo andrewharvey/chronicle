@@ -1669,7 +1669,7 @@ sub outputArchivePage
     #  Output the month + year.
     #
     $template->param( year => $year, month => $month );
-    $template->param( month_name => $names[$month - 1] );
+    $template->param( month_name => $names[$month - 1]  );
 
     #
     #  The clouds
@@ -1891,7 +1891,7 @@ sub outputStaticPage
     #
     $template->param( title     => $title );
     $template->param( tags      => $tags ) if ($tags);
-    $template->param( date      => $date ) if ($date);
+    $template->param( date      => dateI18n( $date ) ) if ($date);
     $template->param( body      => $body );
     $template->param( link      => $static->{ 'link' } );
     $template->param( xrefpairs => $static->{ 'xrefpairs' } )
@@ -3195,7 +3195,7 @@ sub getMonthNames
         ## use critic
     }
 
-    @names = map {&Encode::encode_utf8($_)} @names;
+#    @names = map {&Encode::encode_utf8($_)} @names;
 
     return @names;
 }
