@@ -119,6 +119,10 @@ chronicle - A simple blog compiler.
  if these are not present then there are sensible defaults as described
  below.
 
+   The formatting of the output dates may be changed via the use of the
+ B<--lang> command line option (or the matching "lang=french" option in the
+ configuration file), but the date of the entry itself should be specified in
+ English.
 
 =over 8
 
