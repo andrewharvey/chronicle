@@ -646,6 +646,7 @@ sub parseCommandLineArguments
 
             # optional
             "author=s",       \$CONFIG{ 'author' },
+            "lang=s",         \$CONFIG{ 'lang' },
             "force",          \$CONFIG{ 'force' },
             "no-xrefs",       \$CONFIG{ 'no-xrefs' },
             "no-tags",        \$CONFIG{ 'no-tags' },
