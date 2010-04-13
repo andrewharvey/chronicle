@@ -1119,8 +1119,9 @@ sub outputIndexPage
     my $max = $CONFIG{ 'entry-count' };
     foreach my $f (@tmp2)
     {
-        $f->{ 'date' } = dateI18n( $f->{ 'date' } );
-        push( @$entries, $f ) if ( $max > 0 );
+        my %copy = %{$f};
+        $copy{ 'date' } = dateI18n( $copy{ 'date' } );
+        push( @$entries, \%copy ) if ( $max > 0 );
         $max -= 1;
     }
 
@@ -1358,8 +1359,9 @@ sub outputTagPage
                   processCut( $blog->{ 'body' }, $blog->{ 'link' } );
             }
 
-            $blog->{ 'date' } = dateI18n( $blog->{ 'date' } );
-            push( @$entries, $blog );
+            my %copy = %{$blog};
+            $copy{ 'date' } = dateI18n( $copy{ 'date' } );
+            push( @$entries, \%copy );
         }
     }
 
@@ -1623,8 +1625,10 @@ sub outputArchivePage
                 $blog->{ 'body' } =
                   processCut( $blog->{ 'body' }, $blog->{ 'link' } );
             }
-            $blog->{ 'date' } = dateI18n( $blog->{ 'date' } );
-            push( @$entries, $blog );
+
+            my %copy = %{$blog};
+            $copy{ 'date' } = dateI18n( $copy{ 'date' } );
+            push( @$entries, \%copy );
         }
     }
 
@@ -1812,7 +1816,7 @@ sub outputStaticPage
     my $title = $static->{ 'title' } || $basename;
     my $tags  = $static->{ 'tags' };
     my $body  = $static->{ 'body' };
-    my $date  = dateI18n( $static->{ 'date' } );
+    my $date  = $static->{ 'date' } ;
 
     if ( !defined($date) )
     {
