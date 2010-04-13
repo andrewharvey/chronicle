@@ -3157,7 +3157,7 @@ sub dateI18n
     # Data::Language outputs iso-8859-1 string,
     # we force the conversion to UTF-8
     #
-    $date = &Encode::encode_utf8($date);
+#    $date = &Encode::encode_utf8($date);
 
     return $date;
 }
