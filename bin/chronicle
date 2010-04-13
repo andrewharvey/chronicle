@@ -47,17 +47,18 @@ chronicle - A simple blog compiler.
   Optional Features:
 
    --author       Specify the author's email address
+   --comment-days Specify the number maximum age of posts to accept comments.
+   --date-archive-path  Include the date in the archive.
    --force        Force the copying of static files from the blog theme.
+   --lang         Specify the language to use for formatting dates.
+   --lower-case   Lower-case all filenames which are output.
    --no-archive   Don't create an archive page.
    --no-cache     Don't use the optional memcached features, even if available.
    --no-calendar  Don't use the optional calendar upon the index.
    --no-comments  Don't allow comments to be posted.
    --no-sitemap   Don't generate a sitemap.
-   --comment-days Specify the number maximum age of posts to accept comments.
-   --no-xrefs     Don't produce any cross references.
    --no-tags      Don't produce any tag pages.
-   --lower-case   Lower-case all filenames which are output.
-   --date-archive-path  Include the date in the archive.
+   --no-xrefs     Don't produce any cross references.
 
   Help Options:
 
