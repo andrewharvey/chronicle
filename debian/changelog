@@ -1,3 +1,11 @@
+chronicle (4.4-1) unstable; urgency=low
+
+  * Correctly cope with the formatting and display of dates in foreign locales,
+    via "--lang=French" (for example), or via the matching setting in the configuration
+    file.
+
+ -- Steve Kemp <skx@debian.org>  Thu, 15 Apr 2010 23:00:32 +0000
+
 chronicle (4.3-1) unstable; urgency=low
 
   * Correctly seperate the header/body of a blog post when running
