@@ -1124,7 +1124,7 @@ sub outputIndexPage
     my $max = $CONFIG{ 'entry-count' };
     foreach my $f (@tmp2)
     {
-        my %copy = %{$f};
+        my %copy = %{ $f };
         $copy{ 'date' } = dateI18n( $copy{ 'date' } );
         push( @$entries, \%copy ) if ( $max > 0 );
         $max -= 1;
@@ -1364,7 +1364,7 @@ sub outputTagPage
                   processCut( $blog->{ 'body' }, $blog->{ 'link' } );
             }
 
-            my %copy = %{$blog};
+            my %copy = %{ $blog };
             $copy{ 'date' } = dateI18n( $copy{ 'date' } );
             push( @$entries, \%copy );
         }
@@ -1631,7 +1631,7 @@ sub outputArchivePage
                   processCut( $blog->{ 'body' }, $blog->{ 'link' } );
             }
 
-            my %copy = %{$blog};
+            my %copy = %{ $blog };
             $copy{ 'date' } = dateI18n( $copy{ 'date' } );
             push( @$entries, \%copy );
         }
@@ -1669,7 +1669,7 @@ sub outputArchivePage
     #  Output the month + year.
     #
     $template->param( year => $year, month => $month );
-    $template->param( month_name => $names[$month - 1]  );
+    $template->param( month_name => $names[$month - 1] );
 
     #
     #  The clouds
@@ -1821,7 +1821,7 @@ sub outputStaticPage
     my $title = $static->{ 'title' } || $basename;
     my $tags  = $static->{ 'tags' };
     my $body  = $static->{ 'body' };
-    my $date  = $static->{ 'date' } ;
+    my $date  = $static->{ 'date' };
 
     if ( !defined($date) )
     {
@@ -1891,7 +1891,7 @@ sub outputStaticPage
     #
     $template->param( title     => $title );
     $template->param( tags      => $tags ) if ($tags);
-    $template->param( date      => dateI18n( $date ) ) if ($date);
+    $template->param( date      => dateI18n($date) ) if ($date);
     $template->param( body      => $body );
     $template->param( link      => $static->{ 'link' } );
     $template->param( xrefpairs => $static->{ 'xrefpairs' } )
@@ -3157,7 +3157,7 @@ sub dateI18n
     # Data::Language outputs iso-8859-1 string,
     # we force the conversion to UTF-8
     #
-#    $date = &Encode::encode_utf8($date);
+    #    $date = &Encode::encode_utf8($date);
 
     return $date;
 }
@@ -3195,7 +3195,7 @@ sub getMonthNames
         ## use critic
     }
 
-#    @names = map {&Encode::encode_utf8($_)} @names;
+    #    @names = map {&Encode::encode_utf8($_)} @names;
 
     return @names;
 }

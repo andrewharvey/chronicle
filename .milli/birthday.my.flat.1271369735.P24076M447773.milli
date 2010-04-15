@@ -1,0 +1,31 @@
+Title: Caching comments needs work
+UID: birthday.my.flat.1271369735.P24076M447773
+Added: Thu Apr 15 23:15:35 2010
+Status: open
+
+ Right now the caching of comments works by happy accident, rather than explicit
+ design.
+
+ I'd suggest we break out the reading of blog comments from the reading of the
+ actual entries.  Rather than having:
+
+    push ( @$global, readBlogEntry( $file ) );
+
+ We do something like this:
+
+    foreach my $file ( @files )
+    {
+        my $blog = readBlogEntry( $file );
+        $blog->{'comments'} = readEntryComments( $file, $blog->{'title'} );
+    }
+
+ Essentially we need to have two things for finding the comments for an entry:
+
+    * The filename.
+    * The title.  Sigh.  Bad mistake.
+
+ We want to fetch the comments after the entry, so that we can implement caching
+ in a sensible way.  In short comments associated with an entry < $comment-days
+ in the past shouldn't change.
+
+
