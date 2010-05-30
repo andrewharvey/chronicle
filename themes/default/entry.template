@@ -6,6 +6,11 @@
     <title><!-- tmpl_var name='blog_title' -->: <!-- tmpl_var name='title' --></title>
     <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->vim.css" />
+
+<!-- tmpl_if name='comments' -->
+    <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='basename' -->.rss" type="application/rss+xml" />
+<!-- /tmpl_if -->
+
   </head>
   <body>
     <!-- tmpl_include name='header.inc' -->

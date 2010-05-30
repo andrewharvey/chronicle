@@ -24,6 +24,9 @@
 	myBoxObject.applyCornersToAll();
 	}
       </script>
+<!-- tmpl_if name='comments' -->
+    <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='basename' -->.rss" type="application/rss+xml" />
+<!-- /tmpl_if -->
     </head>
     <body>
       <div class="title">

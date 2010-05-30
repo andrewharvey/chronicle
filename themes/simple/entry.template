@@ -7,6 +7,9 @@
     <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->vim.css" />
     <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='top' -->index.rss" type="application/rss+xml" />
     <script type="text/JavaScript" src="<!-- tmpl_var name='top' -->ajax.js"></script>
+<!-- tmpl_if name='comments' -->
+    <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='basename' -->.rss" type="application/rss+xml" />
+<!-- /tmpl_if -->
   </head>
   <body>
     <div id="wrapper">
