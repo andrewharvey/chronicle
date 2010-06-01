@@ -562,11 +562,6 @@ sub setupDefaultOptions
     $CONFIG{ 'rss-count' } = 10;
 
     #
-    #  Create feeds for comments
-    #
-    $CONFIG{ 'comment-feed' } = 1;
-
-    #
     #  Don't overwrite files by default
     #
     $CONFIG{ 'force' } = 0;
@@ -1932,11 +1927,10 @@ sub outputStaticPage
         outputTemplate( $template, $file );
     }
 
-
     #
     # Create comment feed, unless comments are disabled.
     #
-    if (! $CONFIG{ 'no-comments' } )
+    if (! $CONFIG{ 'no-comments'} )
     {
         $CONFIG{'verbose'} && print "\tCreating comment feed\n";
 
@@ -1950,7 +1944,8 @@ sub outputStaticPage
         #  Setup the loop
         #
         $comments->param( title    => $title );
-        $comments->param( comments => $static->{ 'comments' } );
+        $comments->param( comments => $static->{ 'comments' } )
+          if ( $static->{'comments'} );
 
 
         my $xml = undef;
