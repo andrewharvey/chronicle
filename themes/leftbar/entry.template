@@ -6,9 +6,9 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->style.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="<!-- tmpl_var name='top' -->vim.css" />
-<!-- tmpl_if name='comments' -->
-    <link rel="alternate" title="RSS Feed" href="<!-- tmpl_var name='basename' -->.rss" type="application/rss+xml" />
-<!-- /tmpl_if -->
+<!-- tmpl_unless name='no_comments' -->
+    <link rel="alternate" title="Comment Feed" href="<!-- tmpl_var name='basename' -->.rss" type="application/rss+xml" />
+<!-- /tmpl_unless -->
   </head>
   <body>
     <div class="title">

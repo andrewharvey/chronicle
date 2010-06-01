@@ -1914,6 +1914,14 @@ sub outputStaticPage
     $template->param( blog_subtitle => $CONFIG{ 'blog_subtitle' } )
       if ( $CONFIG{ 'blog_subtitle' } );
 
+    #
+    #  If comments are disabled then set that.
+    #
+    $template->param( no_comments => 1 ) if ( $CONFIG{'no-comments'} );
+
+    #
+    #  Output the entry now.
+    #
     if ( $CONFIG{ 'date-archive-path' } )
     {
         my $dir = "archive/" . time2str( "%Y/%m", str2time($date) );
@@ -1924,11 +1932,11 @@ sub outputStaticPage
         outputTemplate( $template, $file );
     }
 
+
     #
-    #  OK now we output the comment page, if enabled
+    # Create comment feed, unless comments are disabled.
     #
-    if ( ( $CONFIG{ 'comment-feed' } ) &&
-         ( $static->{ 'comments' } ) )
+    if (! $CONFIG{ 'no-comments' } )
     {
         $CONFIG{'verbose'} && print "\tCreating comment feed\n";
 
