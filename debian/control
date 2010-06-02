@@ -9,7 +9,7 @@ Homepage: http://www.steve.org.uk/Software/chronicle/
 Package: chronicle
 Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends}, libtimedate-perl, libhtml-template-perl, perl-modules
-Suggests: memcached, libtext-markdown-perl, libtext-textile-perl, libtext-vimcolor-perl
+Suggests: memcached, libtext-markdown-perl, libtext-textile-perl, libtext-vimcolor-perl, libsoap-lite-perl
 Description: HTML & RSS blog compiler
  This is a tool which will convert a directory of simple
  text files into a static HTML weblog, (or blog if you prefer).
@@ -21,5 +21,7 @@ Description: HTML & RSS blog compiler
   * Template based output.
  .
   * The tagging of entries.
+ .
+  * Notification of ping services upon blog rebuild.
  .
   * User comments upon entries.

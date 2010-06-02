@@ -1,0 +1,277 @@
+#!/usr/bin/perl -w
+
+=head1 NAME
+
+chronicle-ping - Send outgoing PING requests for new pages.
+
+=cut
+
+=head1 SYNOPSIS
+
+  Help Options
+
+    --help        Show a brief help overview.
+    --version     Show the version of this script.
+
+  Mandatory Options
+
+    --url         The URL of the entry to ping.
+    --service     The URL of the service to ping.
+
+  Misc Options
+
+    --name        The name of the blog.
+
+=cut
+
+=head1 ABOUT
+
+This script is designed to receive an URL as its argument, and make an
+outgoing ping for it.
+
+If a service URL (pointing to an XML-RPC end-point) is specified it will
+be used, otherwise the ping will be made to a number of default sites.
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+=cut
+
+=head1 LICENSE
+
+Copyright (c) 2010 by Steve Kemp.  All rights reserved.
+
+This module is free software;
+you can redistribute it and/or modify it under
+the same terms as Perl itself.
+The LICENSE file contains the full text of the license.
+
+=cut
+
+
+
+use strict;
+use warnings;
+
+
+use Getopt::Long;
+use Pod::Usage;
+use XMLRPC::Lite;
+
+
+
+#
+# The default sites to ping if no service is specified.
+#
+my %default = (
+
+    # See http://codex.wordpress.org/Update_Services for
+    # a more comprehensive list.
+    'Blog People'   => 'http://www.blogpeople.net/servlet/weblogUpdates',
+    'Blog Update'   => 'http://blogupdate.org/ping/',
+    'BlogRolling'   => 'http://rpc.blogrolling.com/pinger/',
+    'Google'        => 'http://blogsearch.google.com/ping/RPC2',
+    'Moreover'      => 'http://api.moreover.com/RPC2',
+    'NewsGator'     => 'http://services.newsgator.com/ngws/xmlrpcping.aspx',
+    'Ping-o-Matic!' => 'http://rpc.pingomatic.com/',
+    'Syndic8'       => 'http://ping.syndic8.com/xmlrpc.php',
+    'Weblogs.com'   => 'http://rpc.weblogs.com/RPC2',
+);
+
+
+#
+#  Parse command line arguments
+#
+my %CONFIG = parseCommandLineArguments();
+
+
+#
+#  Validate and update our arguments
+#
+validateOptions();
+
+
+#
+#  Perform the ping
+#
+ping( $CONFIG{ 'service' } );
+
+
+
+=begin doc
+
+Parse the command line options we expect to receive.
+
+=end doc
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP   = 0;
+    my $MANUAL = 0;
+
+    my %options;
+
+    if (
+        !GetOptions(
+
+            # help options
+            "help",    \$HELP,
+            "manual",  \$MANUAL,
+            "verbose", \$options{ 'verbose' },
+
+            # mandatory options
+            "url=s",     \$options{ 'url' },
+            "service=s", \$options{ 'service' },
+
+            # misc
+            "name=s", \$options{ 'name' },
+        ) )
+    {
+        exit 1;
+    }
+
+
+    pod2usage(1) if $HELP;
+    pod2usage( -verbose => 2 ) if $MANUAL;
+
+    return (%options);
+}
+
+
+
+=begin doc
+
+Ensure our options look sane.
+
+=end doc
+
+=cut
+
+sub validateOptions
+{
+
+    #
+    #  Ensure we received the mandatory arguments
+    #
+    if ( !defined( $CONFIG{ 'url' } ) )
+    {
+        print "Missing argument --url\n";
+        exit 1;
+    }
+
+
+    #
+    #  If we don't have a title use the name
+    #
+    if ( !$CONFIG{ 'name' } )
+    {
+        $CONFIG{ 'name' } = $CONFIG{ 'url' };
+    }
+
+    #
+    #  If we have a service make sure it looks like an URL
+    #
+    if ( ( $CONFIG{ 'service' } ) &&
+         ( $CONFIG{ 'service' } !~ /^https?:\/\// ) )
+    {
+        print "Your ping service looks unlike an URL\n";
+        exit 1;
+    }
+}
+
+
+=begin doc
+
+Send a ping for the given service, reverting to all our known ping sites
+if one isn't specified.
+
+=end doc
+
+=cut
+
+sub ping
+{
+    my ($service) = (@_);
+
+    #
+    #  If we don't have a service specified then use each of our
+    # default ones in turn.
+    #
+    if ( !defined($service) )
+    {
+        foreach my $name ( keys %default )
+        {
+            $CONFIG{ 'verbose' } && print "Sending ping via $name\n";
+            send_ping( $default{ $name }, $CONFIG{ 'url' } );
+        }
+    }
+    else
+    {
+        $CONFIG{ 'verbose' } && print "Sending ping via $service\n";
+        send_ping( $service, $CONFIG{ 'url' } );
+    }
+}
+
+
+
+=begin doc
+
+Send a ping for the given URL to the specified RPC end-point.
+
+Report errors liberally.
+
+=end doc
+
+=cut
+
+sub send_ping
+{
+    my ( $rpc, $url ) = (@_);
+
+    print "Sending to $rpc\n";
+
+    my $xmlrpc = XMLRPC::Lite->proxy($rpc);
+    my $call;
+    eval {
+        $call = $xmlrpc->call( 'weblogUpdates.ping', $CONFIG{ 'name' }, $url );
+    };
+    if ($@)
+    {
+        chomp $@;
+        warn "\tPing to $url failed: '$@'\n";
+        next;
+    }
+
+    unless ( defined $call )
+    {
+
+        warn "\tPing $url failed for an unknown reason\n";
+        next;
+    }
+
+    if ( $call->fault )
+    {
+
+        chomp( my $message = $call->faultstring );
+        warn "\tPing to $url failed: '$message'\n";
+        next;
+    }
+
+    my $result = $call->result;
+    if ( $result->{ flerror } )
+    {
+
+        warn "\tPing to $url returned the following error: '",
+          $result->{ message }, "'\n";
+        next;
+    }
+
+    print "\tPing $url returned: '$result->{ message }'\n";
+}

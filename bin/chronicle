@@ -506,6 +506,54 @@ if ( $CONFIG{ 'post-build' } )
 
 
 #
+#  Sending a ping?
+#
+if ( $CONFIG{ 'send-ping' } )
+{
+    $CONFIG{ 'verbose' } && print "Preparing to send pings\n";
+
+    #
+    #  Do we have a list of sites to send to?
+    #
+    my $count = 1;
+    my $sent  = 0;
+
+    while ( defined $CONFIG{ 'ping-server-$count' } )
+    {
+        my $ping = $CONFIG{ 'ping-server-$count' };
+
+        $CONFIG{ 'verbose' } && print "Sending to: $ping\n";
+
+        #
+        # Send to just that specific service
+        #
+        system( "chronicle-ping",          "--service=$ping",
+                "--url=$CONFIG{'prefix'}", "--name=$CONFIG{'blog-title'}" );
+
+        # find next server
+        $count += 1;
+
+        # we've sent something now.
+        $sent += 1;
+    }
+
+    #
+    #  If we didn't send then we're going to use the default servers.
+    #
+    if ( !$sent )
+    {
+        $CONFIG{ 'verbose' } && print "Sending to: default ping servers\n";
+
+        system( "chronicle-ping", "--url=$CONFIG{'prefix'}",
+                "--name=$CONFIG{'blog-title'}" );
+    }
+
+    $CONFIG{ 'verbose' } && print "Pings complete.\n";
+}
+
+
+
+#
 #  All done.
 #
 exit;
@@ -675,6 +723,7 @@ sub parseCommandLineArguments
             "post-build=s",  \$CONFIG{ 'post-build' },
             "pre-filter=s",  \$CONFIG{ 'pre-filter' },
             "post-filter=s", \$CONFIG{ 'post-filter' },
+            "send-ping",     \$CONFIG{ 'send-ping' },
 
             # title
             "blog-title=s",    \$CONFIG{ 'blog_title' },
@@ -1912,7 +1961,7 @@ sub outputStaticPage
     #
     #  If comments are disabled then set that.
     #
-    $template->param( no_comments => 1 ) if ( $CONFIG{'no-comments'} );
+    $template->param( no_comments => 1 ) if ( $CONFIG{ 'no-comments' } );
 
     #
     #  Output the entry now.
@@ -1930,9 +1979,9 @@ sub outputStaticPage
     #
     # Create comment feed, unless comments are disabled.
     #
-    if (! $CONFIG{ 'no-comments'} )
+    if ( !$CONFIG{ 'no-comments' } )
     {
-        $CONFIG{'verbose'} && print "\tCreating comment feed\n";
+        $CONFIG{ 'verbose' } && print "\tCreating comment feed\n";
 
         #
         #  Load the template
@@ -1945,7 +1994,7 @@ sub outputStaticPage
         #
         $comments->param( title    => $title );
         $comments->param( comments => $static->{ 'comments' } )
-          if ( $static->{'comments'} );
+          if ( $static->{ 'comments' } );
 
 
         my $xml = undef;

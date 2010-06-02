@@ -81,8 +81,9 @@ install:
 	mkdir -p ${prefix}/etc
 	cp ./etc/chroniclerc ${prefix}/etc/chroniclerc
 	mkdir -p ${prefix}/usr/bin
-	cp ./bin/chronicle ${prefix}/usr/bin
-	cp ./bin/chronicle-spooler ${prefix}/usr/bin
+	cp ./bin/chronicle              ${prefix}/usr/bin
+	cp ./bin/chronicle-ping         ${prefix}/usr/bin
+	cp ./bin/chronicle-spooler      ${prefix}/usr/bin
 	cp ./bin/chronicle-entry-filter ${prefix}/usr/bin
 	cp ./bin/chronicle-rss-importer ${prefix}/usr/bin
 	mkdir -p ${prefix}/usr/share/chronicle/themes/xml
@@ -122,7 +123,7 @@ release: tidy clean
 #
 tidy:
 	if [ -x ~/bin/perltidy ]; then \
-           ~/bin/perltidy ./bin/chronicle-entry-filter ./bin/chronicle-spam-test ./bin/chronicle-spooler ./bin/chronicle-rss-importer ./bin/chronicle ./cgi-bin/comments.cgi \
+           ~/bin/perltidy ./bin/chronicle-ping ./bin/chronicle-entry-filter ./bin/chronicle-spam-test ./bin/chronicle-spooler ./bin/chronicle-rss-importer ./bin/chronicle ./cgi-bin/comments.cgi \
 	; fi
 
 

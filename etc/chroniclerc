@@ -150,3 +150,16 @@ no-comments = 1
 # Do we want static pages output in year/month directories?
 #
 # date-archive-path = 1
+
+
+#
+#  Do we want to send outgoing PINGS when we've rebuilt our blog?
+#
+# send-ping = 1
+#
+#  Do we want to send to a specific site, or just to the defaults?
+#
+# ping-server-1 = http://example.com/rpc2
+# ping-server-2 = http://example.net/rpc
+# ping-server-N = http://.....
+#
