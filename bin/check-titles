@@ -46,13 +46,13 @@ foreach my $file ( sort( glob( $dir . "/*" ) ) )
     #
     #  Read each file, and look for the title.
     #
-    open my $handle, "<", $file
-      or die "Failed to read $file - $!";
+    open my $handle, "<", $file or
+      die "Failed to read $file - $!";
     foreach my $line (<$handle>)
     {
         $title = $2
-          if ( !defined($title)
-               && ( $line =~ /^(Subject|Title):(.*)/i ) );
+          if ( !defined($title) &&
+               ( $line =~ /^(Subject|Title):(.*)/i ) );
 
     }
     close($handle);
