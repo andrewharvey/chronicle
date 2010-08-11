@@ -2873,7 +2873,7 @@ sub readConfigurationFile
 
     my $line = "";
 
-    open my $handle, "<", $file or die "Cannot read file '$file' - $!";
+    open my $handle, "<:utf8", $file or die "Cannot read file '$file' - $!";
     while ( defined( $line = <$handle> ) )
     {
         chomp $line;
