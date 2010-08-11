@@ -1782,8 +1782,8 @@ sub processCut
 {
     my ( $body, $link ) = (@_);
 
-    $link = $CONFIG{ 'url_prefix' } || "";
-    $link .= $link;
+    my $url = $CONFIG{ 'url_prefix' } || "";
+    $url   .= $link;
 
     my $cut_text = "";
 
@@ -1808,7 +1808,7 @@ sub processCut
         {
             $cut_text = "This entry has been cut, click to read on.";
         }
-        $body .= " <a href=\"$link\">$cut_text</a> ";
+        $body .= " <a href=\"$url\">$cut_text</a> ";
         $body .= $post;
 
     }
