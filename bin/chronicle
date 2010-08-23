@@ -2328,15 +2328,6 @@ sub readBlogEntry
     }
 
     #
-    #  If the date isn't set then use todays.
-    #
-    if ( !defined( $meta{ 'date' } ) || ( !length( $meta{ 'date' } ) ) )
-    {
-        my @lt = localtime(time);
-        $meta{ 'date' } = strftime( "%d %B %Y", @lt );
-    }
-
-    #
     #  Find all the details from the file.
     #
     my ( $dev,  $ino,   $mode,  $nlink, $uid,     $gid, $rdev,
@@ -2344,7 +2335,16 @@ sub readBlogEntry
        ) = stat($filename);
 
     #
-    #  Store mtime for later comparison
+    #  If the date isn't set then use the mtime of the file.
+    #
+    if ( !defined( $meta{ 'date' } ) || ( !length( $meta{ 'date' } ) ) )
+    {
+        my @lt = localtime($mtime);
+        $meta{ 'date' } = strftime( "%d %B %Y", @lt );
+    }
+
+    #
+    #  Store that mtime for later comparison
     #
     $meta{ 'mtime' } = $mtime;
 
