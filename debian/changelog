@@ -1,3 +1,11 @@
+chronicle (4.5-1) unstable; urgency=low
+
+  * New bugfix release:
+     - If a file has no Date: psuedo-header then we use the mtime.
+     - The <cut ..> tag works as expected.
+
+ -- Steve Kemp <skx@debian.org>  Tue, 24 Aug 2010 07:55:07 +0000
+
 chronicle (4.4-1) unstable; urgency=low
 
   * Correctly cope with the formatting and display of dates in foreign locales,

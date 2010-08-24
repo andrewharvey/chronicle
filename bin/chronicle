@@ -1783,7 +1783,7 @@ sub processCut
     my ( $body, $link ) = (@_);
 
     my $url = $CONFIG{ 'url_prefix' } || "";
-    $url   .= $link;
+    $url .= $link;
 
     my $cut_text = "";
 
