@@ -1939,6 +1939,7 @@ sub outputStaticPage
     $template->param( date      => dateI18n($date) ) if ($date);
     $template->param( body      => $body );
     $template->param( link      => $static->{ 'link' } );
+    $basename =~ s/\.(html|htm)$//g;
     $template->param( basename  => $basename );
     $template->param( xrefpairs => $static->{ 'xrefpairs' } )
       if ( $static->{ 'xrefpairs' } );
