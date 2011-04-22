@@ -26,7 +26,7 @@
                           <!-- /tmpl_if -->
                           <li id="rss-links"><h3>RSS Feed</h3>
                             <ul>
-                              <li><a href="index.rss"><img src="<!-- tmpl_var name='top' -->xml.gif" alt="RSS feed" width="36" height="14" /></a>
+                              <li><a href="<!-- tmpl_var name='top' -->index.rss"><img src="<!-- tmpl_var name='top' -->xml.gif" alt="RSS feed" width="36" height="14" /></a>
                               </li>
                             </ul>
                           </li>
