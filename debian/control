@@ -1,7 +1,7 @@
 Source: chronicle
 Section: web
 Priority: extra
-Maintainer: Steve Kemp <skx@debian.org>
+Maintainer: curan@debian.org
 Build-Depends: debhelper (>= 5)
 Standards-Version: 3.8.4
 Homepage: http://www.steve.org.uk/Software/chronicle/
