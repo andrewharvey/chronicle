@@ -1,3 +1,13 @@
+chronicle (4.6-1) unstable; urgency=low
+
+  [Steve Kemp]
+  *  Apply patch for handling timezone changes in RSS feed.
+     (CLose: 615891)
+  [Kai Wasserb??ch]
+  *  New maintainer.
+
+ -- Unreleased
+
 chronicle (4.5-1) unstable; urgency=low
 
   * New bugfix release:

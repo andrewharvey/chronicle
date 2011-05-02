@@ -2340,7 +2340,7 @@ sub readBlogEntry
     #
     if ( !defined( $meta{ 'date' } ) || ( !length( $meta{ 'date' } ) ) )
     {
-        my @lt = localtime($mtime);
+        my @lt = gmtime($mtime);
         $meta{ 'date' } = strftime( "%d %B %Y", @lt );
     }
 
@@ -2373,7 +2373,7 @@ sub readBlogEntry
     #
     if ( $hms eq '00:00:00' )
     {
-        $hms = time2str( "%H:%M:%S", $mtime );
+        $hms = time2str( "%H:%M:%S", $mtime, "GMT" );
         $tz = "GMT";
     }
 
