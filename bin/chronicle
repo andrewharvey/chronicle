@@ -1934,11 +1934,11 @@ sub outputStaticPage
     #
     #  The entry.
     #
-    $template->param( title     => $title );
-    $template->param( tags      => $tags ) if ($tags);
-    $template->param( date      => dateI18n($date) ) if ($date);
-    $template->param( body      => $body );
-    $template->param( link      => $static->{ 'link' } );
+    $template->param( title => $title );
+    $template->param( tags  => $tags ) if ($tags);
+    $template->param( date  => dateI18n($date) ) if ($date);
+    $template->param( body  => $body );
+    $template->param( link  => $static->{ 'link' } );
     $basename =~ s/\.(html|htm)$//g;
     $template->param( basename  => $basename );
     $template->param( xrefpairs => $static->{ 'xrefpairs' } )
