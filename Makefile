@@ -54,8 +54,6 @@ clean:
 	@if [ -d comments ]; then rm -rf comments; fi
 	@if [ -d output   ]; then rm -rf output; fi
 	@if [ -e build-stamp ]; then rm -f build-stamp; fi
-	@if [ -e debian/chronicle.debhelper.log ]; then rm debian/chronicle.debhelper.log; fi
-	@if [ -e debian/chronicle/ ]; then rm -rf debian/chronicle/ ; fi
 
 
 #
