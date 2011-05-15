@@ -104,6 +104,7 @@ release: tidy clean
 	perl -pi.bak -e "s/UNRELEASED/$(VERSION)/g" $(DIST_PREFIX)/$(BASE)-$(VERSION)/bin/chronicle-spooler
 	rm  $(DIST_PREFIX)/$(BASE)-$(VERSION)/bin/*.bak
 	find  $(DIST_PREFIX)/$(BASE)-$(VERSION) -name ".hg*" -print | xargs rm -rf
+	find  $(DIST_PREFIX)/$(BASE)-$(VERSION) -name ".milli" -print | xargs rm -rf
 	find  $(DIST_PREFIX)/$(BASE)-$(VERSION) -name ".release" -print | xargs rm -rf
 	find  $(DIST_PREFIX)/$(BASE)-$(VERSION)/blog -name "*.txt" -print | xargs rm -rf
 	cd $(DIST_PREFIX) && tar -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
