@@ -2798,6 +2798,10 @@ EOF
 
     my $t = HTML::Template->new( filename               => $file,
                                  path                   => $dir,
+                                 filter                 => sub {
+                                         my $ref = shift;
+                                         ${$ref} = Encode::decode_utf8(${$ref});
+                                 },
                                  loop_context_vars      => 1,
                                  global_vars            => 1,
                                  search_path_on_include => 1,
