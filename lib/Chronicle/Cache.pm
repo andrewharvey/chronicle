@@ -245,7 +245,7 @@ sub get
 {
     my ( $self, $key ) = (@_);
 
-    if ( ( ! $self->{'disable'}  ) && $self->{ 'handle' } )
+    if ( ( !$self->{ 'disable' } ) && $self->{ 'handle' } )
     {
         return ( $self->{ 'handle' }->get($key) );
     }
@@ -266,7 +266,7 @@ sub set
 {
     my ( $self, $key, $value ) = (@_);
 
-    if ( ( ! $self->{'disable'}  ) && $self->{ 'handle' } )
+    if ( ( !$self->{ 'disable' } ) && $self->{ 'handle' } )
     {
         return ( $self->{ 'handle' }->set( $key, $value ) );
     }
