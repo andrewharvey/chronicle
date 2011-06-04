@@ -76,14 +76,19 @@ diff:
 #  Install the themes without hardwiring a list of them.
 #
 install:
-	mkdir -p ${prefix}/etc
+	mkdir -p ${prefix}/etc || true
 	cp ./etc/chroniclerc ${prefix}/etc/chroniclerc
-	mkdir -p ${prefix}/usr/bin
+
+	mkdir -p ${prefix}/usr/bin || true
 	cp ./bin/chronicle              ${prefix}/usr/bin
 	cp ./bin/chronicle-ping         ${prefix}/usr/bin
 	cp ./bin/chronicle-spooler      ${prefix}/usr/bin
 	cp ./bin/chronicle-entry-filter ${prefix}/usr/bin
 	cp ./bin/chronicle-rss-importer ${prefix}/usr/bin
+
+	mkdir -p ${prefix}/usr/lib/perl5/ || true
+	cp -R ./lib/Chronicle ${prefix}/usr/lib/perl5/
+
 	mkdir -p ${prefix}/usr/share/chronicle/themes/xml
 	cp -r ./themes/xml/*.* ${prefix}/usr/share/chronicle/themes/xml
 	for i in themes/*/; do \
