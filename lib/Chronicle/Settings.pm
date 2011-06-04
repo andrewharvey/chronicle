@@ -48,8 +48,8 @@ Get a value from our settings.
 
 sub get
 {
-    my ( $self, $key ) = ( @_ );
-    return ( $self->{$key} || undef );
+    my ( $self, $key ) = (@_);
+    return ( $self->{ $key } || undef );
 }
 
 
@@ -64,9 +64,9 @@ Set a value in our global state.
 
 sub set
 {
-    my( $self, $key, $value ) = ( @_ );
+    my ( $self, $key, $value ) = (@_);
 
-    $self->{$key} = $value;
+    $self->{ $key } = $value;
 }
 
 
@@ -81,7 +81,7 @@ Load configuration values from a "key = value" file.
 
 sub load
 {
-    my( $self, $file ) = ( @_ );
+    my ( $self, $file ) = (@_);
 
     if ( -e $file )
     {
@@ -148,7 +148,7 @@ sub load
             }
         }
 
-        close( $handle );
+        close($handle);
     }
 }
 
