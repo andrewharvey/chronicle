@@ -10,6 +10,12 @@
 <!-- tmpl_unless name='no_comments' -->
     <link rel="alternate" title="Comment Feed" href="<!-- tmpl_var name='basename' -->.rss" type="application/rss+xml" />
 <!-- /tmpl_unless -->
+<!-- tmpl_if name='title' -->
+    <meta name="description" content="<!-- tmpl_var name='title' escape='html' -->" />
+<!-- /tmpl_if -->
+<!-- tmpl_if name='tags' -->
+    <meta name="keywords" content="<!-- tmpl_loop name='tags' --><!-- tmpl_var name='tag' escape='html' --><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless --><!-- /tmpl_loop -->" />
+<!-- /tmpl_if -->
   </head>
   <body>
     <div id='content'>
