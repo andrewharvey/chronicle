@@ -3198,7 +3198,12 @@ sub createVisualTagCloud
     foreach my $key ( sort keys(%uniqueTags) )
     {
         my $count = $uniqueTags{ $key };
-        $tagcloud->add($key, "/tags/$key", $count);
+        my $top = "";
+        if ( $CONFIG{ 'url_prefix' } )
+        {
+            $top = $CONFIG{ 'url_prefix' };
+        }
+        $tagcloud->add($key, "${top}tags/$key/", $count);
     }
 
     return ($tagcloud);
