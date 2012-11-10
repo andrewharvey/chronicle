@@ -251,6 +251,17 @@ Any tags which should be associated with the entry, separated by commas.
 
 =cut
 
+
+=head1 OPTIONAL VISUAL TAG CLOUD
+
+  If the 'HTML::TagCloud' module is available each blog will contain a
+ visual tag cloud.
+
+  To disable this invoke the program with '--no-visual-tagcloud'.
+
+=cut
+
+
 =head1 AUTHOR
 
  Steve
@@ -700,6 +711,7 @@ sub parseCommandLineArguments
             "no-tags",        \$CONFIG{ 'no-tags' },
             "no-cache",       \$CONFIG{ 'no-cache' },
             "no-calendar",    \$CONFIG{ 'no-calendar' },
+            "no-visual-tagcloud", \$CONFIG{ 'no-visual-tagcloud' },
             "no-sitemap",     \$CONFIG{ 'no-sitemap' },
             "no-comments",    \$CONFIG{ 'no-comments' },
             "no-archive",     \$CONFIG{ 'no-archive' },
@@ -1198,6 +1210,18 @@ sub outputIndexPage
 
         $template->param( calendar       => 1,
                           calendar_month => $text );
+    }
+
+
+    #
+    # create the visual tag cloud if we can.
+    #
+    my $visualtagcloud = createVisualTagCloud(%all_tags);
+    if ( defined($visualtagcloud) )
+    {
+        my $text = $visualtagcloud->html_and_css();
+
+        $template->param( visual_tagcloud => $text );
     }
 
 
@@ -3130,6 +3154,54 @@ sub listThemes
             print $2 . "\n";
         }
     }
+}
+
+
+
+=begin doc
+
+Create and configure a visual tag cloud for the index, if and only if
+the HTML::TagCloud module is installed.
+
+=end doc
+
+=cut
+
+sub createVisualTagCloud
+{
+    my (%uniqueTags) = (@_);
+
+    #
+    #  Attempt to load the module.
+    #
+    my $test = "use HTML::TagCloud;";
+
+    ## no critic (Eval)
+    eval($test);
+    ## use critic
+
+    #
+    #  If there was an error, or the visual tag cloud is disabled then
+    # return undef.
+    #
+    if ( ($@) || ( $CONFIG{ 'no-visual-tagcloud' } ) )
+    {
+        return;
+    }
+
+    #
+    #  Continue
+    #
+    my $tagcloud = HTML::TagCloud->new;
+
+    # configuration of the tag cloud
+    foreach my $key ( sort keys(%uniqueTags) )
+    {
+        my $count = $uniqueTags{ $key };
+        $tagcloud->add($key, "/tags/$key", $count);
+    }
+
+    return ($tagcloud);
 }
 
 

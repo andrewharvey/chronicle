@@ -16,6 +16,10 @@
 </ul>
 <!-- /tmpl_if name='datecloud' -->
 
+<!-- tmpl_if name='visual_tagcloud' -->
+<h2>Tag Cloud</h2>
+<!-- tmpl_var name='visual_tagcloud' -->
+<!-- /tmpl_if -->
 <!-- tmpl_if name='tagcloud' -->
 <h2>Tags</h2>
 <ul>
